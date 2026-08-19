@@ -186,17 +186,20 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
     const trimmed = rawLine.trim();
 
     if (!trimmed) {
-      // Lookahead: if previous non-empty was a route/concept heading, don't insert excessive gap
-      const prevTrimmed = i > 0 ? lines[i - 1].trim() : '';
-      const isAfterHeading = /^(CONCEPT\s+([0-9]+[A-Z]?)|Concept\s+([0-9]+[A-Z]?)|ALASKA BATTERIES\s*[—–-]\s*TVC ROUTE)/i.test(prevTrimmed);
-      if (isAfterHeading) {
-        continue;
+      if (blocks.length > 0) {
+        const lastBlock = blocks[blocks.length - 1];
+        const isLastSpacer = lastBlock.dataset.isSpacer === 'true';
+        const isLastHeading =
+          lastBlock.dataset.isRouteHeader === 'true' ||
+          lastBlock.dataset.isConceptHeading === 'true' ||
+          lastBlock.dataset.pageBreakAfter === 'true';
+        if (!isLastSpacer && !isLastHeading) {
+          const spacer = document.createElement('div');
+          spacer.style.height = '4px';
+          spacer.dataset.isSpacer = 'true';
+          blocks.push(spacer);
+        }
       }
-
-      // Add a clean vertical spacing gap between logical paragraphs
-      const spacer = document.createElement('div');
-      spacer.style.height = '4px';
-      blocks.push(spacer);
       continue;
     }
 
@@ -213,8 +216,30 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
       continue;
     }
 
-    // Concept Title: e.g. "CONCEPT 1:", "Concept 1A", "CONCEPT 2", "CONCEPT 3", "CONCEPT 3A", "ALASKA BATTERIES — TVC ROUTE 3A"
-    const isConceptHeading = /^(CONCEPT\s+([0-9]+[A-Z]?)|Concept\s+([0-9]+[A-Z]?)|ALASKA BATTERIES\s*[—–-]\s*TVC ROUTE)/i.test(trimmed);
+    // Route Header banner: e.g. "ALASKA BATTERIES — TVC ROUTE 1", "ALASKA BATTERIES — TVC ROUTE 2", "ALASKA BATTERIES — TVC ROUTE 3", "ALASKA BATTERIES — TVC ROUTE 3A", "CAMPAIGN FILM CONCEPTS"
+    const isRouteHeader = /^(ALASKA BATTERIES\s*[—–-]\s*TVC ROUTE|TVC ROUTE\s+[0-9]+[A-Z]?|CAMPAIGN FILM CONCEPTS)/i.test(trimmed);
+    if (isRouteHeader) {
+      const rh = document.createElement('div');
+      rh.style.background = '#f1f5f9';
+      rh.style.borderLeft = '4.5px solid #b8860b';
+      rh.style.padding = '8px 14px';
+      rh.style.borderRadius = '0 6px 6px 0';
+      rh.style.fontWeight = '800';
+      rh.style.fontSize = '14px';
+      rh.style.lineHeight = '1.3';
+      rh.style.letterSpacing = '0.04em';
+      rh.style.textTransform = 'uppercase';
+      rh.style.color = '#0f172a';
+      rh.style.marginTop = '12px';
+      rh.style.marginBottom = '4px';
+      rh.textContent = trimmed;
+      rh.dataset.isRouteHeader = 'true';
+      blocks.push(rh);
+      continue;
+    }
+
+    // Concept Title: e.g. "CONCEPT 1:", "Concept 1A", "CONCEPT 2", "CONCEPT 3", "CONCEPT 3A", "CONCEPT 1: \"BATTERY EXPERT\"", "CONCEPT 2: \"AITEMAAD KA NAYA NAAM\""
+    const isConceptHeading = /^(CONCEPT\s+([0-9]+[A-Z]?)|Concept\s+([0-9]+[A-Z]?))/i.test(trimmed);
     if (isConceptHeading) {
       const ch = document.createElement('div');
       ch.style.background = '#1c2024';
@@ -222,15 +247,14 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
       ch.style.padding = '8px 14px';
       ch.style.borderRadius = '0 6px 6px 0';
       ch.style.fontWeight = '900';
-      ch.style.fontSize = '14.5px';
+      ch.style.fontSize = '14px';
       ch.style.lineHeight = '1.25';
       ch.style.letterSpacing = '0.04em';
       ch.style.textTransform = 'uppercase';
       ch.style.color = '#fef08a';
-      ch.style.marginTop = '10px';
-      ch.style.marginBottom = '4px';
+      ch.style.marginTop = '6px';
+      ch.style.marginBottom = '8px';
       ch.textContent = trimmed;
-      // Mark concept headings to start on a fresh page if content has already been printed
       ch.dataset.isConceptHeading = 'true';
       blocks.push(ch);
       continue;
@@ -925,19 +949,27 @@ export async function generateChapterPDF(
     const textToRender = chapter.pdfFullText || chapter.fullText;
     const blocks = parseTextToBlocks(textToRender);
 
-    // Distribute blocks cleanly across discrete pages with concept-level page breaks
+    // Distribute blocks cleanly across discrete pages with intelligent section grouping
     for (let bIdx = 0; bIdx < blocks.length; bIdx++) {
       const block = blocks[bIdx];
       const blockHeight = measureElementHeight(block);
 
-      // If this block is a new Concept Heading and the page already has content, start a fresh page
-      if (block.dataset.isConceptHeading === 'true' && currentHeight > 60) {
+      // 1. Major Route Header: If we already have substantial content on the page, start a fresh page so the whole route starts at the top
+      if (block.dataset.isRouteHeader === 'true' && currentHeight > 100) {
         currentPage = createNewPage(pages.length);
         currentHeight = 0;
         maxContentHeight = 920;
       }
 
-      // If standard content overflow occurs
+      // 2. Standalone Concept Heading (e.g. Concept 1A when after a full script):
+      // Only break if the page already has significant content (currentHeight > 380) so it never breaks right below a Route Header
+      if (block.dataset.isConceptHeading === 'true' && currentHeight > 380) {
+        currentPage = createNewPage(pages.length);
+        currentHeight = 0;
+        maxContentHeight = 920;
+      }
+
+      // 3. If standard content overflow occurs
       if (currentHeight + blockHeight > maxContentHeight && currentHeight > 0) {
         currentPage = createNewPage(pages.length);
         currentHeight = 0;
@@ -947,7 +979,7 @@ export async function generateChapterPDF(
       currentPage.contentArea.appendChild(block);
       currentHeight += blockHeight;
 
-      // If this was a separation line marking the end of a concept, push subsequent concepts to the next page
+      // 4. If this was a separation line marking the end of a concept / route, push subsequent content to the next page
       if (block.dataset.pageBreakAfter === 'true' && bIdx < blocks.length - 1) {
         // Lookahead: only break if there is actually more meaningful content after this separator
         const remainingBlocks = blocks.slice(bIdx + 1);

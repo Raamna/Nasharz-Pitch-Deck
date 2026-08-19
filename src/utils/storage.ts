@@ -1,7 +1,7 @@
 import { DeckData, LoginLog } from '../types';
 import { initialDeckData } from '../data/defaultData';
 
-const STORAGE_KEY = 'nasharz_alaska_deck_data_v37';
+const STORAGE_KEY = 'nasharz_alaska_deck_data_v41';
 
 export function getStoredData(): DeckData {
   try {
@@ -11,10 +11,26 @@ export function getStoredData(): DeckData {
       return initialDeckData;
     }
     const parsed = JSON.parse(dataStr) as DeckData;
-    // Ensure all critical properties exist
+    
+    // Merge chapters with default data to hydrate any new tabs or properties
+    const hydratedChapters = (parsed.chapters && parsed.chapters.length > 0 ? parsed.chapters : initialDeckData.chapters).map(ch => {
+      const defaultCh = initialDeckData.chapters.find(c => c.id === ch.id);
+      if (defaultCh) {
+        return {
+          ...defaultCh,
+          ...ch,
+          conceptTabs: ch.conceptTabs || defaultCh.conceptTabs,
+          finalConceptsText: ch.finalConceptsText || defaultCh.finalConceptsText,
+          folders: ch.folders || defaultCh.folders,
+          galleryImages: ch.galleryImages || defaultCh.galleryImages,
+        };
+      }
+      return ch;
+    });
+
     return {
       branding: { ...initialDeckData.branding, ...(parsed.branding || {}) },
-      chapters: parsed.chapters && parsed.chapters.length > 0 ? parsed.chapters : initialDeckData.chapters,
+      chapters: hydratedChapters,
       estimates: parsed.estimates && parsed.estimates.length > 0 ? parsed.estimates : initialDeckData.estimates,
       logs: parsed.logs || initialDeckData.logs,
       mediaAssets: Array.isArray(parsed.mediaAssets) ? parsed.mediaAssets : (initialDeckData.mediaAssets || []),

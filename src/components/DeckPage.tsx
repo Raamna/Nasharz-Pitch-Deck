@@ -38,6 +38,7 @@ export const DeckPage: React.FC<DeckPageProps> = ({
   onOpenAdmin,
 }) => {
   const [activeChapterId, setActiveChapterId] = useState<string>(data.chapters[0]?.id || 'brief');
+  const [selectedConceptTab, setSelectedConceptTab] = useState<string>('all');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showFullModal, setShowFullModal] = useState(false);
   const [showEstimateModal, setShowEstimateModal] = useState(false);
@@ -295,6 +296,37 @@ export const DeckPage: React.FC<DeckPageProps> = ({
               <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-zinc-900 font-heading leading-[1.25]">
                 {currentChapter.summary}
               </h3>
+
+              {/* Concept Sub-Tabs Quick Access for Chapter 5 */}
+              {currentChapter.conceptTabs && currentChapter.conceptTabs.length > 0 && (
+                <div className="mt-5 pt-4 border-t border-zinc-300/60">
+                  <div className="text-[10px] font-bold text-zinc-500 uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+                    <Sparkles className="w-3 h-3 text-[#b8860b]" /> Explore Concept Routes:
+                  </div>
+                  <div className="flex flex-wrap gap-2" onClick={(e) => e.stopPropagation()}>
+                    {currentChapter.conceptTabs.map((tab) => {
+                      const isFinal = tab.isFinal || tab.id === 'final-concepts' || tab.name.toLowerCase().includes('final');
+                      return (
+                        <button
+                          key={tab.id}
+                          onClick={() => {
+                            setSelectedConceptTab(tab.id);
+                            setShowFullModal(true);
+                          }}
+                          className={`px-3 py-1.5 rounded-xl text-xs transition-all cursor-pointer flex items-center gap-1.5 ${
+                            isFinal
+                              ? 'bg-amber-400/25 text-amber-950 hover:bg-amber-400/40 border border-amber-500/50 font-extrabold shadow-xs'
+                              : 'bg-zinc-200/80 text-zinc-700 hover:bg-zinc-300 hover:text-zinc-900 border border-zinc-300/60 font-semibold'
+                          }`}
+                        >
+                          {isFinal && <Sparkles className="w-3 h-3 text-amber-700 animate-pulse" />}
+                          <span>{tab.name}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Bottom Controls - Exact to Image 2 */}
@@ -334,6 +366,7 @@ export const DeckPage: React.FC<DeckPageProps> = ({
           chapter={currentChapter}
           branding={data.branding}
           clientName={userName}
+          initialConceptTab={selectedConceptTab}
           onClose={() => setShowFullModal(false)}
         />
       )}

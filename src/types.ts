@@ -10,6 +10,15 @@ export interface StoryboardFolder {
   }[];
 }
 
+export interface ConceptTab {
+  id: string;
+  name: string;
+  badge?: string;
+  summary?: string;
+  content: string;
+  isFinal?: boolean;
+}
+
 export interface Chapter {
   id: string;
   number: string;
@@ -34,6 +43,8 @@ export interface Chapter {
     url: string;
     size?: string;
   }[];
+  conceptTabs?: ConceptTab[];
+  finalConceptsText?: string;
 }
 
 export interface EstimateItem {

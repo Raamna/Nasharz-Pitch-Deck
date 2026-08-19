@@ -440,15 +440,52 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     />
                   </div>
 
-                  <div>
-                    <label className="text-[11px] font-semibold text-zinc-400 block mb-1">Full Text Content (Visible in Modal Pop-up & Downloaded PDF)</label>
-                    <textarea
-                      rows={8}
-                      value={selectedChapter.fullText}
-                      onChange={(e) => handleUpdateChapter('fullText', e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#c69a53] font-mono leading-relaxed"
-                    />
-                  </div>
+                  {/* Concept Tabs Editor (if available on this chapter) */}
+                  {selectedChapter.conceptTabs && selectedChapter.conceptTabs.length > 0 ? (
+                    <div className="p-4 bg-zinc-950/80 rounded-xl border border-zinc-800 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[11px] font-bold text-[#c69a53] uppercase tracking-wider block">
+                          ⭐ Concept Routes & Tabs Editor ({selectedChapter.conceptTabs.length} Tabs)
+                        </label>
+                        <span className="text-[10px] text-zinc-500">Includes "Final Concepts"</span>
+                      </div>
+                      <div className="space-y-3">
+                        {selectedChapter.conceptTabs.map((tab, tIdx) => (
+                          <div key={tab.id} className="p-3 bg-zinc-900/90 rounded-lg border border-zinc-800 space-y-2">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                                {tab.isFinal ? '⭐' : '📄'} {tab.name}
+                              </span>
+                              <span className="text-[10px] text-[#c69a53] font-mono">{tab.badge || tab.id}</span>
+                            </div>
+                            <textarea
+                              rows={5}
+                              value={tab.content}
+                              onChange={(e) => {
+                                const newTabs = [...(selectedChapter.conceptTabs || [])];
+                                newTabs[tIdx] = { ...newTabs[tIdx], content: e.target.value };
+                                handleUpdateChapter('conceptTabs', newTabs);
+                                if (tab.id === 'all') {
+                                  handleUpdateChapter('fullText', e.target.value);
+                                }
+                              }}
+                              className="w-full bg-black/60 border border-zinc-700 rounded-lg p-2 text-xs text-zinc-200 font-mono focus:outline-none focus:border-[#c69a53]"
+                            />
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <label className="text-[11px] font-semibold text-zinc-400 block mb-1">Full Text Content (Visible in Modal Pop-up & Downloaded PDF)</label>
+                      <textarea
+                        rows={8}
+                        value={selectedChapter.fullText}
+                        onChange={(e) => handleUpdateChapter('fullText', e.target.value)}
+                        className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#c69a53] font-mono leading-relaxed"
+                      />
+                    </div>
+                  )}
 
                   <div>
                     <label className="text-[11px] font-semibold text-zinc-400 block mb-1">Key Deliverables (Comma separated)</label>

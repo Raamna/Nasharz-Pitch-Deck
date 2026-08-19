@@ -15,13 +15,15 @@ import {
   Folder, 
   FolderOpen, 
   ChevronLeft, 
-  ChevronRight 
+  ChevronRight,
+  Sparkles
 } from 'lucide-react';
 
 interface FullChapterModalProps {
   chapter: Chapter;
   branding: BrandingConfig;
   clientName: string;
+  initialConceptTab?: string;
   onClose: () => void;
 }
 
@@ -29,11 +31,15 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
   chapter,
   branding,
   clientName,
+  initialConceptTab,
   onClose,
 }) => {
   const [isGenerating, setIsGenerating] = React.useState(false);
   const [activeFolderId, setActiveFolderId] = React.useState<string>(
     chapter.folders && chapter.folders.length > 0 ? chapter.folders[0].id : ''
+  );
+  const [activeConceptTabId, setActiveConceptTabId] = React.useState<string>(
+    initialConceptTab || (chapter.conceptTabs && chapter.conceptTabs.length > 0 ? chapter.conceptTabs[0].id : 'all')
   );
   const [enlargedIndex, setEnlargedIndex] = React.useState<number | null>(null);
   const [zoomScale, setZoomScale] = React.useState<number>(1);
@@ -45,6 +51,10 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
     initialPanX: 0,
     initialPanY: 0,
   });
+
+  // Determine active concept tab content
+  const activeConceptTab = chapter.conceptTabs?.find((t) => t.id === activeConceptTabId) || chapter.conceptTabs?.[0];
+  const activeConceptContent = activeConceptTab ? activeConceptTab.content : chapter.fullText;
 
   // Determine active list of images based on active folder or default galleryImages
   const currentFolder = chapter.folders?.find((f) => f.id === activeFolderId) || (chapter.folders && chapter.folders.length > 0 ? chapter.folders[0] : null);
@@ -71,7 +81,56 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
             );
           }
 
-          // Concept Titles: e.g. "Concept 1", "Concept 1A", "Concept 2", "Concept 3", "Concept 3A", "CONCEPT 1:", "CONCEPT 3A:", etc.
+          // Final Concepts Main Banner Header
+          const isFinalConceptsMainHeader = /^(FINAL CONCEPTS\s*—|FINAL CONCEPTS$)/i.test(trimmed);
+          if (isFinalConceptsMainHeader) {
+            return (
+              <div
+                key={idx}
+                className="mt-6 mb-4 p-4 sm:p-5 bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-white rounded-2xl border border-amber-500/40 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="p-2 bg-amber-500/20 text-amber-400 rounded-xl border border-amber-500/30">
+                    <Sparkles className="w-5 h-5 animate-pulse" />
+                  </span>
+                  <div>
+                    <span className="text-[10px] font-extrabold text-[#c69a53] uppercase tracking-widest block">
+                      Client Selected Execution
+                    </span>
+                    <h3 className="font-extrabold text-lg sm:text-xl text-amber-300 font-heading">
+                      {trimmed}
+                    </h3>
+                  </div>
+                </div>
+                <span className="text-[11px] font-bold text-black bg-gradient-to-r from-amber-400 to-amber-300 px-3 py-1 rounded-full shadow-sm">
+                  ⭐ Final Recommendation
+                </span>
+              </div>
+            );
+          }
+
+          // Final Concept Titles: e.g. "FINAL CONCEPT 1:", "FINAL CONCEPT 2:", etc.
+          const isFinalConceptCard = /^(FINAL CONCEPT\s+[0-9]+[A-Z]?)/i.test(trimmed);
+          if (isFinalConceptCard) {
+            return (
+              <div
+                key={idx}
+                className="mt-7 mb-3 p-4 bg-gradient-to-r from-[#1c2024] to-[#252a30] text-white rounded-xl border-l-4 border-amber-400 border-y border-r border-zinc-700/80 shadow-lg flex items-center justify-between gap-3"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="w-3 h-3 rounded-full bg-amber-400 flex-shrink-0 animate-pulse"></span>
+                  <span className="font-extrabold text-base sm:text-lg tracking-wide uppercase text-amber-200">
+                    {trimmed}
+                  </span>
+                </div>
+                <span className="text-[10px] font-bold uppercase tracking-wider text-amber-300/80 bg-black/40 px-2.5 py-1 rounded-md border border-amber-400/20 hidden sm:inline">
+                  Approved Route
+                </span>
+              </div>
+            );
+          }
+
+          // Standard Concept Titles: e.g. "Concept 1", "Concept 1A", "Concept 2", "Concept 3", "Concept 3A", "CONCEPT 1:", "CONCEPT 3A:", etc.
           const isConceptTitle = /^(CONCEPT\s+([0-9]+[A-Z]?)|Concept\s+([0-9]+[A-Z]?))/i.test(trimmed);
           if (isConceptTitle) {
             return (
@@ -88,7 +147,7 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
           }
 
           // Major Route / Chapter Banner
-          const isRouteHeader = /^(ALASKA BATTERIES — TVC ROUTE|TVC ROUTE [0-9]|CAMPAIGN FILM CONCEPTS)/i.test(trimmed);
+          const isRouteHeader = /^(ALASKA BATTERIES — TVC ROUTE|TVC ROUTE [0-9]|CAMPAIGN FILM CONCEPTS|PRODUCTION & EXECUTION MASTERPLAN|CAMPAIGN ROLLOUT)/i.test(trimmed);
           if (isRouteHeader) {
             return (
               <div
@@ -100,8 +159,8 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
             );
           }
 
-          // Subheaders or Scene Headers: e.g. "OPEN — WORKSHOP", "CORE IDEA", "PRODUCT REVEAL", "THE FILM", "PART 01", "PRODUCT SCOPE", etc.
-          const isSubhead = /^(OPEN|THE GURU|THE EXPERT TEST|RESOLUTION|ALASKA REVEAL|THE SECOND BATTERY|JINGLE|COMPLETE JINGLE|THE ENERGY BUILDS|RETURN TO THE WORKSHOP|PRODUCT REVEAL|END FRAME|CORE IDEA|THE FILM|PART 01|PART 02|PRODUCT SCOPE|CURRENT PRESENTATION|FUTURE EXPANSION|LIGHTS OUT)\b/i.test(trimmed);
+          // Subheaders or Scene Headers: e.g. "OPEN — WORKSHOP", "CORE IDEA", "PRODUCT REVEAL", "THE FILM", "PART 01", "PRODUCT SCOPE", "EXECUTIVE CREATIVE SUMMARY", etc.
+          const isSubhead = /^(OPEN|THE GURU|THE EXPERT TEST|RESOLUTION|ALASKA REVEAL|THE SECOND BATTERY|JINGLE|COMPLETE JINGLE|COMPLETE MASTER JINGLE|THE ENERGY BUILDS|RETURN TO THE WORKSHOP|PRODUCT REVEAL|END FRAME|CORE IDEA|CORE IDEA & HOOK|THE MASTER SCRIPT|THE FILM|PART 01|PART 02|PRODUCT SCOPE|CURRENT PRESENTATION|FUTURE EXPANSION|LIGHTS OUT|EXECUTIVE CREATIVE SUMMARY|NARRATIVE HIGHLIGHTS|SEGMENT BREAKDOWN|PRODUCTION & EXECUTION)\b/i.test(trimmed);
           if (isSubhead) {
             return (
               <div key={idx} className="font-bold text-zinc-900 text-sm sm:text-base mt-4 mb-1 text-[#b8860b]">
@@ -238,9 +297,12 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
 
   const handleDownload = async () => {
     setIsGenerating(true);
-    // Pass along active gallery images to make sure storyboard sheets match the current view
+    // Pass along active gallery images or active concept tab to make sure exported PDF matches the current view
+    const isConceptTabActive = chapter.conceptTabs && activeConceptTab && activeConceptTab.id !== 'all';
     const exportChapter: Chapter = {
       ...chapter,
+      title: isConceptTabActive ? `${chapter.title} — ${activeConceptTab.name}` : chapter.title,
+      fullText: isConceptTabActive ? activeConceptTab.content : (chapter.fullText || ''),
       galleryImages: galleryList
     };
     await generateChapterPDF(exportChapter, branding, clientName);
@@ -641,8 +703,78 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                 ) : null}
               </div>
             ) : (
-              <div className="font-sans">
-                {renderFormattedText(chapter.fullText || '')}
+              <div className="font-sans space-y-4">
+                {/* Concept Tabs Navigation Bar (if chapter has conceptTabs) */}
+                {chapter.conceptTabs && chapter.conceptTabs.length > 0 && (
+                  <div className="mb-6 pb-4 border-b border-zinc-200">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+                      <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider flex items-center gap-1.5">
+                        <Sparkles className="w-3.5 h-3.5 text-[#c69a53]" /> Concepts Navigation:
+                      </span>
+                      {activeConceptTab && (
+                        <span className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full w-fit ${
+                          activeConceptTab.isFinal
+                            ? 'bg-amber-100 text-amber-900 border border-amber-300 shadow-xs'
+                            : 'bg-zinc-100 text-zinc-700 border border-zinc-200'
+                        }`}>
+                          {activeConceptTab.badge || activeConceptTab.name}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2">
+                      {chapter.conceptTabs.map((tab) => {
+                        const isActive = tab.id === activeConceptTabId;
+                        const isFinal = tab.isFinal || tab.id === 'final-concepts' || tab.name.toLowerCase().includes('final');
+                        return (
+                          <button
+                            key={tab.id}
+                            onClick={() => setActiveConceptTabId(tab.id)}
+                            className={`flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-semibold tracking-wide transition-all cursor-pointer ${
+                              isActive
+                                ? isFinal
+                                  ? 'bg-gradient-to-r from-amber-600 via-amber-500 to-amber-600 text-white shadow-md ring-2 ring-amber-400 font-extrabold'
+                                  : 'bg-zinc-900 text-white shadow-sm ring-1 ring-zinc-900'
+                                : isFinal
+                                ? 'bg-amber-50 text-amber-900 hover:bg-amber-100 border border-amber-300 font-bold'
+                                : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900'
+                            }`}
+                          >
+                            {isFinal ? (
+                              <Sparkles className={`w-3.5 h-3.5 ${isActive ? 'text-white' : 'text-amber-600'}`} />
+                            ) : (
+                              <FileText className="w-3.5 h-3.5 text-zinc-400" />
+                            )}
+                            <span>{tab.name}</span>
+                            {tab.badge && (
+                              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                                isActive
+                                  ? 'bg-white/20 text-white'
+                                  : isFinal
+                                  ? 'bg-amber-200/90 text-amber-900 font-bold'
+                                  : 'bg-zinc-200 text-zinc-600'
+                              }`}>
+                                {tab.badge}
+                              </span>
+                            )}
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {activeConceptTab?.summary && (
+                      <div className={`mt-3 p-3 rounded-xl border text-xs leading-relaxed ${
+                        activeConceptTab.isFinal
+                          ? 'bg-amber-500/10 border-amber-300/60 text-amber-950 font-medium'
+                          : 'bg-zinc-50 border-zinc-200 text-zinc-600'
+                      }`}>
+                        {activeConceptTab.summary}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {renderFormattedText(activeConceptContent || chapter.fullText || '')}
               </div>
             )}
           </div>
