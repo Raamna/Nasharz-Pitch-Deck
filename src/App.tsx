@@ -11,10 +11,13 @@ export default function App() {
   const [userName, setUserName] = useState<string>('');
   const [userRole, setUserRole] = useState<'client' | 'admin'>('client');
 
-  // Load latest data on mount
+  // Load latest data on mount & listen to storage events across tabs/windows
   useEffect(() => {
-    const loaded = getStoredData();
-    setData(loaded);
+    const handleStorageChange = () => {
+      setData(getStoredData());
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const handleClientLogin = (name: string) => {
@@ -59,7 +62,10 @@ export default function App() {
           userName={userName}
           userRole={userRole}
           onSignOut={handleSignOut}
-          onOpenAdmin={() => setPage('admin')}
+          onOpenAdmin={() => {
+            setData(getStoredData());
+            setPage('admin');
+          }}
         />
       )}
 
@@ -67,7 +73,10 @@ export default function App() {
         <AdminPortal
           data={data}
           onUpdateData={(newData) => setData(newData)}
-          onExitAdmin={() => setPage('deck')}
+          onExitAdmin={() => {
+            setData(getStoredData());
+            setPage('deck');
+          }}
         />
       )}
     </div>

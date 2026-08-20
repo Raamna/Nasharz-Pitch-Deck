@@ -40,14 +40,33 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
   const [selectedChapterId, setSelectedChapterId] = useState<string>(data.chapters[0]?.id || 'brief');
   const [previewMediaId, setPreviewMediaId] = useState<string | null>(null);
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [lastSavedTime, setLastSavedTime] = useState<string>('Just now');
 
   const selectedChapter = deck.chapters.find((c) => c.id === selectedChapterId) || deck.chapters[0];
+
+  // Helper to commit state changes in real time, saving to localStorage & notifying main deck
+  const commitDeckUpdate = (updater: (prev: DeckData) => DeckData) => {
+    setDeck((prev) => {
+      const next = updater(prev);
+      saveStoredData(next);
+      onUpdateData(next);
+      setLastSavedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
+      return next;
+    });
+  };
 
   const handleSaveAll = () => {
     saveStoredData(deck);
     onUpdateData(deck);
     setSaveSuccess(true);
+    setLastSavedTime(new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }));
     setTimeout(() => setSaveSuccess(false), 2500);
+  };
+
+  const handleExitAdmin = () => {
+    saveStoredData(deck);
+    onUpdateData(deck);
+    onExitAdmin();
   };
 
   const handleResetFactory = () => {
@@ -61,7 +80,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
   // Chapter editing helpers
   const handleUpdateChapter = (field: keyof Chapter, value: any) => {
-    setDeck((prev) => ({
+    commitDeckUpdate((prev) => ({
       ...prev,
       chapters: prev.chapters.map((c) =>
         c.id === selectedChapterId ? { ...c, [field]: value } : c
@@ -85,7 +104,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
       pageCount: 4,
     };
 
-    setDeck((prev) => ({
+    commitDeckUpdate((prev) => ({
       ...prev,
       chapters: [...prev.chapters, newChapter],
     }));
@@ -99,14 +118,14 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
     }
     if (confirm('Delete this chapter from client deck?')) {
       const filtered = deck.chapters.filter((c) => c.id !== id);
-      setDeck((prev) => ({ ...prev, chapters: filtered }));
+      commitDeckUpdate((prev) => ({ ...prev, chapters: filtered }));
       setSelectedChapterId(filtered[0].id);
     }
   };
 
   // Branding editing
   const handleUpdateBranding = (field: keyof BrandingConfig, value: string) => {
-    setDeck((prev) => ({
+    commitDeckUpdate((prev) => ({
       ...prev,
       branding: {
         ...prev.branding,
@@ -117,7 +136,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
   // Estimate editing
   const handleUpdateEstimate = (id: string, field: keyof EstimateItem, value: any) => {
-    setDeck((prev) => ({
+    commitDeckUpdate((prev) => ({
       ...prev,
       estimates: prev.estimates.map((item) =>
         item.id === id ? { ...item, [field]: value } : item
@@ -135,14 +154,14 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
       unit: 'Item',
       included: true,
     };
-    setDeck((prev) => ({
+    commitDeckUpdate((prev) => ({
       ...prev,
       estimates: [...prev.estimates, newItem],
     }));
   };
 
   const handleDeleteEstimateItem = (id: string) => {
-    setDeck((prev) => ({
+    commitDeckUpdate((prev) => ({
       ...prev,
       estimates: prev.estimates.filter((e) => e.id !== id),
     }));
@@ -150,7 +169,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
   // Media editing
   const handleUpdateMedia = (id: string, field: keyof MediaAsset, value: any) => {
-    setDeck((prev) => ({
+    commitDeckUpdate((prev) => ({
       ...prev,
       mediaAssets: (prev.mediaAssets || []).map((item) =>
         item.id === id ? { ...item, [field]: value } : item
@@ -173,7 +192,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
       uploadedAt: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
     };
 
-    setDeck((prev) => ({
+    commitDeckUpdate((prev) => ({
       ...prev,
       mediaAssets: [newItem, ...(prev.mediaAssets || [])],
     }));
@@ -181,7 +200,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
 
   const handleDeleteMedia = (id: string) => {
     if (confirm('Delete this media asset from client review vault?')) {
-      setDeck((prev) => ({
+      commitDeckUpdate((prev) => ({
         ...prev,
         mediaAssets: (prev.mediaAssets || []).filter((m) => m.id !== id),
       }));
@@ -206,6 +225,11 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
         </div>
 
         <div className="flex items-center gap-3">
+          <span className="hidden sm:inline-flex items-center gap-1.5 text-[11px] text-zinc-400 bg-zinc-800/80 px-2.5 py-1 rounded-md border border-zinc-700/50">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Live Auto-Sync Active</span>
+          </span>
+
           {saveSuccess && (
             <span className="text-xs text-emerald-400 font-semibold flex items-center gap-1 bg-emerald-950/60 border border-emerald-800 px-3 py-1.5 rounded-lg animate-fadeIn">
               <Check className="w-3.5 h-3.5" /> Saved to live deck
@@ -220,7 +244,7 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
           </button>
 
           <button
-            onClick={onExitAdmin}
+            onClick={handleExitAdmin}
             className="px-3 py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium rounded-lg flex items-center gap-1.5 transition-all cursor-pointer"
           >
             <Eye className="w-4 h-4" /> Client View
@@ -431,6 +455,38 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                   </div>
 
                   <div>
+                    <div className="flex justify-between items-center mb-1">
+                      <label className="text-[11px] font-semibold text-zinc-400">
+                        Update Disclaimer / Last Updated Tag
+                      </label>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const d = new Date();
+                          const month = d.toLocaleString('en-US', { month: 'short' });
+                          const day = d.getDate().toString().padStart(2, '0');
+                          const weekday = d.toLocaleString('en-US', { weekday: 'short' });
+                          const formatted = `${month}/${day}/${weekday}`;
+                          handleUpdateChapter('lastUpdated', formatted);
+                        }}
+                        className="text-[10px] text-[#c69a53] hover:underline cursor-pointer flex items-center gap-1"
+                      >
+                        ⚡ Set to Today
+                      </button>
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="e.g. Aug/09/Wed"
+                      value={selectedChapter.lastUpdated || ''}
+                      onChange={(e) => handleUpdateChapter('lastUpdated', e.target.value)}
+                      className="w-full bg-zinc-900 border border-zinc-700 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-[#c69a53]"
+                    />
+                    <span className="text-[10px] text-zinc-500 mt-1 block">
+                      Displays "(Last Updated on ...)" in refined amber badge with pulsating status indicator across the deck.
+                    </span>
+                  </div>
+
+                  <div>
                     <label className="text-[11px] font-semibold text-zinc-400 block mb-1">Card Summary (Short text shown in main card)</label>
                     <textarea
                       rows={2}
@@ -462,12 +518,20 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                               rows={5}
                               value={tab.content}
                               onChange={(e) => {
-                                const newTabs = [...(selectedChapter.conceptTabs || [])];
-                                newTabs[tIdx] = { ...newTabs[tIdx], content: e.target.value };
-                                handleUpdateChapter('conceptTabs', newTabs);
-                                if (tab.id === 'all') {
-                                  handleUpdateChapter('fullText', e.target.value);
-                                }
+                                const val = e.target.value;
+                                commitDeckUpdate((prev) => ({
+                                  ...prev,
+                                  chapters: prev.chapters.map((c) => {
+                                    if (c.id !== selectedChapterId) return c;
+                                    const newTabs = [...(c.conceptTabs || [])];
+                                    newTabs[tIdx] = { ...newTabs[tIdx], content: val };
+                                    return {
+                                      ...c,
+                                      conceptTabs: newTabs,
+                                      ...(tab.id === 'all' ? { fullText: val } : {}),
+                                    };
+                                  }),
+                                }));
                               }}
                               className="w-full bg-black/60 border border-zinc-700 rounded-lg p-2 text-xs text-zinc-200 font-mono focus:outline-none focus:border-[#c69a53]"
                             />

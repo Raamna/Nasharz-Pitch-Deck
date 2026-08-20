@@ -361,7 +361,22 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
               Executive Summary
             </div>
             <p className="text-base font-semibold text-zinc-900 leading-relaxed italic">
-              "{chapter.summary}"
+              "
+              {chapter.summary.split(/(\([^)]+\))/g).map((part, idx) => {
+                if (part.startsWith('(') && part.endsWith(')')) {
+                  return (
+                    <span
+                      key={idx}
+                      className="font-semibold not-italic text-amber-900 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full text-xs tracking-normal inline-flex items-center gap-1.5 ml-1.5 align-middle font-sans shadow-2xs"
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block animate-pulse"></span>
+                      {part}
+                    </span>
+                  );
+                }
+                return <span key={idx}>{part}</span>;
+              })}
+              "
             </p>
           </div>
 
@@ -768,7 +783,20 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                           ? 'bg-amber-500/10 border-amber-300/60 text-amber-950 font-medium'
                           : 'bg-zinc-50 border-zinc-200 text-zinc-600'
                       }`}>
-                        {activeConceptTab.summary}
+                        {activeConceptTab.summary.split(/(\([^)]+\))/g).map((part, idx) => {
+                          if (part.startsWith('(') && part.endsWith(')')) {
+                            return (
+                              <span
+                                key={idx}
+                                className="font-semibold text-amber-900 bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-full text-[11px] tracking-normal inline-flex items-center gap-1 ml-1.5 align-middle font-sans shadow-2xs"
+                              >
+                                <span className="w-1 h-1 rounded-full bg-amber-600 inline-block animate-pulse"></span>
+                                {part}
+                              </span>
+                            );
+                          }
+                          return <span key={idx} className="font-bold">{part}</span>;
+                        })}
                       </div>
                     )}
                   </div>

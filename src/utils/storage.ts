@@ -1,7 +1,7 @@
 import { DeckData, LoginLog } from '../types';
 import { initialDeckData } from '../data/defaultData';
 
-const STORAGE_KEY = 'nasharz_alaska_deck_data_v41';
+const STORAGE_KEY = 'nasharz_alaska_deck_data_v43';
 
 export function getStoredData(): DeckData {
   try {
@@ -12,17 +12,18 @@ export function getStoredData(): DeckData {
     }
     const parsed = JSON.parse(dataStr) as DeckData;
     
-    // Merge chapters with default data to hydrate any new tabs or properties
+    // Merge chapters with default data to hydrate any missing new properties while preserving all admin edits
     const hydratedChapters = (parsed.chapters && parsed.chapters.length > 0 ? parsed.chapters : initialDeckData.chapters).map(ch => {
       const defaultCh = initialDeckData.chapters.find(c => c.id === ch.id);
       if (defaultCh) {
         return {
           ...defaultCh,
           ...ch,
-          conceptTabs: ch.conceptTabs || defaultCh.conceptTabs,
-          finalConceptsText: ch.finalConceptsText || defaultCh.finalConceptsText,
-          folders: ch.folders || defaultCh.folders,
-          galleryImages: ch.galleryImages || defaultCh.galleryImages,
+          conceptTabs: ch.conceptTabs !== undefined ? ch.conceptTabs : defaultCh.conceptTabs,
+          finalConceptsText: ch.finalConceptsText !== undefined ? ch.finalConceptsText : defaultCh.finalConceptsText,
+          folders: ch.folders !== undefined ? ch.folders : defaultCh.folders,
+          galleryImages: ch.galleryImages !== undefined ? ch.galleryImages : defaultCh.galleryImages,
+          lastUpdated: ch.lastUpdated !== undefined ? ch.lastUpdated : defaultCh.lastUpdated,
         };
       }
       return ch;

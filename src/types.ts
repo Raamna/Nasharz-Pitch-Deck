@@ -45,6 +45,7 @@ export interface Chapter {
   }[];
   conceptTabs?: ConceptTab[];
   finalConceptsText?: string;
+  lastUpdated?: string;
 }
 
 export interface EstimateItem {

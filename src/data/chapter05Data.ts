@@ -654,8 +654,9 @@ export const chapter05Data: Chapter = {
   title: 'Concepts',
   category: 'Film Narratives',
   visualImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/truck_n0iuex.png',
-  overlayHeadline: 'FINAL FILM CONCEPTS — ALASKA BATTERIES',
-  summary: 'FINAL FILM CONCEPTS (ALASKA BATTERIES — TVC ROUTE 1 with 5 Concepts ft. Iftikhar Thakur: Luxury Car, Truck Fishing Port, Tractor Baraat, Motorcycle Interview, and UPS/Inverter Wedding Morning).',
+  overlayHeadline: 'Film Concepts',
+  summary: 'Film Concepts (Last Updated on Aug/09/Wed)',
+  lastUpdated: 'Aug/09/Wed',
   fullText: `${FINAL_CONCEPTS_RAW}\n\n_____________________________________________________________________________________\n\n${ROUTE_2_RAW}\n\n_____________________________________________________________________________________\n\n${ROUTE_3_RAW}`,
   finalConceptsText: FINAL_CONCEPTS_RAW,
   conceptTabs: [
@@ -664,7 +665,7 @@ export const chapter05Data: Chapter = {
       name: 'Final Concepts',
       badge: '⭐ 5 Master Films',
       isFinal: true,
-      summary: 'FINAL FILM CONCEPTS: ALASKA BATTERIES — TVC ROUTE 1 (5 Full Master Concepts ft. Iftikhar Thakur).',
+      summary: 'Film Concepts (Last Updated on Aug/09/Wed)',
       content: FINAL_CONCEPTS_RAW
     },
     {

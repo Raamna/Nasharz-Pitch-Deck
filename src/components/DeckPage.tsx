@@ -210,7 +210,7 @@ export const DeckPage: React.FC<DeckPageProps> = ({
               Alaska Batteries / Launch Deck
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-zinc-900 font-heading tracking-tight">
-              Campaign review
+              Campaign Review
             </h1>
             <p className="text-xs sm:text-sm text-zinc-500 font-normal mt-1">
               From brief to final execution.
@@ -232,16 +232,20 @@ export const DeckPage: React.FC<DeckPageProps> = ({
           <div className="flex items-center gap-6 sm:gap-8 py-1">
             {data.chapters.map((ch) => {
               const isActive = ch.id === currentChapter.id;
+              const hasUpdate = ch.lastUpdated || ch.summary?.includes('Last Updated');
               return (
                 <button
                   key={ch.id}
                   onClick={() => setActiveChapterId(ch.id)}
-                  className={`relative text-xs font-medium pb-3 transition-all whitespace-nowrap cursor-pointer ${
+                  className={`relative text-xs font-medium pb-3 transition-all whitespace-nowrap cursor-pointer flex items-center gap-1 ${
                     isActive ? 'text-zinc-900 font-bold' : 'text-zinc-400 hover:text-zinc-700'
                   }`}
                 >
-                  <span className="mr-1.5 text-[#b8860b] font-normal">{ch.number}</span>
+                  <span className="mr-1 text-[#b8860b] font-normal">{ch.number}</span>
                   <span>{ch.title}</span>
+                  {hasUpdate && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block animate-pulse ml-0.5" title="Updated recently" />
+                  )}
                   {isActive && (
                     <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-zinc-900 rounded-full"></span>
                   )}
@@ -289,12 +293,35 @@ export const DeckPage: React.FC<DeckPageProps> = ({
             <div>
               {/* Category Header */}
               <div className="flex justify-between items-center text-xs font-normal mb-8">
-                <span className="text-[#b8860b] font-medium">{currentChapter.category || 'The ask'}</span>
+                <span className="text-[#b8860b] font-semibold tracking-wide uppercase text-[11px]">{currentChapter.category || 'The ask'}</span>
+                {currentChapter.lastUpdated && !currentChapter.summary?.includes('Last Updated') && (
+                  <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-900 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
+                    <span>(Last Updated on {currentChapter.lastUpdated})</span>
+                  </span>
+                )}
               </div>
 
               {/* Main Chapter Summary / Body Narrative */}
               <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-zinc-900 font-heading leading-[1.25]">
-                {currentChapter.summary}
+                {currentChapter.summary ? (
+                  currentChapter.summary.split(/(\([^)]+\))/g).map((part, idx) => {
+                    if (part.startsWith('(') && part.endsWith(')')) {
+                      return (
+                        <span
+                          key={idx}
+                          className="font-semibold text-amber-900 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full text-xs sm:text-sm tracking-normal inline-flex items-center gap-1.5 mt-1 sm:mt-0 sm:ml-2 align-middle font-sans shadow-2xs"
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-600 inline-block animate-pulse"></span>
+                          {part}
+                        </span>
+                      );
+                    }
+                    return <span key={idx}>{part}</span>;
+                  })
+                ) : (
+                  currentChapter.title
+                )}
               </h3>
 
               {/* Concept Sub-Tabs Quick Access for Chapter 5 */}
