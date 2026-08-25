@@ -3,6 +3,7 @@ export interface StoryboardFolder {
   name: string;
   conceptName?: string;
   product?: string;
+  pdfUrl?: string;
   images: {
     title: string;
     url: string;

@@ -551,6 +551,81 @@ export const AdminPortal: React.FC<AdminPortalProps> = ({
                     </div>
                   )}
 
+                  {/* Storyboard Folders Management (if present on chapter) */}
+                  {selectedChapter.folders && selectedChapter.folders.length > 0 && (
+                    <div className="p-4 bg-zinc-950/80 rounded-xl border border-zinc-800 space-y-3">
+                      <div className="flex items-center justify-between">
+                        <label className="text-[11px] font-bold text-[#c69a53] uppercase tracking-wider block">
+                          🎬 Storyboard Route Folders ({selectedChapter.folders.length} Folders)
+                        </label>
+                        <span className="text-[10px] text-zinc-500">Includes Sheets & Drive PDFs</span>
+                      </div>
+                      <div className="space-y-3">
+                        {selectedChapter.folders.map((folder, fIdx) => (
+                          <div key={folder.id} className="p-3 bg-zinc-900/90 rounded-lg border border-zinc-800 space-y-2">
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                                📁 {folder.name} <span className="text-zinc-500 font-normal">({folder.images.length} Sheets)</span>
+                              </span>
+                              {folder.pdfUrl && (
+                                <a
+                                  href={folder.pdfUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-[10px] text-[#c69a53] hover:underline flex items-center gap-1"
+                                >
+                                  View PDF Link ↗
+                                </a>
+                              )}
+                            </div>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px]">
+                              <div>
+                                <label className="text-[10px] text-zinc-400 block mb-0.5">Route Concept Name</label>
+                                <input
+                                  type="text"
+                                  value={folder.conceptName || ''}
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    commitDeckUpdate((prev) => ({
+                                      ...prev,
+                                      chapters: prev.chapters.map((c) => {
+                                        if (c.id !== selectedChapterId) return c;
+                                        const newFolders = [...(c.folders || [])];
+                                        newFolders[fIdx] = { ...newFolders[fIdx], conceptName: val };
+                                        return { ...c, folders: newFolders };
+                                      }),
+                                    }));
+                                  }}
+                                  className="w-full bg-black/60 border border-zinc-700 rounded p-1.5 text-xs text-zinc-200 focus:outline-none focus:border-[#c69a53]"
+                                />
+                              </div>
+                              <div>
+                                <label className="text-[10px] text-zinc-400 block mb-0.5">Google Drive PDF URL</label>
+                                <input
+                                  type="text"
+                                  value={folder.pdfUrl || ''}
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    commitDeckUpdate((prev) => ({
+                                      ...prev,
+                                      chapters: prev.chapters.map((c) => {
+                                        if (c.id !== selectedChapterId) return c;
+                                        const newFolders = [...(c.folders || [])];
+                                        newFolders[fIdx] = { ...newFolders[fIdx], pdfUrl: val };
+                                        return { ...c, folders: newFolders };
+                                      }),
+                                    }));
+                                  }}
+                                  className="w-full bg-black/60 border border-zinc-700 rounded p-1.5 text-xs text-zinc-200 focus:outline-none focus:border-[#c69a53]"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
                   <div>
                     <label className="text-[11px] font-semibold text-zinc-400 block mb-1">Key Deliverables (Comma separated)</label>
                     <input

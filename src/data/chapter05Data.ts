@@ -1,12 +1,8 @@
 import { Chapter } from '../types';
 
-export const FINAL_CONCEPTS_RAW = `FINAL FILM CONCEPTS
-
-ALASKA BATTERIES — TVC ROUTE 1
-
-Concept 1: "Battery Expert"
-“Battery Expert Entry”
-
+export const CAR_CONCEPT_RAW = `Concept 1: Car "Pehelwan Reveal"
+“Battery Phelwan Entry”
+Car
 A massive traffic jam on a single road.
 
 At the very front: a new, expensive luxury car, bonnet open.
@@ -16,61 +12,47 @@ The owner is frustrated, trying to reconnect the battery terminals while the ent
 A traffic policeman arrives — Iftikhar Thakur.
 
 He looks at the driver.
-
 POLICE THAKUR:
-
-“Battery?”
-
+بیٹری
 The driver slowly shakes his head with complete disappointment.
-
-Thakur looks at the traffic jam.
-
-Looks back at him.
-
-Then explodes:
-
-“BATTERRRRRRRRY EXPERRRRRRRRRT!”
-
+Thakur:
+جب بیٹری کا ہو کباڑہ
+تو لگاؤ پہلوان کا اکھاڑہ
+Car Owner: 
+کیوں؟
+دھکا لگانا ہے
+Then Thakur in Panjabi pehlvan style slaps on his thai:
+نا ۔۔۔ ٹینشن مُکانی ہے!
+first blows vistal and and explodes:
+آ جاؤ …پہلوانو ۔۔۔ !!!
 (THE ARRIVAL)
-
+پہلوان
+او پہلوان
+مشکلوں کو پچھاڑے
+ٹینشنوں کو اکھاڑے
+لائف میں کرنٹ بھر کے
+سکون کی ترنگ بھر دے
+!!!!پہلوااااااااااااااان
 Suddenly, another Iftikhar Thakur steps out of the same policeman body in a white lab coat.
-
-His expert team in same lab costume arrives dramatically from different directions — running, sliding, carrying equipment — and instantly transforms the roadside into a ridiculous high-tech battery laboratory.
-
-The Police Thakur watches all this and poses as a confident man in funny style (knoting both arms on chest).
-
-THE EXPERT TEST
-
-EXPERT THAKUR:
-
+His Phelwan team in same lab costume arrives dramatically from different directions — running, sliding, carrying equipment — and instantly transforms the roadside into a ridiculous high-tech battery laboratory.
+The Police Thakur watches all this and poses as a confident man in funny style (knoting both arms on chest). 
+THE PHELWAN TEST
+PHELWAN THAKUR:
 “Graphite Technology?”
-
 TEAM:
-
 “NO!”
-
 “Heat Resistance?”
-
 “NO!”
-
 “Long Battery Life?”
-
 “NO!”
-
 “UPTIME?”
-
 “NO!”
-
 “9 Months Free Replacement Warranty?”
-
 “NO!”
-
-Expert Thakur looks at the battery.
-
+Phelwan Thakur looks at the battery.
 Then looks at the driver.
 
 Then dramatically:
-
 “Peechay tu phir sirf dabba hi bachta hai!”
 
 Police Thakur, genuinely shocked:
@@ -83,55 +65,36 @@ Driver, almost casually:
 
 (ALASKA REVEAL)
 
-The Expert reaches behind him.
+The Phelwan reaches behind him.
 
 Music shifts.
-
 He presents proudly:
-
-“Pesh hai Alaska ki jadeed tareen battery…”
-
+"پیش ہے الاسکا کی جدید ترین بیٹری..."
 Beat.
-
-“Graphite Technology ke saath.”
-
-Then:
-
-“Har Lamha Aitemaad.”
-
+"گریفائٹ ٹیکنالوجی کے ساتھ۔"
+ٹینشن فری راستہ۔۔۔
+ALASKA
+پہلوان جئی دم دار بیٹری!
 RESOLUTION
-
-The Expert team installs the Alaska battery.
-
+The Phelwan team installs the Alaska battery.
 Engine starts immediately.
-
 VROOM.
-
 The entire traffic jam begins moving.
-
-End Logo 
-"ALASKA" Har Lamha Aitemad
-
+End Logo
+"ALASKA" 
+Har Lamha Aitemaad
 (Twist)
-
-The Police Thakur is completely covered in silver foil, tapping few torn pieces on his arms.
-
-Expert Thakur walks in, (Shocking expressions) stops and stares.
-
-“Police ka uniform change ho gaya hai kia?”
-
+The Police Thakur is completely covered in silver foil, tapping a few torn pieces on his arms.
+Phelwan Thakur walks in, (shocking expressions) stops and stares.
+"پولیس کا یونیفارم چینج ہو گیا ہے کیا؟"
 Police Thakur, completely serious:
-
-“Nahin.”
-
+"نہیں۔"
 Beat.
+"آج گرمی زیادہ ہے... سوچا گریفائٹ ٹیکنالوجی سے فائدہ اٹھا لوں۔"`;
 
-“Aaj garmi zyada hai... socha Graphite Technology se faida utha loon.”
-
-_____________________________________________________________________________________
-
-Concept 2: "Battery Expert"
-TRUCK — FISHING PORT
+export const TRUCK_CONCEPT_RAW = `Concept 2: Truck "Fish"
+TRUCK — FISHING PORT / Truck Art
+Truck
 OPEN
 Early morning at a busy fishing port.
 Fishing boats are coming in. Fish are being unloaded. Workers are carrying crates of fresh catch.
@@ -153,6 +116,7 @@ THAKUR:
 “Kyun Lala... gaari nahi maan rahi?”
 DRIVER:
 “Battery.”
+ماڑا خانہ خراب کر دیا
 Thakur freezes.
 A tiny pause.
 He slowly repeats to himself:
@@ -165,67 +129,85 @@ Then back at the battery.
 Almost to himself:
 “Ohhh... battery...”
 His expression changes.
-He suddenly understands the seriousness of the situation.
-He turns toward the truck.
+بیٹری کر دے خانہ خراب
+تو پہلوان کی پکڑ لاجواب 
+He turns toward the truck and vistal.
 THAKUR:
-“BATTERY EXPERRRRRT!”
+آ جاؤ …پہلوانو ۔۔۔ !!!
+THE Pehlwan ARRIVAL
 
-THE EXPERT ARRIVAL
-Immediately, the Alaska Battery Expert Team arrives.
+پہلوان
+او پہلوان
+مشکلوں کو پچھاڑے
+ٹینشنوں کو اکھاڑے
+لائف میں کرنٹ بھر کے
+سکون کی ترنگ بھر دے
+!!!!پہلوااااااااااااااان او
+
+Immediately, the Alaska Battery Phelwan Team arrives.
 This time the arrival can be spectacular and location-specific — a massive Alaska mobile laboratory truck drives into the fishing port.
 The team jumps out and rapidly sets up around the truck.
-Expert Thakur emerges in his white lab coat.
-The familiar Battery Expert interrogation begins.
-and places new "Battery" in the truck 
-EXPERT:
+Phelwan Thakur emerges in his white lab coat.
+The familiar Battery Phelwan interrogation begins.
+and moves forward to ask his team about the report.
+PHELWAN:
 “Graphite Technology?”
 TEAM:
-“YES!”
-EXPERT:
+“NO!”
+PHELWAN:
 “Heat Resistance?”
 TEAM:
-“YES!”
-EXPERT:
+“NO!”
+PHELWAN:
 “Long Battery Life?”
 TEAM:
-“YES!”
-EXPERT:
+“NO!”
+PHELWAN:
 “Uptime?”
 TEAM:
-“YES!”
-EXPERT:
+“NO!”
+PHELWAN:
 “Reliability?”
 TEAM:
-“YES!”
-EXPERT:
+“NO!”
+PHELWAN:
 “Dependability?”
 TEAM:
-“YES!”
-EXPERT:
+“NO!”
+PHELWAN:
 “9 Months Free Replacement Warranty?”
 TEAM:
-“YES!”
+“NO!”
+PHELWAN:
+بس، الاسکا لگاؤ
+ٹینشن مٹاؤ
 
+
+Meanwhile New Alaska is being placed in the truck.
 ALASKA REVEAL
 The camera now reveals ALASKA Battery in the truck.
-EXPERT:
-“Pesh hai Alaska ki jadeed tareen battery...”
-“Graphite Technology aur 9 mah ki powerful warranty"
-“Alaska kay Sath...Har Lamha Aitemaad.”
-The driver turns the key.
+PHELWAN:
+"پیش ہے الاسکا کی
+جدید ترین بیٹری..."
+"گریفائٹ ٹیکنالوجی اور
+نو ماہ کی طاقتور وارنٹی"
+"الاسکا کے ساتھ...
+ہر لمحہ اعتماد۔"
+ The driver turns the key.
 VROOM!
 The truck comes alive.
 
 THE TWIST
 Driver thanking THAKUR: 
-Driver: dher mehrbani da...
-Thankur:"shykriya wapsi per warna..."
-“...truck se pehle badboo pohanch jani ae.”
+Driver: ڈھیر مہربانی دا...
+Thankur:
+شکریہ واپسی پر، ورنہ...
+"...ٹرک سے پہلے
+بدبو پہنچ جانی اے۔"`;
 
-_____________________________________________________________________________________
-
-Concept 3: "Battery Expert"
+export const TRACTOR_CONCEPT_RAW = `Concept 3: Tractor "Field"
 TRACTOR — “BARAAT IN THE FIELD”
+Tractor
 OPEN
 A beautiful Punjabi agricultural field.
 A tractor is stuck in the middle of the field.
@@ -234,39 +216,53 @@ Cut to a shot of the bonnet open, with the driver trying to fix the battery conn
 A little distance away, Iftikhar Thakur appears as a Chaudhary, as if he is a guest from the wedding.
 He arrives and looks inside the bonnet.
 Looks at the farmer.
-THAKUR:
-“Ki hoya?”
-FARMER:
-“Battery, Chaudhary Sahib.”
-Thakur freezes.
-THAKUR:
-“Battery?”
-Beat.
+"کی ہویا؟"
+Farmer:
+"بیٹری، چوہدری صاحب۔"
+Thakur:
+"بیٹری؟"
 He looks toward the horizon.
-“Ajj?”
-Suddenly—
-“BATTERY EXPERRRRRT!”
-THE EXPERT ARRIVAL
+"اج؟"
+Suddenly— Thakur taps his thai in pure pehelwani style:
+جدوں بیٹری دا ہؤے کباڑا
+ تاں لاؤ پہلوان دا اکھاڑا۔
+FARMER:
+کیوں؟
+دھکا لان لئی۔
+Thakur:
+ناں
+ٹینشن مُکاؤن لئی۔ 
+Thakur Vistal:
+THAKUR:
+آ جاؤ …پہلوانو ۔۔۔ !!!
+THE Pehlwan ARRIVAL
+
+پہلوان
+او پہلوان
+مشکلوں کو پچھاڑے
+ٹینشنوں کو اکھاڑے
+لائف میں کرنٹ بھر کے
+سکون کی ترنگ بھر دے
 From the distance, we hear a tractor engine approaching.
 A beautifully designed Alaska-branded laboratory caravan, towed behind a tractor, enters the field.
 It looks like a sophisticated mobile battery laboratory — not a truck.
 The caravan stops beside the stranded tractor.
-The Battery Expert is sitting beside the driver on the tractor's wheel fender, wearing his white lab coat.
+The Battery Phelwan is sitting beside the driver on the tractor's wheel fender, wearing his white lab coat.
 He jumps down.
-The Expert Team emerges from the caravan with diagnostic equipment.
+The Phelwan Team emerges from the caravan with diagnostic equipment.
 They immediately begin examining the tractor battery.
-While the Experts are examining the battery...
+While the Phelwans are examining the battery...
 A full Punjabi baraat is approaching.
-The Expert begins asking his team questions.
+The Phelwan begins asking his team questions.
 But every answer is suddenly accompanied by the dhol beat.
-EXPERT:
+PHELWAN:
 “Graphite Technology?”
 TEAM:
 “NO!”
 DHOL: DHAM!
 The baraat reacts rhythmically:
 “NO!”
-EXPERT:
+PHELWAN:
 “Heat Resistance?”
 DHOL: DHAM!
 Baraat:
@@ -274,23 +270,23 @@ Baraat:
 DHOL: DHAM!
 Baraat:
 “NO!”
-EXPERT:
+PHELWAN:
 “Horn?”
 DHOL: DHAM!
 Baraat:
 “NO!”
-EXPERT:
+PHELWAN:
 “Lights?”
 DHOL: DHAM!
 Baraat:
 “NO!”
-EXPERT:
+PHELWAN:
 “Power?”
 DHOL: DHAM!
 Baraat:
 “NO!”
 The questions become faster.
-EXPERT:
+PHELWAN:
 “Uptime?”
 “Reliability?”
 “Dependability?”
@@ -301,15 +297,16 @@ The entire baraat is now effectively becoming the comic chorus.
 The Chaudhary is getting increasingly desperate because the baraat is almost at the tractor.
 
 ALASKA
-The Expert finally looks up.
+The Phelwan finally looks up.
 He turns toward the Chaudhary.
-EXPERT:
-“Bas... hun Alaska lao.”
+PHELWAN:
+"بس... ہُن الاسکا لاؤ۔"
 The team installs the Alaska Battery.
-The Expert closes the bonnet.
-EXPERT:
-“Graphite Technology aur 9 mah ki muft tabdeeli ki warranty ke saath.”
-“Alaska ke saath... Har Lamha Aitemaad.”
+The Phelwan closes the bonnet.
+PHELWAN:
+"گریفائٹ ٹیکنالوجی اور نو ماہ کی مفت تبدیلی کی وارنٹی کے ساتھ۔"
+"الاسکا کے ساتھ...
+ہر لمحہ اعتماد۔"
 The farmer turns the key.
 VROOM!
 The tractor starts.
@@ -317,8 +314,8 @@ End Tail:
 ALASKA
 Har Lamha Aitemaad
 THAKUR:
-“Chalo Malik Sahib... chal ke khana khatay hain ab.”
-He waits.
+"چلو ملک صاحب... چل کے کھانا کھاتے ہیں اب۔
+"He waits.
 Suddenly, the dhol stops.
 Thakur looks around, confused.
 The camera slowly pulls back.
@@ -327,99 +324,114 @@ The entire baraat is moving rapidly in the opposite direction, disappearing into
 Thakur stares.
 Realization.
 THAKUR:
-“Hain? Barat ne idhar jaana tha!”
+"ہیں؟ بارات نے اِدھر جانا تھا
 He suddenly runs after them.
-“O Malik Sahib! Thero!”
-He runs across the field as the baraat disappears into the distance.
+"او ملک صاحب
+ٹھہرو 
+He runs across the field as the baraat disappears into the distance.`;
 
-_____________________________________________________________________________________
-
-Concept 4: "Battery Expert"
+export const BIKE_CONCEPT_RAW = `Concept 4: Bike "Interview"
 MOTORCYCLE — “Interview”
+Bike
 OPEN
 We see a young man in a suit, with a file, pushing a bike on the road, and the taxi bike guy (helmet is placed diagonally on his head to see clearly) says:
-BIKER: “Thora sa dhakka den, abhi start ho jaye gi.”
+BIKER:
+"تھوڑا سا دھکا دیں، ابھی سٹارٹ ہو جائے گی۔"
 The young man looks at his wristwatch and asks him:
-"Bhai, interview ka time na nikal jaye?"
-We see I.T. outside his building, brushing on the roadside like a typical street morning man. (or) we see I.T wearing safari suite and with office leather bag / checkered shirt and pants with black leather bad.
-“Kia hua?”
-Biker:
-“Battery.”
+YOUNG MAN:
+"بھائی، انٹرویو کا ٹائم نہ نکل جائے؟"
+we see Iftikhar Thakur wearing a safari suit with an office leather bag / checkered shirt and pants with a black leather bag.
 I.T.:
-“Hain?”
-“Batterrrry Expert!”
-We suddenly hear the thunderous sound of helicopter blades.
-The young man, biker and Thakur look up.
-A helicopter descends into the road/open area behind them.
-A ladder drops from the helicopter.
-The Battery Expert Team begins descending rapidly.
-Finally, I.T. Expert appears at the helicopter door, wearing his white lab coat.
-He confidently climbs down the ladder like a specialist arriving for an emergency operation.
-As soon as he reaches the ground, the team immediately gets to work and sets up the mobile battery laboratory around the motorcycle.
-Battery Expert, like an experienced surgeon:
+"کیا ہوا؟"
+BIKER:
+"بیٹری۔"
+I.T.:
+"ہیں؟"
+I.T.in pure pehelwani style:
+جب بیٹری دے دھکے،
+تو فیر چک دے فٹے۔ 
+THAKUR:
+آ جاؤ
+پہلوانو ۔۔۔ !!! …
+THE Pehlwan ARRIVAL
+
+پہلوان
+او پہلوان
+مشکلوں کو پچھاڑے
+ٹینشنوں کو اکھاڑے
+لائف میں کرنٹ بھر کے
+سکون کی ترنگ بھر دے
+!!!!پہلوااااااااااااااان او
+I.T. Phelwan appears leading his team, wearing his white lab coat.
+As soon as team reachess, they immediately get to work and sets up the mobile battery laboratory around the motorcycle.
+Battery Phelwan, like an experienced surgeon:
 He is handed a long, big paper report.
 He studies it seriously.
-I.T. Expert:
-“Hmm... haalat to bohat critical hai.”
+I.T. PHELWAN:
+"ہمم... حالت تو بہت کریٹیکل ہے۔"
 Then he looks over his glasses at the boy:
-“Interview kab hai?”
-Interview Guy:
-“10 minute mein.”
-I.T. Expert reacts:
-“Hain... aithe khlo.”
+I.T. PHELWAN:
+"انٹرویو کب ہے؟"
+INTERVIEW GUY:
+"دس منٹ میں۔"
+I.T. Phelwan reacts:
+I.T. PHELWAN:
+"ہیں... ایتھے کھلو۔"
 Beat.
- “Operation Interview shuru...”
+I.T. PHELWAN:
+"آپریشن انٹرویو شروع..."
 The team instantly changes the battery.
 (Different shots: taking out the battery, branding not visible; removing the old battery as if it is the failed organ and the new one is being implanted.)
 Screws are fixed, everything is done.
 Now the rider hits the kick and the bike starts.
 I.T. WITH PRODUCT ATTRIBUTES:
-Expert:
+Phelwan:
 “Graphite Technology?”
 Team checks.
 “YES!”
-Expert:
+Phelwan:
 “Heat Resistance?”
 Team:
 “YES!”
-Expert:
+Phelwan:
 “Long Battery Life?”
 Team:
 “YES!”
-Expert:
+Phelwan:
 “Uptime?”
 “Reliability?”
 “Dependability?”
 Team:
 “YES!”
-Expert:
+Phelwan:
 “9 Months Free Replacement Warranty?”
 Team:
 “YES!”
-Expert looks at the young man.
+Phelwan looks at the young man.
 He hops on and kicks the motorcycle.
 VROOM!
-I.T. Expert:
-“Pakistan ki jadeed tareen battery...”
-“Alaska Graphite Technology aur 9 mah ki lambi tareen warranty ke saath.”
-“Alaska ka intekhab... Har Lamha...”
+I.T. Phelwan:
+"پاکستان کی جدید ترین بیٹری..."
+"الاسکا گریفائٹ ٹیکنالوجی اور
+نو ماہ کی لمبی ترین وارنٹی کے ساتھ۔"
+"الاسکا کا انتخاب...
+ہر لمحہ..."
 Everyone:
-“Aitemaad!”
+"اعتماد!"
 END SLIDE
 Alaska
 Har Lamha Aitemaad
 Thakur turns back and sees the interview guy, who is checking the location map on his mobile.
-Biker Thakur: “O jana, kahan hai?”
-Interview Boy (excited): “Yahin to aana tha!”
-Expert I.T.: “Lo ji, bechara bike pe nahi, paidal aaya hai.”
-Expert I.T: Lo ji bechara pese de kar bhi pedal aya hai (Option)
-Clerk I.T to Expert I.T: Chaha ji ab aap kese jao ge helicopter tu nikl gaya
-Expert: Bhai Jab se petrol mehnga hua hai. Wapas pedal hi jata hun 
+Biker Thakur:
+"او جانا، کہاں ہے؟"
+Interview Boy (excited):
+"یہیں تو آنا تھا!"
+Phelwan I.T.:
+"لو جی، بیچارہ بائیک پہ پیدل آیا ہے۔"`;
 
-_____________________________________________________________________________________
-
-Concept 5: "Battery Expert"
-MOTORCYCLE — “Wedding Home”
+export const UPS_CONCEPT_RAW = `Concept 5: UPS "Wedding"
+UPS/Invertor — “Wedding Home”
+UPS
 OPEN
 
 UPS / Inverter — “Wedding Morning”
@@ -438,8 +450,9 @@ In the kitchen:
 •	Someone is getting the bride/groom ready
 The whole house is running on electricity.
 Then suddenly—
-Some male voice:
-“Nashtay mein kitna time hai?”
+Some male voice (groom’s father):
+میرا کرتا پریس ہو گیا کیا؟"
+
 LIGHTS OUT.
 Everything stops.
 The blender dies.
@@ -447,26 +460,40 @@ The iron stops.
 The hair dryer goes silent.
 Everyone freezes.
 A mother shouts from the kitchen:
-“UPS chalao!”
+“یو پی ایس چلاؤ!”
 Someone checks it.
-“Battery nahin chal rahi... Light kab aaye gi?”
-Mother from the kitchen:
-“Beta, pehle kabhi bata kar gayi hai?”
+“بیٹری نہیں چل رہی... لائٹ کب آئے گی؟”
+Mother from the kitchen (fading out voice in the bg):
+“بیٹا، پہلے کبھی بتا کر گئی ہے؟”
 Cut to Iftikhar Thakur taking out his clothes from his leather bag.
 He hears the word:
-“Battery...”
+“بیٹری...”
 He slowly zips his bag.
 THAKUR:
-“Battery?”
+“بیٹری؟”
 I.T. turns into an action hero and comes out into the courtyard.
+"جب یو پی ایس پہ نہ ہو کنٹرول
+تو بیٹا... پہلوان کو بول۔"
+
 Then—
-“BATTERY EXPERRRRRT!”
-That gives us a very strong reason for the Expert Team to arrive.
-And unlike the vehicle films, here the Expert Team can arrive as a fully equipped Alaska household power-response unit, entering through the gate with their equipment.
-EXPERT:
-“Report?”
-EXPERT:
-“Kia kuch chal sakta hai?”
+THAKUR Vistal:
+آ جاؤ …پہلوانو ۔۔۔ !!!
+THE Pehlwan ARRIVAL
+
+پہلوان
+او پہلوان
+مشکلوں کو پچھاڑے
+ٹینشنوں کو اکھاڑے
+لائف میں کرنٹ بھر کے
+سکون کی ترنگ بھر دے
+!!!!پہلوااااااااااااااان او
+
+That gives us a very strong reason for the Phelwan Team to arrive.
+And unlike the vehicle films, here the Phelwan Team can arrive as a fully equipped Alaska household power-response unit, entering through the gate with their equipment.
+PHELWAN:
+“رپورٹ؟”
+PHELWAN:
+“کیا کچھ چل سکتا ہے؟”
 Fan?
 TEAM:
 “No.”
@@ -482,30 +509,116 @@ TEAM:
 Kettle?
 TEAM:
 “No.”
-Expert, while looking at the huge UPS:
-“Tu phir itni jagah kyun gheri hui hai?”
+Phelwan, while looking at the huge UPS:
+“تو پھر اتنی جگہ کیوں گھیری ہوئی ہے؟”
 DULHA:
-“Ab kya karein?”
-Expert turns towards his team:
-EXPERT:
-“Aitemaad.”
+“اب کیا کریں؟”
+Phelwan turns towards his team:
+PHELWAN:
+“اعتماد۔”
 They instantly open a new Alaska inverter carton and reveal the new Alaska battery.
-EXPERT:
-“Pesh hai nayi Alaska.”
-“Alaska ki thick plates deti hain zyada aur lamba backup.”
+PHELWAN:
+“پیش ہے نئی الاسکا۔”
+“الاسکا کی تھک پلیٹس دیتی ہیں زیادہ اور لمبا بیک اپ۔”
 Deep Cycle
 Long Backup
-Graphite Technology aur nau mah ki muft tabdeeli ki warranty.
-Graphite celebrating the new inverter and battery, and everything comes alive again.
+Graphite Technology
+ اور نو ماہ کی مفت تبدیلی کی وارنٹی۔
+Family celebrating the new inverter and battery, and everything comes alive again.
 ALASKA
 Har Lamha Aitemaad
 A woman brings a huge carton full of plates.
-WOMAN TO EXPERT TEAM:
-“Puttar, yeh plates faltu pari hain, check karo agar kam ajayen.”
+WOMAN TO PHELWAN TEAM:
+“پُتّر، یہ پلیٹیں فالتو پڑی ہیں، چیک کرو اگر کام آ جائیں۔”
 Guest I.T.:
-“Itni plates? Kyun, Khala, kya poore mohallay mein light baantni hai?”
-EXPERT:
-“Yeh plates lagti to aap ka apna transformer hota.”`;
+“اتنی پلیٹیں؟ کیوں، خالہ، کیا پورے محلے میں لائٹ بانٹنی ہے؟”
+PHELWAN:
+“یہ پلیٹیں لگتیں تو آپ کا اپنا ٹرانسفارمر ہوتا۔”`;
+
+export const JINGLES_DIALOGUES_RAW = `Jingle & Dialogue Options:
+
+
+
+
+Option- A
+داؤ لگا ۔۔۔  چل داؤ لگا
+مشکلاں پچھاڑ
+ٹینشن نوں اکھاڑ
+گڈی اچ کرنٹ دا
+فِٹ کر نیا کھڑاک
+
+Option- B
+کام دکھا ۔۔۔ چل کام دکھا
+مشکلاں پچھاڑ
+ٹینشن نوں اکھاڑ
+گڈی اچ کرنٹ بھر
+سکون دی ترنگ بھر
+
+Option- C
+دم دکھا دے ۔۔۔ دکھا دے دم دکھا دے
+مشکلاں پچھاڑ
+ٹینشن نوں اکھاڑ
+گڈی اچ کرنٹ بھر
+سکون دی ترنگ بھر
+
+________________________________________
+
+& Dialogue Options
+
+Thakur: 
+ اتنی خوبیاں کسی بیٹری میں ہوندی ایں بھلا؟
+Expert:
+کیوں نہیں ْ۔۔۔ ۔۔۔ہے نا یہ ۔۔۔  
+نئی دم دارماڈرن بیٹری ۔۔۔
+ALASKA!
+
+Thakur:
+پہلوان!
+اس میں ساری خوبیاں ہوندی ایں ۔۔۔؟
+Expert:
+ساری جی ساری!
+ایوین تے نئیں کہندے اسے ۔۔۔
+پہلوان جیسی دم دار بیٹری! 
+
+MVO:
+ٹینشن فری راستہ ۔۔۔
+ALASKA
+پہلوان جئی دم دار بیٹری!
+Ending Dialogues
+
+Expert:
+سر جی ۔۔۔ یہ کیا؟
+Thakur:
+گرمی مُکان لئی ۔۔۔
+ اب پولیس بھی پنی پیک گریفائٹ ٹیکنالوجی
+استعمال کرے گی ۔۔۔
+الاسکا کی طرح!`;
+
+export const FINAL_CONCEPTS_RAW = `CAMPAIGN FILM CONCEPTS
+
+ALASKA BATTERIES — TVC ROUTE 1
+
+${CAR_CONCEPT_RAW}
+
+.........................................................................................
+
+${TRUCK_CONCEPT_RAW}
+
+________________________________________
+
+${TRACTOR_CONCEPT_RAW}
+
+________________________________________
+
+${BIKE_CONCEPT_RAW}
+
+________________________________________
+
+${UPS_CONCEPT_RAW}
+
+________________________________________
+
+${JINGLES_DIALOGUES_RAW}`;
 
 export const ROUTE_2_RAW = `ALASKA BATTERIES — TVC ROUTE 2
 “AITEMAAD KA NAYA NAAM”
@@ -648,6 +761,553 @@ COMPLETE JINGLE
 END FRAME
 ALASKA — ہر لمحہ اعتماد`;
 
+export const CONCEPTS_PDF_ENGLISH_RAW = `CAMPAIGN FILM CONCEPTS
+ALASKA BATTERIES — TVC ROUTE 1
+Concept 1: Car "Pehelwan Reveal"
+Car
+A massive traffic jam on a single road.
+At the very front: a new, expensive luxury car, bonnet open.
+The owner is frustrated, trying to reconnect the battery terminals while the entire traffic behind him waits.
+A traffic policeman arrives — Iftikhar Thakur.
+He looks at the driver.
+POLICE THAKUR:
+"Battery?"
+The driver slowly shakes his head with complete disappointment.
+Thakur:
+"Jab battery ka ho kabaara,
+to lagao Phelwan ka akhaara."
+Car Owner:
+"Kyun?"
+"Dhakka lagana hai."
+Then Thakur in Panjabi pehlwan style slaps on his thigh:
+"Na... tension mukaanee hai!"
+First blows whistle and explodes:
+"Aa jao... Phelwano...!!!"
+(THE ARRIVAL)
+Phelwan
+O Phelwan
+Mushklaan nu pachhaare
+Tensionan nu ukhaare
+Life vich current bhar ke
+Sukoon di tarang bhar de
+!!!!Phelwaaaaaaaaaaan
+Suddenly, another Iftikhar Thakur steps out of the same policeman body in a white lab coat.
+His Phelwan team in same lab costume arrives dramatically from different directions — running, sliding, carrying equipment — and instantly transforms the roadside into a ridiculous high-tech battery laboratory.
+The Police Thakur watches all this and poses as a confident man in funny style (knotting both arms on chest).
+THE PHELWAN TEST
+PHELWAN THAKUR:
+"Graphite Technology?"
+TEAM:
+"NO!"
+"Heat Resistance?"
+"NO!"
+"Long Battery Life?"
+"NO!"
+"UPTIME?"
+"NO!"
+"9 Months Free Replacement Warranty?"
+"NO!"
+Phelwan Thakur looks at the battery.
+Then looks at the driver.
+Then dramatically:
+"Peechay tu phir sirf dabba hi bachta hai!"
+Police Thakur, genuinely shocked:
+"Hain? Itna kuch aik battery mein?"
+Driver, almost casually:
+"Socho... aisi battery milegi kahan se?"
+(ALASKA REVEAL)
+The Phelwan reaches behind him.
+Music shifts.
+He presents proudly:
+"Pesh hai Alaska ki jadeed tareen battery..."
+Beat.
+"Graphite Technology ke saath."
+Tension Free Rasta...
+ALASKA
+Phelwan ji dam daar battery!
+RESOLUTION
+The Phelwan team installs the Alaska battery.
+Engine starts immediately.
+VROOM.
+The entire traffic jam begins moving.
+End Logo
+"ALASKA"
+Har Lamha Aitemaad
+(Twist)
+The Police Thakur is completely covered in silver foil, tapping a few torn pieces on his arms.
+Phelwan Thakur walks in, (shocking expressions) stops and stares.
+"Police ka uniform change ho gaya hai kya?"
+Police Thakur, completely serious:
+"Nahin."
+Beat.
+"Aaj garmi zyada hai... socha Graphite Technology se faida utha loon."
+________________________________________
+Concept 2: Truck "Fish"
+Truck
+OPEN
+Early morning at a busy fishing port.
+Fishing boats are coming in. Fish are being unloaded. Workers are carrying crates of fresh catch.
+Nearby, Iftikhar Thakur is sitting casually on a small charpai beside the boat, sipping chai.
+He hears:
+"Ignition sound"
+He looks over.
+A loaded refrigerated truck is standing ready to leave, but it isn't starting.
+Thakur puts his chai down.
+Cut.
+He walks toward the truck.
+THE PROBLEM
+We now see the truck driver with the bonnet open, trying to fix the battery terminals.
+Thakur comes alongside him.
+He looks at the truck.
+Then at the driver.
+THAKUR:
+"Kyun Lala... gaari nahi maan rahi?"
+DRIVER:
+"Battery."
+"Maara khaana kharaab kar ditta."
+Thakur freezes.
+A tiny pause.
+He slowly repeats to himself:
+THAKUR:
+"Battery..."
+He looks at the enormous truck.
+Then at the mountain of fish.
+Then at the fishermen.
+Then back at the battery.
+Almost to himself:
+"Ohhh... battery..."
+His expression changes.
+"Battery kar de khaana kharaab,
+taan Phelwan di pakar laajawaab."
+He turns toward the truck and whistles.
+THAKUR:
+"Aa jao... Phelwano...!!!"
+THE PHELWAN ARRIVAL
+Phelwan
+O Phelwan
+Mushklaan nu pachhaare
+Tensionan nu ukhaare
+Life vich current bhar ke
+Sukoon di tarang bhar de
+O  Phelwaaaaaaaaaaan !!!!
+Immediately, the Alaska Battery Phelwan Team arrives.
+This time the arrival can be spectacular and location-specific — a massive Alaska mobile laboratory truck drives into the fishing port.
+The team jumps out and rapidly sets up around the truck.
+Phelwan Thakur emerges in his white lab coat.
+The familiar Battery Phelwan interrogation begins.
+and moves forward to ask his team about the report.
+PHELWAN:
+"Graphite Technology?"
+TEAM:
+"NO!"
+PHELWAN:
+"Heat Resistance?"
+TEAM:
+"NO!"
+PHELWAN:
+"Long Battery Life?"
+TEAM:
+"NO!"
+PHELWAN:
+"Uptime?"
+TEAM:
+"NO!"
+PHELWAN:
+"Reliability?"
+TEAM:
+"NO!"
+PHELWAN:
+"Dependability?"
+TEAM:
+"NO!"
+PHELWAN:
+"9 Months Free Replacement Warranty?"
+TEAM:
+"NO!"
+PHELWAN:
+"Bas, Alaska lagao."
+"Tension mukkao."
+Meanwhile New Alaska is being placed in the truck.
+ALASKA REVEAL
+The camera now reveals ALASKA Battery in the truck.
+PHELWAN:
+"Pesh hai Alaska ki jadeed tareen battery..."
+"Graphite Technology aur nau mah ki taaqatwar warranty."
+"Alaska ke saath... Har Lamha Aitemaad."
+The driver turns the key.
+VROOM!
+The truck comes alive.
+THE TWIST
+Driver thanking THAKUR:
+DRIVER:
+"Dher mehrbani da..."
+THAKUR:
+"Shukriya wapsi per, warna..."
+"...truck se pehle badboo pohanch jani ae."
+________________________________________
+Concept 3: Tractor "Field"
+Tractor
+OPEN
+A beautiful Punjabi agricultural field.
+A tractor is stuck in the middle of the field.
+The farmer is trying to start the tractor to clear the passage.
+Cut to a shot of the bonnet open, with the driver trying to fix the battery connectors.
+A little distance away, Iftikhar Thakur appears as a Chaudhary, as if he is a guest from the wedding.
+He arrives and looks inside the bonnet.
+Looks at the farmer.
+"Ki hoya?"
+Farmer:
+"Battery, Chaudhary Sahib."
+Thakur:
+"Battery?"
+He looks toward the horizon.
+"Ajj?"
+Suddenly— Thakur taps his thigh in pure pehelwani style:
+"Jadon battery da hove kabaara,
+taan lao Phelwan da akhaara."
+FARMER:
+"Kyun?"
+"Dhakka laan layi."
+THAKUR:
+"Naa."
+"Tension mukaun layi."
+THAKUR Vistal:
+"Aa jao... Phelwano...!!!"
+THE PHELWAN ARRIVAL
+Phelwan
+O Phelwan
+Mushklaan nu pachhaare
+Tensionan nu ukhaare
+Life vich current bhar ke
+Sukoon di tarang bhar de
+From the distance, we hear a tractor engine approaching.
+A beautifully designed Alaska-branded laboratory caravan, towed behind a tractor, enters the field.
+It looks like a sophisticated mobile battery laboratory — not a truck.
+The caravan stops beside the stranded tractor.
+The Battery Phelwan is sitting beside the driver on the tractor's wheel fender, wearing his white lab coat.
+He jumps down.
+The Phelwan Team emerges from the caravan with diagnostic equipment.
+They immediately begin examining the tractor battery.
+While the Phelwans are examining the battery...
+A full Punjabi baraat is approaching.
+The Phelwan begins asking his team questions.
+But every answer is suddenly accompanied by the dhol beat.
+PHELWAN:
+"Graphite Technology?"
+TEAM:
+"NO!"
+DHOL: DHAM!
+The baraat reacts rhythmically:
+"NO!"
+PHELWAN:
+"Heat Resistance?"
+DHOL: DHAM!
+Baraat:
+"NO!"
+DHOL: DHAM!
+Baraat:
+"NO!"
+PHELWAN:
+"Horn?"
+DHOL: DHAM!
+Baraat:
+"NO!"
+PHELWAN:
+"Lights?"
+DHOL: DHAM!
+Baraat:
+"NO!"
+PHELWAN:
+"Power?"
+DHOL: DHAM!
+Baraat:
+"NO!"
+The questions become faster.
+PHELWAN:
+"Uptime?"
+"Reliability?"
+"Dependability?"
+DHOL!
+Baraat:
+"NO!"
+The entire baraat is now effectively becoming the comic chorus.
+The Chaudhary is getting increasingly desperate because the baraat is almost at the tractor.
+ALASKA
+The Phelwan finally looks up.
+He turns toward the Chaudhary.
+PHELWAN:
+"Bas... hun Alaska lao."
+The team installs the Alaska Battery.
+The Phelwan closes the bonnet.
+PHELWAN:
+"Graphite Technology aur nau mah ki muft tabdeeli ki warranty ke saath."
+"Alaska ke saath... Har Lamha Aitemaad."
+The farmer turns the key.
+VROOM!
+The tractor starts.
+End Tail:
+ALASKA
+Har Lamha Aitemaad
+THAKUR:
+"Chalo Malik Sahib... chal ke khana khatay hain ab."
+He waits.
+Suddenly, the dhol stops.
+Thakur looks around, confused.
+The camera slowly pulls back.
+Thakur is standing completely alone in the middle of the field.
+The entire baraat is moving rapidly in the opposite direction, disappearing into the distance.
+Thakur stares.
+Realization.
+THAKUR:
+"Hain? Barat ne idhar jaana tha!"
+He suddenly runs after them.
+"O Malik Sahib! Thero!"
+He runs across the field as the baraat disappears into the distance.
+________________________________________
+Concept 4: Bike "Interview"
+Bike
+OPEN
+We see a young man in a suit, with a file, pushing a bike on the road, and the taxi bike guy (helmet is placed diagonally on his head to see clearly) says:
+BIKER:
+"Thora sa dhakka dein, abhi start ho jaye gi."
+The young man looks at his wristwatch and asks him:
+YOUNG MAN:
+"Bhai, interview ka time na nikal jaye?"
+We see Iftikhar Thakur wearing a safari suit with an office leather bag / checkered shirt and pants with a black leather bag.
+I.T.:
+"Kia hua?"
+BIKER:
+"Battery."
+I.T.:
+"Hain?"
+I.T. in pure pehelwani style:
+"Jadon battery de dhakke,
+tu pher chakk de fatte."
+THAKUR:
+"Aa jao
+Phelwano...!!!"
+THE PHELWAN ARRIVAL
+Phelwan
+O Phelwan
+Mushklaan nu pachhaare
+Tensionan nu ukhaare
+Life vich current bhar ke
+Sukoon di tarang bhar de
+O  Phelwaaaaaaaaaaan !!!!
+I.T. Phelwan appears leading his team, wearing his white lab coat.
+As soon as team reaches, they immediately get to work and set up the mobile battery laboratory around the motorcycle.
+Battery Phelwan, like an experienced surgeon:
+He is handed a long, big paper report.
+He studies it seriously.
+I.T. PHELWAN:
+"Hmm... haalat to bohat critical hai."
+Then he looks over his glasses at the boy:
+I.T. PHELWAN:
+"Interview kab hai?"
+INTERVIEW GUY:
+"Das minute mein."
+I.T. Phelwan reacts:
+I.T. PHELWAN:
+"Hain... aithe khlo."
+Beat.
+I.T. PHELWAN:
+"Operation Interview shuru..."
+The team instantly changes the battery.
+(Different shots: taking out the battery, branding not visible; removing the old battery as if it is the failed organ and the new one is being implanted.)
+Screws are fixed, everything is done.
+Now the rider hits the kick and the bike starts.
+I.T. WITH PRODUCT ATTRIBUTES:
+Phelwan:
+"Graphite Technology?"
+Team checks.
+"YES!"
+Phelwan:
+"Heat Resistance?"
+Team:
+"YES!"
+Phelwan:
+"Long Battery Life?"
+Team:
+"YES!"
+Phelwan:
+"Uptime?"
+"Reliability?"
+"Dependability?"
+Team:
+"YES!"
+Phelwan:
+"9 Months Free Replacement Warranty?"
+Team:
+"YES!"
+Phelwan looks at the young man.
+He hops on and kicks the motorcycle.
+VROOM!
+I.T. Phelwan:
+"Pakistan ki jadeed tareen battery..."
+"Alaska Graphite Technology aur nau mah ki lambi tareen warranty ke saath."
+"Alaska ka intekhab...
+Har Lamha..."
+Everyone:
+"Aitemaad!"
+END SLIDE
+Alaska
+Har Lamha Aitemaad
+Thakur turns back and sees the interview guy, who is checking the location map on his mobile.
+Biker Thakur:
+"O jana, kahan hai?"
+Interview Boy (excited):
+"Yahin to aana tha!"
+Phelwan I.T.:
+"Lo ji, bechara bike pe paidal aaya hai."
+________________________________________
+Concept 5: UPS "Wedding"
+UPS
+OPEN
+UPS / Inverter — “Wedding Morning”
+Early morning in a Pakistani home.
+It’s the morning of a wedding.
+The house is already buzzing.
+In the kitchen:
+•	Kettle running
+•	Blender running
+•	Iron being used
+•	Hair dryer running
+•	Fans running
+•	Lights everywhere
+•	Someone is making tea
+•	Someone is pressing clothes
+•	Someone is getting the bride/groom ready
+The whole house is running on electricity.
+Then suddenly—
+Some male voice (groom’s father):
+"Mera kurta press ho gaya kya?"
+LIGHTS OUT.
+Everything stops.
+The blender dies.
+The iron stops.
+The hair dryer goes silent.
+Everyone freezes.
+A mother shouts from the kitchen:
+"UPS chalao!"
+Someone checks it.
+"Battery nahi chal rahi... Light kab aaye gi?"
+Mother from the kitchen (fading out voice in the bg):
+"Beta, pehle kabhi bata kar gayi hai?"
+Cut to Iftikhar Thakur taking out his clothes from his leather bag.
+He hears the word:
+"Battery..."
+He slowly zips his bag.
+THAKUR:
+"Battery?"
+I.T. turns into an action hero and comes out into the courtyard.
+"Jab UPS pe na ho control,
+to beta... Phelwan ko bol."
+Then—
+THAKUR Vistal:
+"Aa jao... Phelwano...!!!"
+THE PHELWAN ARRIVAL
+Phelwan
+O Phelwan
+Mushklaan nu pachhaare
+Tensionan nu ukhaare
+Life vich current bhar ke
+Sukoon di tarang bhar de
+O  Phelwaaaaaaaaaaan !!!!
+That gives us a very strong reason for the Phelwan Team to arrive.
+And unlike the vehicle films, here the Phelwan Team can arrive as a fully equipped Alaska household power-response unit, entering through the gate with their equipment.
+PHELWAN:
+"Report?"
+PHELWAN:
+"Kia kuch chal sakta hai?"
+Fan?
+TEAM:
+"No."
+Lights?
+TEAM:
+"No."
+Iron?
+TEAM:
+"No."
+Blender?
+TEAM:
+"No."
+Kettle?
+TEAM:
+"No."
+Phelwan, while looking at the huge UPS:
+"Tu phir itni jagah kyun gheri hui hai?"
+DULHA:
+"Ab kya karein?"
+Phelwan turns towards his team:
+PHELWAN:
+"Aitemaad."
+They instantly open a new Alaska inverter carton and reveal the new Alaska battery.
+PHELWAN:
+"Pesh hai nayi Alaska."
+"Alaska ki thick plates deti hain zyada aur lamba backup."
+Deep Cycle
+Long Backup
+Graphite Technology aur nau mah ki muft tabdeeli ki warranty.
+Family celebrating the new inverter and battery, and everything comes alive again.
+ALASKA
+Har Lamha Aitemaad
+A woman brings a huge carton full of plates.
+WOMAN TO PHELWAN TEAM:
+"Puttar, yeh plates faltu pari hain, check karo agar kaam aa jayein."
+Guest I.T.:
+"Itni plates? Kyun, Khala, kya poore mohallay mein light baantni hai?"
+PHELWAN:
+"Yeh plates lagti to aap ka apna transformer hota."
+________________________________________
+Jingle & Dialogue Options
+Option A
+Daao laga... chal daao laga
+Mushklaan pachhaad
+Tension nu ukhaad
+Gaddi 'ch current da
+Fit kar nava kharaak
+Option B
+Kaam dikha... chal kaam dikha
+Mushklaan pachhaad
+Tension nu ukhaad
+Gaddi 'ch current bhar
+Sukoon di tarang bhar
+Option C
+Dam dikha de... dikha de dam
+Dikha de
+Mushklaan pachhaad
+Tension nu ukhaad
+Gaddi 'ch current bhar
+Sukoon di tarang bhar
+________________________________________
+Dialogue Options
+Thakur:
+"Itni khoobiyan kisi battery mein hondiyan ain bhala?"
+Expert:
+"Kyun nahi... hai na yeh..."
+"Nayi damdaar modern battery..."
+ALASKA!
+Thakur:
+"Phelwan!"
+"Is mein saari khoobiyan hondiyan ain...?"
+Expert:
+"Saari ji saari!"
+"Evein te nahi kehnde is nu..."
+"Phelwan jaisi damdaar battery!"
+MVO:
+Tension Free Rasta...
+ALASKA
+Phelwan jayi damdaar battery!
+________________________________________
+Ending Dialogues
+Expert:
+"Sir ji... yeh kya?"
+Thakur:
+"Garmi mukaan layi..."
+"Hun Police vi apni PINK Graphite Technology
+istemaal karegi..."
+"Alaska ki tarah!"`;
+
 export const chapter05Data: Chapter = {
   id: 'concepts',
   number: '05',
@@ -655,18 +1315,61 @@ export const chapter05Data: Chapter = {
   category: 'Film Narratives',
   visualImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/truck_n0iuex.png',
   overlayHeadline: 'Film Concepts',
-  summary: 'Film Concepts (Last Updated on Aug/09/Wed)',
-  lastUpdated: 'Aug/09/Wed',
+  summary: 'Film Concepts (Updated Master Script ft. Battery Phelwan)',
+  lastUpdated: 'Aug/24',
   fullText: `${FINAL_CONCEPTS_RAW}\n\n_____________________________________________________________________________________\n\n${ROUTE_2_RAW}\n\n_____________________________________________________________________________________\n\n${ROUTE_3_RAW}`,
+  pdfFullText: CONCEPTS_PDF_ENGLISH_RAW,
   finalConceptsText: FINAL_CONCEPTS_RAW,
   conceptTabs: [
     {
       id: 'final-concepts',
-      name: 'Final Concepts',
-      badge: '⭐ 5 Master Films',
+      name: 'Final Concepts (Master)',
+      badge: '⭐ 5 Master Films + Jingles',
       isFinal: true,
-      summary: 'Film Concepts (Last Updated on Aug/09/Wed)',
+      summary: 'Campaign Film Concepts — Route 1: Battery Phelwan ft. Iftikhar Thakur (5 Commercials & Jingle / Dialogue Options)',
       content: FINAL_CONCEPTS_RAW
+    },
+    {
+      id: 'car',
+      name: 'Car "Pehelwan Reveal"',
+      badge: 'Concept 1',
+      summary: 'Concept 1: Car "Pehelwan Reveal" — Luxury Car in Traffic Jam & Battery Phelwan Laboratory Entry',
+      content: `ALASKA BATTERIES — TVC ROUTE 1\n\n${CAR_CONCEPT_RAW}`
+    },
+    {
+      id: 'truck',
+      name: 'Truck "Fish"',
+      badge: 'Concept 2',
+      summary: 'Concept 2: Truck "Fish" — Fishing Port Logistics & Mobile Alaska Lab Truck',
+      content: `ALASKA BATTERIES — TVC ROUTE 1\n\n${TRUCK_CONCEPT_RAW}`
+    },
+    {
+      id: 'tractor',
+      name: 'Tractor "Field"',
+      badge: 'Concept 3',
+      summary: 'Concept 3: Tractor "Field" — Baraat in the Punjabi Field & Dhol Beats Chorus',
+      content: `ALASKA BATTERIES — TVC ROUTE 1\n\n${TRACTOR_CONCEPT_RAW}`
+    },
+    {
+      id: 'bike',
+      name: 'Bike "Interview"',
+      badge: 'Concept 4',
+      summary: 'Concept 4: Bike "Interview" — Motorcycle Taxi to Job Interview & Emergency Battery Swap',
+      content: `ALASKA BATTERIES — TVC ROUTE 1\n\n${BIKE_CONCEPT_RAW}`
+    },
+    {
+      id: 'ups',
+      name: 'UPS "Wedding"',
+      badge: 'Concept 5',
+      summary: 'Concept 5: UPS "Wedding" — Wedding Morning Household Power Outage & Heavy Plates Inverter',
+      content: `ALASKA BATTERIES — TVC ROUTE 1\n\n${UPS_CONCEPT_RAW}`
+    },
+    {
+      id: 'jingles',
+      name: 'Jingles & Dialogues',
+      badge: 'Options A, B, C',
+      summary: 'Punjabi Pehlwan Daao Laga Jingles, MVO Taglines & Silver Foil Dialogue Twist',
+      content: `ALASKA BATTERIES — TVC ROUTE 1\n\n${JINGLES_DIALOGUES_RAW}`
     },
     {
       id: 'all',
@@ -674,35 +1377,15 @@ export const chapter05Data: Chapter = {
       badge: 'Complete Suite',
       summary: 'Complete collection of all campaign TVC routes presented for Alaska Batteries.',
       content: `${FINAL_CONCEPTS_RAW}\n\n_____________________________________________________________________________________\n\n${ROUTE_2_RAW}\n\n_____________________________________________________________________________________\n\n${ROUTE_3_RAW}`
-    },
-    {
-      id: 'route-1',
-      name: 'Route 1: Battery Expert',
-      badge: '5 Film Concepts',
-      summary: 'High-energy comedy route featuring Iftikhar Thakur across 5 situational vehicle & power films.',
-      content: FINAL_CONCEPTS_RAW
-    },
-    {
-      id: 'route-2',
-      name: 'Route 2: Aitemaad Ka Naya Naam',
-      badge: 'Concept 2',
-      summary: 'Alaska becomes the cultural synonym for trust across Pakistani everyday life.',
-      content: ROUTE_2_RAW
-    },
-    {
-      id: 'route-3',
-      name: 'Route 3: Social & Rap',
-      badge: 'Concept 3 & 3A',
-      summary: 'Corporate Social Message “Har Qadam” and high-BPM urban Urdu-Punjabi Juggalbandi & Rap.',
-      content: ROUTE_3_RAW
     }
   ],
   keyPoints: [
-    'Concept 1: "Battery Expert" (Car / Traffic Jam ft. Police & Lab Expert Thakur)',
-    'Concept 2: "Battery Expert" (Truck / Fishing Port ft. Fresh Catch Logistics & Mobile Lab)',
-    'Concept 3: "Battery Expert" (Tractor / Punjabi Baraat in the Field ft. Dhol Chorus)',
-    'Concept 4: "Battery Expert" (Motorcycle / Job Interview ft. Helicopter Operation)',
-    'Concept 5: "Battery Expert" (UPS / Inverter — Wedding Morning Household Emergency)',
+    'Concept 1: Car "Pehelwan Reveal" (Traffic Jam ft. Police & Lab Phelwan Thakur)',
+    'Concept 2: Truck "Fish" (Fishing Port ft. Fresh Catch Logistics & Mobile Lab)',
+    'Concept 3: Tractor "Field" (Punjabi Baraat in the Field ft. Dhol Chorus)',
+    'Concept 4: Bike "Interview" (Motorcycle Taxi to Job Interview ft. Operation Interview)',
+    'Concept 5: UPS "Wedding" (Wedding Morning Household Emergency ft. Heavy Plates Inverter)',
+    'Jingle & Dialogue Options: Punjabi Pehlwan Daao Laga Jingles & Ending Taglines',
     'Route 2: "Aitemaad Ka Naya Naam" (Alaska as the cultural synonym for trust)',
     'Route 3 & 3A: Social Message “Har Qadam” & Urban Urdu-Punjabi Juggalbandi Rap'
   ],

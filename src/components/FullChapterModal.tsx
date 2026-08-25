@@ -16,7 +16,8 @@ import {
   FolderOpen, 
   ChevronLeft, 
   ChevronRight,
-  Sparkles
+  Sparkles,
+  Copy
 } from 'lucide-react';
 
 interface FullChapterModalProps {
@@ -45,12 +46,21 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
   const [zoomScale, setZoomScale] = React.useState<number>(1);
   const [panPosition, setPanPosition] = React.useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = React.useState(false);
+  const [copiedContract, setCopiedContract] = React.useState(false);
   const dragStartRef = React.useRef<{ startX: number; startY: number; initialPanX: number; initialPanY: number }>({
     startX: 0,
     startY: 0,
     initialPanX: 0,
     initialPanY: 0,
   });
+
+  const handleCopyContract = () => {
+    if (chapter.fullText) {
+      navigator.clipboard.writeText(chapter.fullText);
+      setCopiedContract(true);
+      setTimeout(() => setCopiedContract(false), 2500);
+    }
+  };
 
   // Determine active concept tab content
   const activeConceptTab = chapter.conceptTabs?.find((t) => t.id === activeConceptTabId) || chapter.conceptTabs?.[0];
@@ -159,12 +169,21 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
             );
           }
 
-          // Subheaders or Scene Headers: e.g. "OPEN — WORKSHOP", "CORE IDEA", "PRODUCT REVEAL", "THE FILM", "PART 01", "PRODUCT SCOPE", "EXECUTIVE CREATIVE SUMMARY", etc.
-          const isSubhead = /^(OPEN|THE GURU|THE EXPERT TEST|RESOLUTION|ALASKA REVEAL|THE SECOND BATTERY|JINGLE|COMPLETE JINGLE|COMPLETE MASTER JINGLE|THE ENERGY BUILDS|RETURN TO THE WORKSHOP|PRODUCT REVEAL|END FRAME|CORE IDEA|CORE IDEA & HOOK|THE MASTER SCRIPT|THE FILM|PART 01|PART 02|PRODUCT SCOPE|CURRENT PRESENTATION|FUTURE EXPANSION|LIGHTS OUT|EXECUTIVE CREATIVE SUMMARY|NARRATIVE HIGHLIGHTS|SEGMENT BREAKDOWN|PRODUCTION & EXECUTION)\b/i.test(trimmed);
+          // Subheaders, Section Headers, Jingle Options & Scene Markers
+          const isSubhead = /^(OPEN|THE GURU|THE EXPERT TEST|THE PHELWAN TEST|THE Pehlwan ARRIVAL|\(THE ARRIVAL\)|RESOLUTION|THE PROBLEM|THE TWIST|\(Twist\)|ALASKA REVEAL|\(ALASKA REVEAL\)|THE SECOND BATTERY|JINGLE|COMPLETE JINGLE|COMPLETE MASTER JINGLE|Jingle & Dialogue Options|& Dialogue Options|Ending Dialogues|Option-\s*[A-C]|THE ENERGY BUILDS|RETURN TO THE WORKSHOP|PRODUCT REVEAL|END FRAME|END SLIDE|End Logo|End Tail|CORE IDEA|CORE IDEA & HOOK|THE MASTER SCRIPT|THE FILM|PART 01|PART 02|PRODUCT SCOPE|CURRENT PRESENTATION|FUTURE EXPANSION|LIGHTS OUT|EXECUTIVE CREATIVE SUMMARY|NARRATIVE HIGHLIGHTS|SEGMENT BREAKDOWN|PRODUCTION & EXECUTION)\b/i.test(trimmed);
           if (isSubhead) {
+            const isOptionOrJingle = /^(Jingle & Dialogue Options|& Dialogue Options|Option-\s*[A-C]|Ending Dialogues)/i.test(trimmed);
             return (
-              <div key={idx} className="font-bold text-zinc-900 text-sm sm:text-base mt-4 mb-1 text-[#b8860b]">
-                {trimmed}
+              <div
+                key={idx}
+                className={`font-bold text-sm sm:text-base mt-5 mb-2 flex items-center gap-2 ${
+                  isOptionOrJingle
+                    ? 'text-amber-800 bg-amber-50/80 border border-amber-300/80 px-3.5 py-1.5 rounded-lg w-fit'
+                    : 'text-[#b8860b]'
+                }`}
+              >
+                {isOptionOrJingle && <Sparkles className="w-4 h-4 text-[#b8860b]" />}
+                <span>{trimmed}</span>
               </div>
             );
           }
@@ -174,11 +193,57 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
             return <div key={idx} className="h-2"></div>;
           }
 
-          // Regular narrative / dialogue line
+          // Check if line contains Urdu/Arabic characters
+          const containsUrdu = /[\u0600-\u06FF]/.test(line);
+
+          // Dialogue Speaker lines (e.g. "POLICE THAKUR: بیٹری", "Thakur:", "Phelwan I.T.:", "FARMER:", "Interview Boy (excited):", etc.)
+          const speakerMatch = line.match(/^([A-Za-z0-9.\s&—/()–-]+):\s*(.*)$/);
+          if (speakerMatch && speakerMatch[1].length <= 35 && !speakerMatch[1].toLowerCase().includes('http')) {
+            const speaker = speakerMatch[1].trim();
+            const dialogue = speakerMatch[2].trim();
+
+            if (!dialogue) {
+              return (
+                <div key={idx} className="mt-3 mb-1 text-left">
+                  <span className="font-bold text-xs uppercase tracking-wider bg-amber-100 text-amber-900 border border-amber-300/80 px-2.5 py-0.5 rounded-md inline-flex items-center gap-1 shadow-2xs">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-600"></span>
+                    {speaker}:
+                  </span>
+                </div>
+              );
+            }
+
+            const isDialogueUrdu = /[\u0600-\u06FF]/.test(dialogue);
+            return (
+              <div key={idx} className="my-2 pl-3 border-l-2 border-amber-400 text-left">
+                <span className="font-bold text-zinc-900 mr-2 text-xs uppercase tracking-wide bg-zinc-200/80 px-2 py-0.5 rounded text-[#b8860b] inline-block">
+                  {speaker}:
+                </span>
+                <span className={`${isDialogueUrdu ? 'font-semibold text-zinc-950 text-base sm:text-lg inline-block' : 'text-zinc-800 font-medium'}`}>
+                  {dialogue}
+                </span>
+              </div>
+            );
+          }
+
+          // Regular narrative / Urdu poetry line (aligned vertically with English on the left)
+          if (containsUrdu) {
+            return (
+              <div key={idx} className="text-left py-0.5 pl-3 border-l-2 border-amber-300/30">
+                <p className="text-zinc-950 leading-loose text-base sm:text-lg font-medium tracking-normal">
+                  {line}
+                </p>
+              </div>
+            );
+          }
+
+          // Regular narrative line (Left-aligned)
           return (
-            <p key={idx} className="text-zinc-700 leading-relaxed text-sm sm:text-base">
-              {line}
-            </p>
+            <div key={idx} className="text-left py-0.5">
+              <p className="text-zinc-700 leading-relaxed text-sm sm:text-base">
+                {line}
+              </p>
+            </div>
           );
         })}
       </div>
@@ -606,7 +671,7 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                 {/* For Storyboards: Top-to-Bottom Vertical Scroll Feed with Magnifying Glass */}
                 {isStoryboard ? (
                   <div className="space-y-6">
-                    <div className="flex items-center justify-between bg-amber-50/60 border border-amber-200/80 rounded-xl px-4 py-2.5">
+                    <div className="flex items-center justify-between bg-amber-50/60 border border-amber-200/80 rounded-xl px-4 py-2.5 flex-wrap gap-2">
                       <div className="flex items-center gap-2">
                         <span className="w-2 h-2 rounded-full bg-[#c69a53]"></span>
                         <span className="text-xs font-bold text-zinc-800 uppercase tracking-wider">
@@ -616,9 +681,23 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                           ({galleryList.length} Storyboard Sheets)
                         </span>
                       </div>
-                      <span className="text-[11px] text-[#b8860b] font-medium flex items-center gap-1">
-                        <ZoomIn className="w-3.5 h-3.5" /> Click any sheet to zoom in with magnifier
-                      </span>
+                      <div className="flex items-center gap-3">
+                        {currentFolder?.pdfUrl && (
+                          <a
+                            href={currentFolder.pdfUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="text-[11px] font-semibold text-zinc-800 bg-white border border-zinc-300 hover:border-[#c69a53] hover:text-[#b8860b] px-3 py-1 rounded-lg flex items-center gap-1.5 transition-all shadow-2xs"
+                          >
+                            <FileText className="w-3.5 h-3.5 text-[#c69a53]" />
+                            <span>View {currentFolder.name} PDF</span>
+                          </a>
+                        )}
+                        <span className="text-[11px] text-[#b8860b] font-medium hidden sm:flex items-center gap-1">
+                          <ZoomIn className="w-3.5 h-3.5" /> Click any sheet to zoom in with magnifier
+                        </span>
+                      </div>
                     </div>
 
                     <div className="flex flex-col gap-8">
@@ -712,7 +791,50 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                 )}
 
                 {chapter.fullText ? (
-                  <div className="font-sans mt-4 p-5 bg-zinc-50 rounded-2xl border border-zinc-200 shadow-sm">
+                  <div className="font-sans mt-6 p-6 sm:p-8 bg-zinc-50 rounded-2xl border border-zinc-200 shadow-xs">
+                    {chapter.id === 'art-talent' && (
+                      <div className="mb-6 pb-4 border-b border-zinc-200 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="p-1.5 bg-amber-500/15 rounded-md text-amber-900 border border-amber-500/30">
+                              <FileText className="w-4 h-4 text-[#c69a53]" />
+                            </span>
+                            <h4 className="text-sm sm:text-base font-black text-zinc-900 uppercase tracking-tight font-heading">
+                              Celebrity Talent Contract Copy
+                            </h4>
+                          </div>
+                          <p className="text-xs text-zinc-500 mt-1">
+                            Official Modeling, Talent & Digital Likeness Agreement for Mr. Iftikhar Ahmad Sheikh (Iftikhar Thakur).
+                          </p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={handleCopyContract}
+                            className="px-3 py-1.5 text-xs font-bold rounded-lg border border-zinc-300 bg-white text-zinc-700 hover:bg-zinc-100 hover:text-zinc-900 transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                          >
+                            {copiedContract ? (
+                              <>
+                                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                <span>Copied!</span>
+                              </>
+                            ) : (
+                              <>
+                                <Copy className="w-3.5 h-3.5 text-zinc-500" />
+                                <span>Copy Agreement</span>
+                              </>
+                            )}
+                          </button>
+                          <button
+                            onClick={handleDownload}
+                            disabled={isGenerating}
+                            className="px-3 py-1.5 text-xs font-extrabold rounded-lg bg-[#c69a53] text-black hover:bg-[#b08542] transition-all cursor-pointer flex items-center gap-1.5 shadow-2xs"
+                          >
+                            <Download className="w-3.5 h-3.5" />
+                            <span>Download PDF</span>
+                          </button>
+                        </div>
+                      </div>
+                    )}
                     {renderFormattedText(chapter.fullText)}
                   </div>
                 ) : null}
@@ -835,14 +957,21 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                 {chapter.attachedFiles.map((file, i) => (
                   <div
                     key={i}
-                    className="p-3 bg-white border border-zinc-200 rounded-lg flex items-center justify-between hover:border-zinc-300 transition-all"
+                    onClick={() => {
+                      if (file.url && file.url !== '#') {
+                        window.open(file.url, '_blank');
+                      } else {
+                        handleDownload();
+                      }
+                    }}
+                    className="p-3 bg-white border border-zinc-200 rounded-lg flex items-center justify-between hover:border-[#c69a53] hover:shadow-xs transition-all cursor-pointer group"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className="p-2 bg-zinc-100 rounded-md text-zinc-600">
+                    <div className="flex items-center gap-3 overflow-hidden">
+                      <div className="p-2 bg-zinc-100 group-hover:bg-amber-50 rounded-md text-zinc-600 group-hover:text-[#c69a53] transition-colors">
                         <FileText className="w-4 h-4" />
                       </div>
                       <div className="overflow-hidden">
-                        <div className="text-xs font-semibold text-zinc-900 truncate">
+                        <div className="text-xs font-semibold text-zinc-900 truncate group-hover:text-[#b8860b] transition-colors">
                           {file.name}
                         </div>
                         {file.size && (
@@ -851,9 +980,16 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                       </div>
                     </div>
                     <button
-                      onClick={handleDownload}
-                      className="p-1.5 text-zinc-500 hover:text-black hover:bg-zinc-100 rounded-md transition-all"
-                      title="Download"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (file.url && file.url !== '#') {
+                          window.open(file.url, '_blank');
+                        } else {
+                          handleDownload();
+                        }
+                      }}
+                      className="p-1.5 text-zinc-500 hover:text-[#b8860b] hover:bg-zinc-100 rounded-md transition-all cursor-pointer"
+                      title="Open / Download"
                     >
                       <FileDown className="w-4 h-4" />
                     </button>

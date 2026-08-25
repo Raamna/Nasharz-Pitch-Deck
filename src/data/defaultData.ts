@@ -2,6 +2,195 @@ import { DeckData } from '../types';
 import { BASE_ESTIMATE_ITEMS } from './defaultEstimate';
 import { chapter05Data } from './chapter05Data';
 
+export const TALENT_CONTRACT_RAW = `MODELING, TALENT & DIGITAL LIKENESS AGREEMENT
+
+This Agreement is made and entered into on this ___ day of __________ 2026, by and between:
+
+1. THE MODEL
+Mr. Iftikhar Ahmad Sheikh
+Address: _______________________________________________
+CNIC No.: ______________________________________________
+(hereinafter referred to as the “Model”)
+
+AND
+
+2. THE CLIENT
+M/s. Alaska Batteries
+Head Office: 7th Floor, B-3 Tower, Sector F-9, G-9 Jinnah Avenue, New Blue Area, Islamabad, 44010, Pakistan
+(hereinafter referred to as the “Client” or “Alaska Batteries”)
+
+The Model and the Client are hereinafter individually referred to as a “Party” and collectively as the “Parties.”
+
+For purposes of this Agreement, “Nasharz” means the advertising agency / production house / digital agency appointed or authorized in connection with this engagement to produce, create, develop and/or reproduce advertising and promotional material featuring the Model.
+
+________________________________________
+
+3. CONTRACT PERIOD
+3.1 This Agreement shall commence on ________________ 2026 (“Effective Date”) and shall remain valid for a period of two (2) years, expiring on ________________ 2028 (“Contract Period”).
+3.2 The rights granted under this Agreement shall be available during the Contract Period on a worldwide basis, subject to the limitations and conditions expressly set out herein.
+
+________________________________________
+
+4. MODELING SERVICES & SHOOT DAYS
+4.1 The Model agrees to provide modeling, photographic, audiovisual and related performance services for the advertising and promotional communication of Alaska Batteries.
+4.2 The engagement shall include five (5) shoot days during the Contract Period.
+4.3 The shoot days may take place at any location, including studio, indoor or outdoor locations, within Pakistan or internationally, as mutually agreed.
+4.4 The shoot days may include photography, video, television commercials, digital films, social-media content, still photography, promotional material, radio/voice recording and other advertising content relating to Alaska Batteries.
+
+________________________________________
+
+5. MODELING FEE & TALENT AGENCY COMMISSION
+5.1 The Client shall pay the Model a total modeling fee of:
+PKR 3,000,000/- (Rupees Three Million Only), NET TO THE MODEL.
+5.2 In addition, a 10% Talent Agency Commission shall be payable to the Model’s appointed Talent Agency.
+5.3 Accordingly:
+• Model’s Net Fee: PKR 3,000,000/-
+• Talent Agency Commission (10%): PKR 300,000/-
+• Total Professional Consideration: PKR 3,300,000/-
+5.4 The above amounts are exclusive of all applicable taxes, duties, levies, withholding taxes and governmental charges, if applicable. No taxes are included in the above amounts.
+
+________________________________________
+
+6. EXCLUSIVE PRODUCTION & AI / DIGITAL LIKENESS RIGHTS
+6.1 The Parties expressly agree that Nasharz shall be the sole authorized advertising agency / production house / digital agency permitted to create, produce, reproduce, manipulate, generate or otherwise develop any advertising or promotional material involving the Model’s face, likeness, image, voice or performance under this Agreement.
+6.2 Without limiting the foregoing, Nasharz shall have the exclusive authority, during the Contract Period, to produce or create any:
+a. still photography featuring the Model;
+b. video or audiovisual material featuring the Model;
+c. AI-generated or digitally generated representation of the Model;
+d. AI-generated or synthetically reproduced face or facial likeness of the Model;
+e. AI-generated or synthetically reproduced voice of the Model;
+f. digital double or virtual representation of the Model;
+g. facial animation, facial mapping or lip-sync representation;
+h. digitally modified or composited representation of the Model;
+i. AI-assisted or digitally enhanced images or videos featuring the Model;
+j. reproduction, adaptation or manipulation of any approved element of the Model’s appearance, likeness, face, voice or performance; and
+k. any other still or video photography or digital advertising material reasonably relevant to the Model and the Alaska Batteries campaign.
+6.3 No other advertising agency, production house, digital agency, AI company, post-production company or third party shall have the right to independently create, reproduce, generate, clone, synthesize, manipulate or otherwise exploit the Model’s face, voice, likeness or any other identifiable element of the Model under this Agreement.
+6.4 The Client may appoint other service providers for ordinary media buying, publishing, distribution, printing, broadcasting, placement, technical hosting or other campaign-support functions, but such appointment shall not grant such third party any independent right to create or reproduce the Model’s face, voice, likeness or AI/digital representation.
+
+________________________________________
+
+7. AI FACE, VOICE & DIGITAL REPRODUCTION
+7.1 The Model expressly grants consent for the use of his face, likeness, image, voice, appearance, expressions, movements, photographs, recordings and performance for the creation of advertising material for Alaska Batteries during the Contract Period.
+7.2 However, the Parties expressly agree that the creation, reproduction and generation of such material shall be exclusively controlled and undertaken by Nasharz.
+7.3 The Client’s rights are therefore limited to the use, publication, distribution, broadcast, display and communication of the approved campaign material produced by Nasharz.
+7.4 The Client shall not independently:
+a. upload the Model’s photographs, videos, voice recordings or other identifiable material into an AI system for the purpose of generating a new likeness or voice;
+b. create an AI clone of the Model;
+c. create a digital twin or digital double of the Model;
+d. commission another agency or production house to create an AI representation of the Model;
+e. provide the Model’s face, voice, likeness or source materials to another agency or production house for independent reproduction;
+f. authorize another advertising agency or production house to reproduce any element of the Model;
+g. license, sublicense, sell, transfer or commercially exploit the Model’s AI likeness or voice independently of the campaign material produced by Nasharz.
+7.5 Where AI or digital technology is required to create campaign material, Nasharz shall remain the authorized entity responsible for such creation and production.
+7.6 Nasharz may use appropriate third-party technical platforms, software, AI systems, post-production facilities or specialist vendors where necessary to produce the agreed campaign material, provided that such use is solely for the purpose of producing the Alaska Batteries campaign and does not grant those third parties independent commercial rights in the Model’s face, voice or likeness.
+
+________________________________________
+
+8. CLIENT USAGE RIGHTS
+8.1 Alaska Batteries shall have the right, during the Contract Period, to use the final approved campaign material featuring the Model across the following media:
+• Television / TVC
+• Cinema
+• Social Media (Facebook, Instagram, TikTok, YouTube)
+• Digital Platforms, Websites & Online Advertising
+• Electronic Media
+• Outdoor / OOH & Digital Outdoor / DOOH (Billboards, Hoardings)
+• Print (Newspapers, Magazines, Brochures, Flyers, Posters)
+• POS Material, Retail Displays, Standees & Banners
+• Radio & Audio Advertising
+• Corporate / Promotional Films & Dealer / Distributor Communication
+• All other conventional advertising and publicity formats.
+8.2 The Client may reproduce and distribute the final campaign material produced by Nasharz in different technical formats, sizes, durations, aspect ratios, resolutions and media formats as reasonably required for advertising purposes.
+8.3 The Client may translate, subtitle, dub, shorten, crop, resize or technically adapt the final campaign material for different advertising platforms and territories, provided that such adaptation does not constitute the independent creation of a new AI clone, voice clone or digital likeness of the Model.
+
+________________________________________
+
+9. NO TRANSFER OF MODEL’S REPRODUCTION RIGHTS
+9.1 The rights granted to Alaska Batteries under this Agreement are usage rights only and shall not be interpreted as an unrestricted transfer of the Model’s underlying face, voice, likeness, AI or reproduction rights.
+9.2 Alaska Batteries shall not assign, transfer, sublicense or otherwise grant the Model’s face, voice, likeness, AI rights or reproduction rights to any other advertising agency, production house or third party without the Model’s prior written consent and, where applicable, the prior written consent of Nasharz.
+9.3 For clarity, the Client may provide completed campaign materials to broadcasters, publishers, social-media platforms, media agencies, outdoor media owners, printers and other distribution channels solely for the purpose of publishing, displaying, broadcasting or distributing the completed campaign.
+9.4 Such distribution shall not be considered a transfer of the Model’s reproduction rights.
+
+________________________________________
+
+10. OWNERSHIP & CONTROL OF AI / DIGITAL SOURCE MATERIAL
+10.1 Any AI prompts, AI-generated assets, digital models, facial mappings, voice models, edited source material, digital doubles, production files and other technical assets created by Nasharz for the campaign shall remain under the control of Nasharz and/or the respective rights holder, subject to the Client’s right to use the final approved campaign material during the Contract Period.
+10.2 The Client shall not extract, reuse or repurpose the Model’s AI/digital representation from the campaign for a separate campaign, separate product, unrelated brand or third-party commercial purpose.
+10.3 The Model’s face, voice and likeness shall not be treated as a transferable generic advertising asset.
+
+________________________________________
+
+11. EXCLUSIVITY
+11.1 During the Contract Period, the Model agrees not to appear in advertising or promotional communication for any company or brand directly competing with Alaska Batteries in the automotive/storage battery industry.
+11.2 The Model shall remain free to work for companies and brands outside the directly competing battery category.
+
+________________________________________
+
+12. TERM & EXPIRY OF USAGE RIGHTS
+12.1 All commercial usage rights granted under this Agreement shall expire upon completion of the two-year Contract Period, unless renewed in writing by the Parties.
+12.2 Upon expiry, Alaska Batteries shall not commence any new commercial campaign using the Model’s image, likeness, voice or AI/digital representation without a new written agreement.
+12.3 Campaign material already lawfully distributed during the Contract Period may remain accessible through third-party platforms, archives, social-media feeds, search engines, press references and other environments outside the Client’s reasonable control.
+12.4 The Client may retain archival copies of campaign material for internal records, legal compliance, corporate history and archival purposes.
+
+________________________________________
+
+13. CONFIDENTIALITY
+The Model shall maintain confidentiality regarding all unreleased campaign concepts, scripts, photographs, videos, AI material, production details, commercial information and other confidential information relating to Alaska Batteries and Nasharz.
+
+________________________________________
+
+14. GOVERNING LAW & DISPUTE RESOLUTION
+14.1 This Agreement shall be governed by and construed in accordance with the laws of the Islamic Republic of Pakistan.
+14.2 Any dispute arising out of or relating to this Agreement shall first be attempted to be resolved amicably between the Parties.
+14.3 If the dispute cannot be resolved amicably, the matter may be referred to arbitration in Islamabad under applicable Pakistani law.
+14.4 The courts of competent jurisdiction at Islamabad shall have jurisdiction in matters requiring judicial intervention.
+
+________________________________________
+
+15. ENTIRE AGREEMENT
+This Agreement constitutes the entire understanding between the Parties concerning the Model’s engagement and the rights granted herein.
+Any amendment, extension, modification or additional grant of rights must be made in writing and signed by the relevant Parties.
+
+________________________________________
+
+SIGNATURES & EXECUTION
+
+THE MODEL
+Name: Mr. Iftikhar Ahmad Sheikh (Iftikhar Thakur)
+CNIC No.: ___________________________________________
+Address: _____________________________________________
+Signature: ___________________________________________
+Date: _______________________________________________
+
+FOR M/s. ALASKA BATTERIES (CLIENT)
+Authorized Representative: ____________________________
+Designation: _________________________________________
+Signature: ___________________________________________
+Date: _______________________________________________
+Company Stamp: ______________________________________
+
+FOR NASHARZ (AGENCY & PRODUCTION HOUSE)
+Authorized Representative: ____________________________
+Designation: _________________________________________
+Signature: ___________________________________________
+Date: _______________________________________________
+
+TALENT AGENCY
+Agency Name: _________________________________________
+Authorized Representative: ____________________________
+Signature: ___________________________________________
+Date: _______________________________________________
+
+WITNESS 1
+Name: _______________________________________________
+CNIC No.: ____________________________________________
+Signature: ___________________________________________
+
+WITNESS 2
+Name: _______________________________________________
+CNIC No.: ____________________________________________
+Signature: ___________________________________________`;
+
 export const initialDeckData: DeckData = {
   branding: {
     whiteLogo: 'https://res.cloudinary.com/dawlj9ne4/image/upload/AVN_Logo_white_d0g8x2.png',
@@ -391,41 +580,185 @@ I’m now testing these territories against Alaska’s complete product portfoli
       title: 'Storyboards',
       category: 'Visual Framing',
       visualImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/summer_kgdblu.png',
-      overlayHeadline: 'Frame-by-Frame Precision.',
-      summary: 'Detailed visual storyboards for Concept 01: Battery Expert (Car Battery Campaign) — outlining camera movements, ignition shots, and narrative flow.',
-      fullText: `CONCEPT: BATTERY EXPERT | PRODUCT: CAR BATTERY | CONCEPT: 01
+      overlayHeadline: 'Commercial Storyboards.',
+      summary: 'Complete visual storyboards across all 5 commercial films',
+      lastUpdated: 'Aug/24',
+      fullText: `ALASKA BATTERIES TVC CAMPAIGN — COMPLETE STORYBOARDS
 
-Visual storyboards mapping out the shot-by-shot progression, comic timing, lighting design, and camera choreography for the Alaska Car Battery TVC campaign.`,
+Bike Battery — "Motorcycle Reporter / Street Vox-Pop"
+Car Battery — "Luxury Car & Cold Morning Ignition"
+Truck Battery — "Port Logistics & Heavy Engine Haul"
+Tractor Battery — "Baraat Morning & Agricultural Power"
+UPS/Inverter Battery — "Wedding Morning & Uninterrupted Power"
+
+Explore each concept folder above to review the high-resolution storyboard sequences and vector production PDFs.`,
       folders: [
         {
-          id: 'battery-expert-car',
-          name: 'Battery Expert / Car',
-          conceptName: 'Concept 01: Battery Expert',
-          product: 'Car Battery',
+          id: 'bike',
+          name: 'Bike',
+          conceptName: 'Motorcycle Interview',
+          product: 'Motorcycle Battery',
+          pdfUrl: 'https://drive.google.com/file/d/1ceVlKe4Ta7gIE4VjaAwygvXEpfod4EGS/view?usp=sharing',
           images: [
             {
-              title: 'Concept 01: Battery Expert — Page 01',
-              url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Alask_car_SB1_sjfn6j.png',
+              title: 'Bike Storyboard — Sheet 01',
+              url: 'https://lh3.googleusercontent.com/d/1V34IZzvcW8e1Hi1P891n4N0DXmqh8698',
               objectPosition: 'center 20%'
             },
             {
-              title: 'Concept 01: Battery Expert — Page 02',
-              url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Alask_car_SB2_g1ez2q.png',
+              title: 'Bike Storyboard — Sheet 02',
+              url: 'https://lh3.googleusercontent.com/d/1C-LVLrhzjGUiOUYJOL92u3X4ssOzmxK0',
               objectPosition: 'center 20%'
             },
             {
-              title: 'Concept 01: Battery Expert — Page 03',
-              url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Alask_car_SB3_gezlfc.png',
+              title: 'Bike Storyboard — Sheet 03',
+              url: 'https://lh3.googleusercontent.com/d/1gAc4GqOD842z885-EKKw07LTEeEZAdx5',
               objectPosition: 'center 20%'
             },
             {
-              title: 'Concept 01: Battery Expert — Page 04',
-              url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Alask_car_SB4_lurdir.png',
+              title: 'Bike Storyboard — Sheet 04',
+              url: 'https://lh3.googleusercontent.com/d/1E4aCFxEfjnm7QMiTPnT6EUEjt4T0LVtt',
               objectPosition: 'center 20%'
             },
             {
-              title: 'Concept 01: Battery Expert — Page 05',
-              url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Alask_car_SB5_rqusfj.png',
+              title: 'Bike Storyboard — Sheet 05',
+              url: 'https://lh3.googleusercontent.com/d/1wZ_C3JJfLigoCmL76V_EMwLZ9sR2c0qI',
+              objectPosition: 'center 20%'
+            }
+          ]
+        },
+        {
+          id: 'car',
+          name: 'Car',
+          conceptName: 'Luxury Car Ignition',
+          product: 'Car Battery',
+          pdfUrl: 'https://drive.google.com/file/d/1sWxXPJjGc4nsM3-0itMLXAdPCGq8MPwq/view?usp=sharing',
+          images: [
+            {
+              title: 'Car Storyboard — Sheet 01',
+              url: 'https://lh3.googleusercontent.com/d/1Hv7Vu1IgLujmqJCuXoROTZQI8T81H6Fe',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Car Storyboard — Sheet 02',
+              url: 'https://lh3.googleusercontent.com/d/16kFwSDhyY4Ogdi8zUnog842TryHySoOe',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Car Storyboard — Sheet 03',
+              url: 'https://lh3.googleusercontent.com/d/11uIOA2C4k46llbY1j-vpGHtwI6e3AmhU',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Car Storyboard — Sheet 04',
+              url: 'https://lh3.googleusercontent.com/d/1H4p0C_C6jXlq6dlRoBsWaDUk6xbNqzzB',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Car Storyboard — Sheet 05',
+              url: 'https://lh3.googleusercontent.com/d/1diTyfWxJ1GgafLcU5fVBwIdKLGPC5FRx',
+              objectPosition: 'center 20%'
+            }
+          ]
+        },
+        {
+          id: 'truck',
+          name: 'Truck',
+          conceptName: 'Truck Port Logistics',
+          product: 'Truck Battery',
+          pdfUrl: 'https://drive.google.com/file/d/1bFUAzuk1YXAzDZ1suaXZRZxB7pXDpjcA/view?usp=sharing',
+          images: [
+            {
+              title: 'Truck Storyboard — Sheet 01',
+              url: 'https://lh3.googleusercontent.com/d/1LscTDgYe3ojAE2oSiVsDEPdFMKIXeTXy',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Truck Storyboard — Sheet 01A',
+              url: 'https://lh3.googleusercontent.com/d/1vg9_oO5mgFVtfYBnhurA49x3UXss0PW4',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Truck Storyboard — Sheet 02',
+              url: 'https://lh3.googleusercontent.com/d/1zzTei-Rl9I-YT99aKhCzmslDMjzxOh1v',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Truck Storyboard — Sheet 03',
+              url: 'https://lh3.googleusercontent.com/d/1ciL67B85oAoOBK1OvdZRqq-orzbsw4KK',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Truck Storyboard — Sheet 04',
+              url: 'https://lh3.googleusercontent.com/d/1tYgPA6Ge5XFkcS0gMoJV8JnuEEwMnsFX',
+              objectPosition: 'center 20%'
+            }
+          ]
+        },
+        {
+          id: 'tractor',
+          name: 'Tractor',
+          conceptName: 'Tractor Baraat',
+          product: 'Tractor Battery',
+          pdfUrl: 'https://drive.google.com/file/d/1xRmqRTPztmVc7lRa_24FwK4HdLgQSVvd/view?usp=sharing',
+          images: [
+            {
+              title: 'Tractor Storyboard — Sheet 01',
+              url: 'https://lh3.googleusercontent.com/d/1NTtmKqHWwF6ZCNw_9LuLxjRLFVkDt0uJ',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Tractor Storyboard — Sheet 02',
+              url: 'https://lh3.googleusercontent.com/d/1Z121nbusfcvc37j6JEuNg1atV8_pLwoq',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Tractor Storyboard — Sheet 03',
+              url: 'https://lh3.googleusercontent.com/d/1oYRcqCcItL6ZsmoqLKy1VVb2FIRGTENk',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Tractor Storyboard — Sheet 04',
+              url: 'https://lh3.googleusercontent.com/d/1ftLDaaq7wm4vIgj6kF1AldwvBRcABdgW',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Tractor Storyboard — Sheet 05',
+              url: 'https://lh3.googleusercontent.com/d/1Cnhl7wAh2P5eOJfaAaYUH4qgRL4YYx-A',
+              objectPosition: 'center 20%'
+            }
+          ]
+        },
+        {
+          id: 'ups',
+          name: 'UPS',
+          conceptName: 'UPS/Inverter Wedding Morning',
+          product: 'UPS / Inverter Battery',
+          pdfUrl: 'https://drive.google.com/file/d/13trOf5UyzTaSFILdxO19Ns5zDgYF8irY/view?usp=sharing',
+          images: [
+            {
+              title: 'UPS Storyboard — Sheet 01',
+              url: 'https://lh3.googleusercontent.com/d/1Q3j1LeNDLNw4X7OplZON3tXbmag2eTSG',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'UPS Storyboard — Sheet 02',
+              url: 'https://lh3.googleusercontent.com/d/1taGpV1QreYaDcEJYA5shsI5h-ehA8nyb',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'UPS Storyboard — Sheet 03',
+              url: 'https://lh3.googleusercontent.com/d/15aqY0rOHIQG9eLBEWuZaRS59Hu67AaEJ',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'UPS Storyboard — Sheet 04',
+              url: 'https://lh3.googleusercontent.com/d/1vyOdQhl9CQcKm7v8pBmZwixfu7bCVsuM',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'UPS Storyboard — Sheet 05',
+              url: 'https://lh3.googleusercontent.com/d/1X07WSWV8vuLTKkB0g6VAay99nmNAiACi',
               objectPosition: 'center 20%'
             }
           ]
@@ -433,40 +766,44 @@ Visual storyboards mapping out the shot-by-shot progression, comic timing, light
       ],
       galleryImages: [
         {
-          title: 'Concept 01: Battery Expert — Page 01',
-          url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Alask_car_SB1_sjfn6j.png',
+          title: 'Bike Storyboard — Sheet 01',
+          url: 'https://lh3.googleusercontent.com/d/1V34IZzvcW8e1Hi1P891n4N0DXmqh8698',
           objectPosition: 'center 20%'
         },
         {
-          title: 'Concept 01: Battery Expert — Page 02',
-          url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Alask_car_SB2_g1ez2q.png',
+          title: 'Bike Storyboard — Sheet 02',
+          url: 'https://lh3.googleusercontent.com/d/1C-LVLrhzjGUiOUYJOL92u3X4ssOzmxK0',
           objectPosition: 'center 20%'
         },
         {
-          title: 'Concept 01: Battery Expert — Page 03',
-          url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Alask_car_SB3_gezlfc.png',
+          title: 'Bike Storyboard — Sheet 03',
+          url: 'https://lh3.googleusercontent.com/d/1gAc4GqOD842z885-EKKw07LTEeEZAdx5',
           objectPosition: 'center 20%'
         },
         {
-          title: 'Concept 01: Battery Expert — Page 04',
-          url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Alask_car_SB4_lurdir.png',
+          title: 'Bike Storyboard — Sheet 04',
+          url: 'https://lh3.googleusercontent.com/d/1E4aCFxEfjnm7QMiTPnT6EUEjt4T0LVtt',
           objectPosition: 'center 20%'
         },
         {
-          title: 'Concept 01: Battery Expert — Page 05',
-          url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Alask_car_SB5_rqusfj.png',
+          title: 'Bike Storyboard — Sheet 05',
+          url: 'https://lh3.googleusercontent.com/d/1wZ_C3JJfLigoCmL76V_EMwLZ9sR2c0qI',
           objectPosition: 'center 20%'
         }
       ],
       keyPoints: [
-        'Concept 01: "Battery Expert" (Car Battery Edition)',
-        '35mm Anamorphic Lens package for widescreen cinematic scale',
-        'Macro lens focus on ignition spark and battery construction details',
-        'Color grading transition from cold blues to warm ember sunrise tones'
+        '5 Commercial Films: Bike, Car, Truck, Tractor, UPS / Inverter',
+        '25 High-Definition Storyboard Sheets mapping shot-by-shot progression and camera movement',
+        'Full vector production PDFs with complete director notes for each film',
+        'Interactive pan, zoom, and magnifying glass inspection for visual review'
       ],
-      pageCount: 5,
+      pageCount: 25,
       attachedFiles: [
-        { name: 'Full_Storyboard_Sequence_HD.pdf', url: '#', size: '14.2 MB' }
+        { name: 'Alaska_Bike_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/1ceVlKe4Ta7gIE4VjaAwygvXEpfod4EGS/view?usp=sharing', size: 'Vector PDF' },
+        { name: 'Alaska_Car_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/1sWxXPJjGc4nsM3-0itMLXAdPCGq8MPwq/view?usp=sharing', size: 'Vector PDF' },
+        { name: 'Alaska_Truck_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/1bFUAzuk1YXAzDZ1suaXZRZxB7pXDpjcA/view?usp=sharing', size: 'Vector PDF' },
+        { name: 'Alaska_Tractor_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/1xRmqRTPztmVc7lRa_24FwK4HdLgQSVvd/view?usp=sharing', size: 'Vector PDF' },
+        { name: 'Alaska_UPS_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/13trOf5UyzTaSFILdxO19Ns5zDgYF8irY/view?usp=sharing', size: 'Vector PDF' }
       ]
     },
     {
@@ -476,8 +813,8 @@ Visual storyboards mapping out the shot-by-shot progression, comic timing, light
       category: 'Production & Casting',
       visualImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/ITrobot_qwhvys.png',
       overlayHeadline: 'World-class Crew & Authentic Casting.',
-      summary: 'Production visual references and art direction for Route 1 / Concept 1 (Battery Expert) and Concept 1A (Battery Guru).',
-      fullText: '',
+      summary: 'Production visual references, character design & Celebrity Talent Agreement (Iftikhar Thakur).',
+      fullText: TALENT_CONTRACT_RAW,
       galleryImages: [
         {
           title: 'Route 1 / Concept 1: Battery Expert',
@@ -490,9 +827,17 @@ Visual storyboards mapping out the shot-by-shot progression, comic timing, light
           objectPosition: 'center 12%'
         }
       ],
-      keyPoints: [],
+      keyPoints: [
+        'Celebrity Model: Mr. Iftikhar Ahmad Sheikh (Iftikhar Thakur)',
+        'Client: M/s. Alaska Batteries | Agency & Production: Nasharz',
+        'Contract Period: 2 Years (2026 – 2028), Worldwide Commercial Usage',
+        '5 Shoot Days across TVC, Digital, Print, OOH, POS & Audio Advertising',
+        'Exclusive AI, Facial Likeness, Digital Double & Voice Rights via Nasharz',
+        'Professional Consideration: PKR 3,000,000 Net + 10% Talent Agency Commission (PKR 300,000)'
+      ],
       pageCount: 6,
       attachedFiles: [
+        { name: 'Celebrity Talent Contract Copy (Iftikhar Thakur)', url: '#contract', size: 'Full Legal Agreement' },
         { name: 'Talent_Lookbook_and_Location_Guide.pdf', url: '#', size: '9.8 MB' }
       ]
     }
@@ -502,5 +847,42 @@ Visual storyboards mapping out the shot-by-shot progression, comic timing, light
     { id: 'log-1', name: 'Alaska Client', role: 'client', timestamp: '2026-08-13 10:15:00' },
     { id: 'log-2', name: 'aati', role: 'admin', timestamp: '2026-08-13 10:30:12' }
   ],
-  mediaAssets: []
+  mediaAssets: [
+    {
+      id: 'media-jingle-jalwa',
+      title: 'Jalwa (Reveal)',
+      type: 'audio',
+      category: 'Jingle Reference Music',
+      url: 'https://res.cloudinary.com/zpwicpo5/video/upload/Fashion_Ka_Jalwa_Sukhwinder_Singh_320_Kbps.mp3',
+      downloadUrl: 'https://res.cloudinary.com/zpwicpo5/video/upload/Fashion_Ka_Jalwa_Sukhwinder_Singh_320_Kbps.mp3',
+      description: 'High-energy rhythmic brass, percussion & vocal punch for the climactic Battery Phelwan / Alaska Reveal sequence.',
+      duration: '4:42',
+      fileSize: '10.8 MB',
+      uploadedAt: '2026-08-24'
+    },
+    {
+      id: 'media-jingle-dhoom2',
+      title: 'Dhoom 2 (Crazy Kiya Re)',
+      type: 'audio',
+      category: 'Jingle Reference Music',
+      url: 'https://res.cloudinary.com/zpwicpo5/video/upload/Crazy_Kiya_Re_Dhoom_2__Back_In_Action_320_Kbps.mp3',
+      downloadUrl: 'https://res.cloudinary.com/zpwicpo5/video/upload/Crazy_Kiya_Re_Dhoom_2__Back_In_Action_320_Kbps.mp3',
+      description: 'High-octane electronic groove, modern bassline pulse & kinetic tempo reference for high-impact action cuts.',
+      duration: '4:54',
+      fileSize: '11.2 MB',
+      uploadedAt: '2026-08-24'
+    },
+    {
+      id: 'media-jingle-dangal-title',
+      title: 'Dangal (Title Track)',
+      type: 'audio',
+      category: 'Jingle Reference Music',
+      url: 'https://res.cloudinary.com/zpwicpo5/video/upload/Dangal_-_Title_Track_Dangal_Aamir_Khan_Pritam_Amitabh_Bhattacharya_Daler_Mehndi_HD_Video.mp3',
+      downloadUrl: 'https://res.cloudinary.com/zpwicpo5/video/upload/Dangal_-_Title_Track_Dangal_Aamir_Khan_Pritam_Amitabh_Bhattacharya_Daler_Mehndi_HD_Video.mp3',
+      description: 'Iconic energetic vocals by Daler Mehndi with anthemic Punjabi wrestling dhol cadence and epic build-up.',
+      duration: '4:59',
+      fileSize: '11.5 MB',
+      uploadedAt: '2026-08-24'
+    }
+  ]
 };

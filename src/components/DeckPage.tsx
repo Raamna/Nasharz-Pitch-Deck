@@ -4,6 +4,7 @@ import { generateChapterPDF } from '../utils/pdfGenerator';
 import { FullChapterModal } from './FullChapterModal';
 import { EstimateModal } from './EstimateModal';
 import { MediaHubModal } from './MediaHubModal';
+import { UpdatesModal } from './UpdatesModal';
 import { BrandLogo } from './BrandLogo';
 import {
   Download,
@@ -19,7 +20,11 @@ import {
   Music,
   Play,
   LayoutDashboard,
-  ArrowRight
+  ArrowRight,
+  X,
+  Bell,
+  Film,
+  Image as ImageIcon
 } from 'lucide-react';
 
 interface DeckPageProps {
@@ -38,11 +43,13 @@ export const DeckPage: React.FC<DeckPageProps> = ({
   onOpenAdmin,
 }) => {
   const [activeChapterId, setActiveChapterId] = useState<string>(data.chapters[0]?.id || 'brief');
-  const [selectedConceptTab, setSelectedConceptTab] = useState<string>('all');
+  const [selectedConceptTab, setSelectedConceptTab] = useState<string>('final-concepts');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [showFullModal, setShowFullModal] = useState(false);
   const [showEstimateModal, setShowEstimateModal] = useState(false);
   const [showMediaHub, setShowMediaHub] = useState(false);
+  const [showUpdatesModal, setShowUpdatesModal] = useState(false);
+  const [showUpdatesBanner, setShowUpdatesBanner] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const currentChapter = data.chapters.find((c) => c.id === activeChapterId) || data.chapters[0];
@@ -55,11 +62,19 @@ export const DeckPage: React.FC<DeckPageProps> = ({
     setIsGenerating(false);
   };
 
+  const handleNavigateChapter = (chapterId: string, conceptTab?: string) => {
+    setActiveChapterId(chapterId);
+    if (conceptTab) {
+      setSelectedConceptTab(conceptTab);
+    }
+    setShowFullModal(true);
+  };
+
   return (
     <div className="min-h-screen bg-[#f4f3f0] text-[#1a1c1e] font-sans flex flex-col justify-between selection:bg-[#c69a53] selection:text-white">
       
-      {/* 1. TOP HEADER - Exact match to Image 2 with Media Hub */}
-      <header className="px-6 sm:px-12 py-5 border-b border-zinc-200/80 flex items-center justify-between bg-[#f4f3f0] sticky top-0 z-30">
+      {/* 1. TOP HEADER */}
+      <header className="px-6 sm:px-12 py-4 sm:py-5 border-b border-zinc-200/80 flex items-center justify-between bg-[#f4f3f0] sticky top-0 z-30 shadow-2xs">
         <div className="flex items-center gap-3">
           <BrandLogo
             src={data.branding.blackLogo}
@@ -76,6 +91,19 @@ export const DeckPage: React.FC<DeckPageProps> = ({
         {/* Right Header Navigation Items */}
         <div className="flex items-center gap-2 sm:gap-3">
           
+          {/* Highlighted Updates Button */}
+          <button
+            onClick={() => setShowUpdatesModal(true)}
+            className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full bg-amber-500/15 hover:bg-amber-500/25 text-amber-950 border border-amber-500/40 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-2xs"
+            title="View Recent Deck Updates & Changelog"
+          >
+            <span className="w-2 h-2 rounded-full bg-amber-600 animate-ping" />
+            <span className="hidden xs:inline">Updates</span>
+            <span className="bg-amber-500 text-black text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">
+              NEW
+            </span>
+          </button>
+
           {/* Direct Generate Estimate Button */}
           <button
             onClick={() => setShowEstimateModal(true)}
@@ -134,6 +162,20 @@ export const DeckPage: React.FC<DeckPageProps> = ({
                     {userRole === 'admin' ? 'Executive Producer' : 'Client Reviewer'}
                   </span>
                 </div>
+
+                <button
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    setShowUpdatesModal(true);
+                  }}
+                  className="w-full text-left px-4 py-2.5 text-xs text-amber-900 hover:bg-amber-50 font-bold flex items-center justify-between transition-all cursor-pointer border-b border-zinc-100 bg-amber-500/5"
+                >
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-[#b8860b]" />
+                    <span>What's New (Updates)</span>
+                  </div>
+                  <span className="bg-amber-500 text-black text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">NEW</span>
+                </button>
 
                 {/* Return to Admin Panel Option (Prominent for Admin) */}
                 {userRole === 'admin' && (
@@ -200,7 +242,42 @@ export const DeckPage: React.FC<DeckPageProps> = ({
         </div>
       </header>
 
-      {/* 2. MAIN PRESENTATION CONTAINER - Exact match to Image 2 */}
+      {/* Prominent Updates Notification Alert Banner */}
+      {showUpdatesBanner && (
+        <div className="bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-white px-4 sm:px-12 py-2.5 border-b border-amber-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-md">
+          <div className="flex items-center gap-2.5 flex-wrap">
+            <span className="inline-flex items-center gap-1 bg-amber-500 text-black font-black text-[10px] uppercase px-2.5 py-0.5 rounded-full shadow-2xs">
+              <Sparkles className="w-3 h-3 animate-pulse" /> RECENT UPDATES
+            </span>
+            <span className="text-zinc-200 font-medium">
+              New <strong>"Battery Phelwan"</strong> TVC Master Suite (5 Films, Punjabi Jingles & Dialogues) & Complete Storyboards updated.
+            </span>
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
+            <button
+              onClick={() => handleNavigateChapter('concepts', 'final-concepts')}
+              className="px-3 py-1 bg-gradient-to-r from-amber-400 to-amber-300 text-black hover:from-amber-300 hover:to-amber-200 font-black rounded-lg text-[11px] transition-all cursor-pointer shadow-xs"
+            >
+              View Master Concepts
+            </button>
+            <button
+              onClick={() => handleNavigateChapter('storyboards')}
+              className="px-3 py-1 bg-zinc-800 text-amber-300 hover:bg-zinc-700 font-bold rounded-lg text-[11px] transition-all cursor-pointer border border-zinc-700"
+            >
+              View Storyboards
+            </button>
+            <button
+              onClick={() => setShowUpdatesBanner(false)}
+              className="p-1 text-zinc-400 hover:text-white rounded-md transition-colors cursor-pointer"
+              title="Dismiss notification"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* 2. MAIN PRESENTATION CONTAINER */}
       <main className="max-w-7xl w-full mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-8 flex-1 flex flex-col gap-6">
         
         {/* Title and Client Breadcrumb */}
@@ -227,24 +304,26 @@ export const DeckPage: React.FC<DeckPageProps> = ({
           </div>
         </div>
 
-        {/* Chapter Navigation Tabs */}
+        {/* Chapter Navigation Tabs with Highlight Badges */}
         <div className="border-b border-zinc-200/80 pb-1 overflow-x-auto no-scrollbar">
-          <div className="flex items-center gap-6 sm:gap-8 py-1">
+          <div className="flex items-center gap-5 sm:gap-7 py-1">
             {data.chapters.map((ch) => {
               const isActive = ch.id === currentChapter.id;
-              const hasUpdate = ch.lastUpdated || ch.summary?.includes('Last Updated');
+              const hasUpdate = ch.id === 'concepts' || ch.id === 'storyboards' || !!ch.lastUpdated;
               return (
                 <button
                   key={ch.id}
                   onClick={() => setActiveChapterId(ch.id)}
-                  className={`relative text-xs font-medium pb-3 transition-all whitespace-nowrap cursor-pointer flex items-center gap-1 ${
+                  className={`relative text-xs font-medium pb-3 transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
                     isActive ? 'text-zinc-900 font-bold' : 'text-zinc-400 hover:text-zinc-700'
                   }`}
                 >
-                  <span className="mr-1 text-[#b8860b] font-normal">{ch.number}</span>
+                  <span className="text-[#b8860b] font-normal">{ch.number}</span>
                   <span>{ch.title}</span>
                   {hasUpdate && (
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block animate-pulse ml-0.5" title="Updated recently" />
+                    <span className="text-[9px] font-black tracking-wider uppercase bg-amber-500/20 text-amber-900 border border-amber-500/40 px-1.5 py-0.2 rounded-md animate-pulse ml-0.5">
+                      UPDATED
+                    </span>
                   )}
                   {isActive && (
                     <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-zinc-900 rounded-full"></span>
@@ -255,7 +334,7 @@ export const DeckPage: React.FC<DeckPageProps> = ({
           </div>
         </div>
 
-        {/* Main Deck Display Grid - Exact layout from Image 2 */}
+        {/* Main Deck Display Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
           
           {/* Left Column: Widescreen Visual Card */}
@@ -286,24 +365,76 @@ export const DeckPage: React.FC<DeckPageProps> = ({
 
           {/* Right Column: Narrative Card */}
           <div 
-            className="lg:col-span-5 bg-[#eae8e3] rounded-3xl p-8 sm:p-10 flex flex-col justify-between border border-zinc-200/50 hover:border-zinc-300 transition-all cursor-pointer group"
+            className="lg:col-span-5 bg-[#eae8e3] rounded-3xl p-6 sm:p-8 flex flex-col justify-between border border-zinc-200/50 hover:border-zinc-300 transition-all cursor-pointer group"
             onClick={() => setShowFullModal(true)}
             title="Click to view full chapter detail"
           >
             <div>
-              {/* Category Header */}
-              <div className="flex justify-between items-center text-xs font-normal mb-8">
+              {/* Category Header & Update Tag */}
+              <div className="flex justify-between items-center text-xs font-normal mb-5">
                 <span className="text-[#b8860b] font-semibold tracking-wide uppercase text-[11px]">{currentChapter.category || 'The ask'}</span>
-                {currentChapter.lastUpdated && !currentChapter.summary?.includes('Last Updated') && (
+                {currentChapter.lastUpdated && (
                   <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-amber-900 bg-amber-500/15 border border-amber-500/30 px-2.5 py-0.5 rounded-full">
                     <span className="w-1.5 h-1.5 rounded-full bg-amber-600 animate-pulse"></span>
-                    <span>(Last Updated on {currentChapter.lastUpdated})</span>
+                    <span>(Last Updated {currentChapter.lastUpdated})</span>
                   </span>
                 )}
               </div>
 
+              {/* Special Prominent Highlight Callout Banners for Updated Chapters */}
+              {currentChapter.id === 'concepts' && (
+                <div className="mb-4 p-3 bg-gradient-to-r from-amber-500/20 to-amber-500/10 border border-amber-500/40 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-2xs">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-amber-700 shrink-0 animate-pulse" />
+                    <div>
+                      <span className="font-extrabold text-amber-950 block">
+                        ⭐ Updated Master Concepts:
+                      </span>
+                      <span className="text-amber-900 text-[11px]">
+                        "Battery Phelwan" 5-film suite with Punjabi jingles & dialogue options.
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedConceptTab('final-concepts');
+                      setShowFullModal(true);
+                    }}
+                    className="px-2.5 py-1 bg-[#c69a53] text-black font-extrabold rounded-lg text-[11px] hover:bg-[#b08542] transition-all cursor-pointer shrink-0 shadow-2xs"
+                  >
+                    Read Script →
+                  </button>
+                </div>
+              )}
+
+              {currentChapter.id === 'storyboards' && (
+                <div className="mb-4 p-3 bg-gradient-to-r from-amber-500/20 to-amber-500/10 border border-amber-500/40 rounded-2xl flex items-center justify-between gap-3 text-xs shadow-2xs">
+                  <div className="flex items-center gap-2">
+                    <Sparkles className="w-4 h-4 text-amber-700 shrink-0 animate-pulse" />
+                    <div>
+                      <span className="font-extrabold text-amber-950 block">
+                        ⭐ Updated Storyboards:
+                      </span>
+                      <span className="text-amber-900 text-[11px]">
+                        Complete 5 commercial film storyboards & vector PDFs.
+                      </span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setShowFullModal(true);
+                    }}
+                    className="px-2.5 py-1 bg-[#c69a53] text-black font-extrabold rounded-lg text-[11px] hover:bg-[#b08542] transition-all cursor-pointer shrink-0 shadow-2xs"
+                  >
+                    View Sheets →
+                  </button>
+                </div>
+              )}
+
               {/* Main Chapter Summary / Body Narrative */}
-              <h3 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-zinc-900 font-heading leading-[1.25]">
+              <h3 className="text-xl sm:text-2xl font-extrabold text-zinc-900 font-heading leading-[1.25]">
                 {currentChapter.summary ? (
                   currentChapter.summary.split(/(\([^)]+\))/g).map((part, idx) => {
                     if (part.startsWith('(') && part.endsWith(')')) {
@@ -356,8 +487,8 @@ export const DeckPage: React.FC<DeckPageProps> = ({
               )}
             </div>
 
-            {/* Bottom Controls - Exact to Image 2 */}
-            <div className="pt-6 border-t border-zinc-300/60 flex items-center justify-between gap-3 mt-8">
+            {/* Bottom Controls */}
+            <div className="pt-5 border-t border-zinc-300/60 flex items-center justify-between gap-3 mt-6">
               <span className="text-xs text-zinc-400 font-normal">
                 {currentChapter.pageCount.toString().padStart(2, '0')} pages
               </span>
@@ -368,7 +499,7 @@ export const DeckPage: React.FC<DeckPageProps> = ({
                   handleDownloadPDF();
                 }}
                 disabled={isGenerating}
-                className="px-5 py-3 bg-[#1c2024] hover:bg-black text-white rounded-2xl text-xs font-bold flex items-center gap-2.5 transition-all shadow-sm active:scale-95 disabled:opacity-50 cursor-pointer"
+                className="px-5 py-2.5 bg-[#1c2024] hover:bg-black text-white rounded-2xl text-xs font-bold flex items-center gap-2.5 transition-all shadow-sm active:scale-95 disabled:opacity-50 cursor-pointer"
               >
                 <Download className="w-4 h-4" />
                 <span>{isGenerating ? 'Generating...' : 'Download'}</span>
@@ -381,7 +512,7 @@ export const DeckPage: React.FC<DeckPageProps> = ({
 
       </main>
 
-      {/* 3. FOOTER - Exact match to Image 2 */}
+      {/* 3. FOOTER */}
       <footer className="px-6 sm:px-12 py-5 border-t border-zinc-200/60 flex items-center justify-between text-xs text-zinc-400 font-normal bg-[#f4f3f0]">
         <span>Confidential - For review only</span>
         <span>{data.branding.producedBy || 'Nasharz'}</span>
@@ -412,6 +543,14 @@ export const DeckPage: React.FC<DeckPageProps> = ({
           assets={data.mediaAssets || []}
           branding={data.branding}
           onClose={() => setShowMediaHub(false)}
+        />
+      )}
+
+      {showUpdatesModal && (
+        <UpdatesModal
+          isOpen={showUpdatesModal}
+          onClose={() => setShowUpdatesModal(false)}
+          onNavigateChapter={handleNavigateChapter}
         />
       )}
 

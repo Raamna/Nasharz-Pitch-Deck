@@ -1,7 +1,7 @@
 import { DeckData, LoginLog } from '../types';
 import { initialDeckData } from '../data/defaultData';
 
-const STORAGE_KEY = 'nasharz_alaska_deck_data_v43';
+const STORAGE_KEY = 'nasharz_alaska_deck_data_v52';
 
 export function getStoredData(): DeckData {
   try {
@@ -19,6 +19,7 @@ export function getStoredData(): DeckData {
         return {
           ...defaultCh,
           ...ch,
+          pdfFullText: defaultCh.pdfFullText || ch.pdfFullText,
           conceptTabs: ch.conceptTabs !== undefined ? ch.conceptTabs : defaultCh.conceptTabs,
           finalConceptsText: ch.finalConceptsText !== undefined ? ch.finalConceptsText : defaultCh.finalConceptsText,
           folders: ch.folders !== undefined ? ch.folders : defaultCh.folders,
@@ -34,7 +35,7 @@ export function getStoredData(): DeckData {
       chapters: hydratedChapters,
       estimates: parsed.estimates && parsed.estimates.length > 0 ? parsed.estimates : initialDeckData.estimates,
       logs: parsed.logs || initialDeckData.logs,
-      mediaAssets: Array.isArray(parsed.mediaAssets) ? parsed.mediaAssets : (initialDeckData.mediaAssets || []),
+      mediaAssets: Array.isArray(parsed.mediaAssets) && parsed.mediaAssets.length > 0 ? parsed.mediaAssets : (initialDeckData.mediaAssets || []),
     };
   } catch (e) {
     console.error('Error loading data from localStorage', e);

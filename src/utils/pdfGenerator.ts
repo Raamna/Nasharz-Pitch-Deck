@@ -276,8 +276,8 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
     // Main section heading: e.g. "1. COMPETITOR ANALYSIS..." or "CONFIDENTIAL - CREATIVE BRIEF"
     const isMainHeading =
       (/^[0-9]+\.\s+[A-Z\s&/—–:-]{3,}/.test(trimmed) ||
-      /^(CONFIDENTIAL|CAMPAIGN|STORYBOARD|ART DIRECTION|PRODUCTION|ESTIMATE|KEY DELIVERABLES|PAKISTANI BATTERY|BRAND FOUNDATION|TAGLINE \/ SLOGAN|STRATEGIC CONCLUSION)/i.test(trimmed)) &&
-      trimmed.length < 75;
+      /^(CONFIDENTIAL|CAMPAIGN|STORYBOARD|ART DIRECTION|PRODUCTION|ESTIMATE|KEY DELIVERABLES|PAKISTANI BATTERY|BRAND FOUNDATION|TAGLINE \/ SLOGAN|STRATEGIC CONCLUSION|CONCEPT\s+[0-9]|ROUTE\s+[0-9]|ALASKA BATTERIES|MODELING,\s+TALENT|SIGNATURES)/i.test(trimmed)) &&
+      trimmed.length < 90;
 
     if (isMainHeading) {
       const h = document.createElement('div');
@@ -299,7 +299,7 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
     }
 
     // Scene Headings & Jingle Sections (e.g. "OPEN — WORKSHOP", "CORE IDEA", "THE SECOND BATTERY", "JINGLE", "COMPLETE JINGLE", "THE FILM", "PART 01", "PRODUCT SCOPE")
-    const isSceneOrJingleHeading = /^(OPEN|THE GURU|THE EXPERT TEST|RESOLUTION|ALASKA REVEAL|THE SECOND BATTERY|JINGLE|COMPLETE JINGLE|THE ENERGY BUILDS|RETURN TO THE WORKSHOP|PRODUCT REVEAL|END FRAME|CORE IDEA|CUT TO|THE FILM|PART 01|PART 02|PRODUCT SCOPE|CURRENT PRESENTATION|FUTURE EXPANSION|LIGHTS OUT|JUGGALBANDI & RAP)\b/i.test(trimmed);
+    const isSceneOrJingleHeading = /^(OPEN|THE GURU|THE EXPERT TEST|THE PHELWAN TEST|THE PHELWAN ARRIVAL|\(THE ARRIVAL\)|THE ARRIVAL|THE PROBLEM|THE TWIST|\(Twist\)|RESOLUTION|ALASKA REVEAL|\(ALASKA REVEAL\)|THE SECOND BATTERY|JINGLE|COMPLETE JINGLE|COMPLETE MASTER JINGLE|Jingle & Dialogue Options|& Dialogue Options|Dialogue Options|Ending Dialogues|Option\s+[A-C]|Option-[A-C]|THE ENERGY BUILDS|RETURN TO THE WORKSHOP|PRODUCT REVEAL|END FRAME|END SLIDE|End Logo|End Tail|CORE IDEA|CUT TO|THE FILM|PART 01|PART 02|PRODUCT SCOPE|CURRENT PRESENTATION|FUTURE EXPANSION|LIGHTS OUT|JUGGALBANDI & RAP)\b/i.test(trimmed);
     if (isSceneOrJingleHeading) {
       const sh = document.createElement('div');
       sh.style.fontWeight = '800';
@@ -331,14 +331,30 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
       continue;
     }
 
-    // Character dialogue speakers (e.g. "IFTIKHAR THAKUR:", "MOTA SHAKHS:", "VO:", "CLIENT:", "MANAGER:", "MOTHER:")
-    const isSpeaker = /^(IFTIKHAR THAKUR|MOTA SHAKHS|IFTIKHAR|THAKUR|VO|CLIENT|MANAGER|MOTHER|COACH|PLAYER|DRIVER):\s*$/i.test(trimmed);
-    if (isSpeaker) {
+    // Character dialogue speakers with inline dialogue (e.g. "POLICE THAKUR: \"Battery?\"", "Thakur: \"Jab battery ka ho kabaara...\"")
+    const speakerWithDialogueMatch = trimmed.match(/^([A-Za-z0-9.\s&—/()–-]+):\s*(.+)$/);
+    if (speakerWithDialogueMatch && speakerWithDialogueMatch[1].length <= 35 && !speakerWithDialogueMatch[1].toLowerCase().includes('http') && !trimmed.startsWith('•')) {
+      const spk = speakerWithDialogueMatch[1].trim();
+      const dlg = speakerWithDialogueMatch[2].trim();
+      const row = document.createElement('div');
+      row.style.fontSize = '13px';
+      row.style.lineHeight = '1.55';
+      row.style.marginBottom = '5px';
+      row.style.paddingLeft = '10px';
+      row.style.borderLeft = '2.5px solid #d97706';
+      row.innerHTML = `<strong style="color: #92400e; font-weight: 800; text-transform: uppercase; font-size: 11.5px; letter-spacing: 0.04em;">${spk}:</strong> <span style="color: #0f172a; font-weight: 600;">${dlg}</span>`;
+      blocks.push(row);
+      continue;
+    }
+
+    // Standalone dialogue speaker line (e.g. "POLICE THAKUR:", "Thakur:", "DRIVER:")
+    const isSpeakerStandalone = /^([A-Za-z0-9.\s&—/()–-]+):\s*$/i.test(trimmed) && trimmed.length <= 40;
+    if (isSpeakerStandalone) {
       const spk = document.createElement('div');
       spk.style.fontWeight = '800';
-      spk.style.fontSize = '13.5px';
+      spk.style.fontSize = '12.5px';
       spk.style.lineHeight = '1.3';
-      spk.style.color = '#1e293b';
+      spk.style.color = '#92400e';
       spk.style.marginTop = '10px';
       spk.style.marginBottom = '3px';
       spk.style.textTransform = 'uppercase';
