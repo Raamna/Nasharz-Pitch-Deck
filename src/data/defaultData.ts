@@ -594,6 +594,40 @@ UPS/Inverter Battery — "Wedding Morning & Uninterrupted Power"
 Explore each concept folder above to review the high-resolution storyboard sequences and vector production PDFs.`,
       folders: [
         {
+          id: 'main-tvc',
+          name: 'Main TVC',
+          conceptName: 'Main TVC Master Storyboard',
+          product: 'Alaska Batteries Master TVC Campaign',
+          pdfUrl: 'https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing',
+          images: [
+            {
+              title: 'Main TVC Master Board — Key Sequence 01 (Bike / Street Reporter)',
+              url: 'https://lh3.googleusercontent.com/d/1V34IZzvcW8e1Hi1P891n4N0DXmqh8698',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Main TVC Master Board — Key Sequence 02 (Car / Winter Luxury Ignition)',
+              url: 'https://lh3.googleusercontent.com/d/1Hv7Vu1IgLujmqJCuXoROTZQI8T81H6Fe',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Main TVC Master Board — Key Sequence 03 (Truck / Port Logistics)',
+              url: 'https://lh3.googleusercontent.com/d/1vg9_oO5mgFVtfYBnhurA49x3UXss0PW4',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Main TVC Master Board — Key Sequence 04 (Tractor / Agricultural Power Field)',
+              url: 'https://lh3.googleusercontent.com/d/1NTtmKqHWwF6ZCNw_9LuLxjRLFVkDt0uJ',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Main TVC Master Board — Key Sequence 05 (UPS / Wedding Morning Continuity)',
+              url: 'https://lh3.googleusercontent.com/d/1Q3j1LeNDLNw4X7OplZON3tXbmag2eTSG',
+              objectPosition: 'center 20%'
+            }
+          ]
+        },
+        {
           id: 'bike',
           name: 'Bike',
           conceptName: 'Motorcycle Interview',
@@ -792,6 +826,7 @@ Explore each concept folder above to review the high-resolution storyboard seque
         }
       ],
       keyPoints: [
+        'Main TVC Master Storyboard with complete shot sequence and visual direction',
         '5 Commercial Films: Bike, Car, Truck, Tractor, UPS / Inverter',
         '25 High-Definition Storyboard Sheets mapping shot-by-shot progression and camera movement',
         'Full vector production PDFs with complete director notes for each film',
@@ -799,6 +834,7 @@ Explore each concept folder above to review the high-resolution storyboard seque
       ],
       pageCount: 25,
       attachedFiles: [
+        { name: 'Main_TVC_Storyboard_Master_Board.pdf', url: 'https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing', size: 'Main TVC Master' },
         { name: 'Alaska_Bike_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/1ceVlKe4Ta7gIE4VjaAwygvXEpfod4EGS/view?usp=sharing', size: 'Vector PDF' },
         { name: 'Alaska_Car_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/1sWxXPJjGc4nsM3-0itMLXAdPCGq8MPwq/view?usp=sharing', size: 'Vector PDF' },
         { name: 'Alaska_Truck_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/1bFUAzuk1YXAzDZ1suaXZRZxB7pXDpjcA/view?usp=sharing', size: 'Vector PDF' },

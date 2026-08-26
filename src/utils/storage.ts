@@ -1,7 +1,7 @@
 import { DeckData, LoginLog } from '../types';
 import { initialDeckData } from '../data/defaultData';
 
-const STORAGE_KEY = 'nasharz_alaska_deck_data_v52';
+const STORAGE_KEY = 'nasharz_alaska_deck_data_v55';
 
 export function getStoredData(): DeckData {
   try {
@@ -22,7 +22,8 @@ export function getStoredData(): DeckData {
           pdfFullText: defaultCh.pdfFullText || ch.pdfFullText,
           conceptTabs: ch.conceptTabs !== undefined ? ch.conceptTabs : defaultCh.conceptTabs,
           finalConceptsText: ch.finalConceptsText !== undefined ? ch.finalConceptsText : defaultCh.finalConceptsText,
-          folders: ch.folders !== undefined ? ch.folders : defaultCh.folders,
+          folders: defaultCh.folders ? defaultCh.folders : ch.folders,
+          attachedFiles: defaultCh.attachedFiles ? defaultCh.attachedFiles : ch.attachedFiles,
           galleryImages: ch.galleryImages !== undefined ? ch.galleryImages : defaultCh.galleryImages,
           lastUpdated: ch.lastUpdated !== undefined ? ch.lastUpdated : defaultCh.lastUpdated,
         };

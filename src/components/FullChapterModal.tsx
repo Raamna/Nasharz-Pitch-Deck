@@ -17,7 +17,8 @@ import {
   ChevronLeft, 
   ChevronRight,
   Sparkles,
-  Copy
+  Copy,
+  ExternalLink
 } from 'lucide-react';
 
 interface FullChapterModalProps {
@@ -634,37 +635,63 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                 
                 {/* Folders Tab Bar (if chapter has multiple storyboard folders) */}
                 {chapter.folders && chapter.folders.length > 0 && (
-                  <div className="flex flex-wrap items-center gap-2 pb-3 border-b border-zinc-200">
-                    <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mr-1 flex items-center gap-1.5">
-                      <Folder className="w-3.5 h-3.5" /> Concept Folders:
-                    </span>
-                    {chapter.folders.map((folder) => {
-                      const isActive = folder.id === activeFolderId;
-                      return (
-                        <button
-                          key={folder.id}
-                          onClick={() => {
-                            setActiveFolderId(folder.id);
-                            setEnlargedIndex(null);
-                          }}
-                          className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all cursor-pointer ${
-                            isActive
-                              ? 'bg-zinc-900 text-white shadow-sm ring-1 ring-zinc-900'
-                              : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900'
-                          }`}
-                        >
-                          {isActive ? (
-                            <FolderOpen className="w-3.5 h-3.5 text-[#c69a53]" />
-                          ) : (
-                            <Folder className="w-3.5 h-3.5 text-zinc-400" />
-                          )}
-                          <span>{folder.name}</span>
-                          <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? 'bg-white/20 text-white' : 'bg-zinc-200 text-zinc-600'}`}>
-                            {folder.images.length}
-                          </span>
-                        </button>
-                      );
-                    })}
+                  <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-zinc-200">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider mr-1 flex items-center gap-1.5">
+                        <Folder className="w-3.5 h-3.5" /> Concept Folders:
+                      </span>
+                      {chapter.folders.map((folder) => {
+                        const isActive = folder.id === activeFolderId;
+                        const isMainTVC = folder.id === 'main-tvc';
+                        return (
+                          <button
+                            key={folder.id}
+                            onClick={() => {
+                              setActiveFolderId(folder.id);
+                              setEnlargedIndex(null);
+                            }}
+                            className={`flex items-center gap-2 px-3.5 py-1.5 rounded-full text-xs font-bold tracking-wide transition-all cursor-pointer ${
+                              isActive
+                                ? isMainTVC
+                                  ? 'bg-gradient-to-r from-amber-500 to-[#c69a53] text-black shadow-md ring-2 ring-amber-400'
+                                  : 'bg-zinc-900 text-white shadow-sm ring-1 ring-zinc-900'
+                                : isMainTVC
+                                  ? 'bg-amber-500/15 text-amber-900 hover:bg-amber-500/25 border border-amber-500/30'
+                                  : 'bg-zinc-100 text-zinc-600 hover:bg-zinc-200 hover:text-zinc-900'
+                            }`}
+                          >
+                            {isActive ? (
+                              <FolderOpen className={`w-3.5 h-3.5 ${isMainTVC ? 'text-black' : 'text-[#c69a53]'}`} />
+                            ) : (
+                              <Folder className={`w-3.5 h-3.5 ${isMainTVC ? 'text-amber-700' : 'text-zinc-400'}`} />
+                            )}
+                            <span>{folder.name}</span>
+                            {isMainTVC && (
+                              <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-black uppercase tracking-wider ${isActive ? 'bg-black text-amber-300' : 'bg-amber-500/30 text-amber-900'}`}>
+                                Master
+                              </span>
+                            )}
+                            <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? (isMainTVC ? 'bg-black/20 text-black' : 'bg-white/20 text-white') : 'bg-zinc-200 text-zinc-600'}`}>
+                              {folder.images.length}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
+
+                    {chapter.id === 'storyboards' && (
+                      <a
+                        href="https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-950 border border-amber-500/40 hover:bg-amber-500/25 transition-all shadow-2xs group"
+                      >
+                        <Sparkles className="w-3.5 h-3.5 text-[#c69a53] group-hover:scale-110 transition-transform" />
+                        <span>Main TVC Master Board (Drive)</span>
+                        <ExternalLink className="w-3 h-3 text-amber-800" />
+                      </a>
+                    )}
                   </div>
                 )}
 
@@ -682,6 +709,17 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
+                        <a
+                          href="https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="text-[11px] font-bold text-black bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 px-3 py-1 rounded-lg flex items-center gap-1.5 transition-all shadow-2xs"
+                        >
+                          <FolderOpen className="w-3.5 h-3.5 text-black" />
+                          <span>Main TVC Master Board (Drive)</span>
+                          <ExternalLink className="w-3 h-3 text-black" />
+                        </a>
                         {currentFolder?.pdfUrl && (
                           <a
                             href={currentFolder.pdfUrl}
@@ -699,6 +737,41 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                         </span>
                       </div>
                     </div>
+
+                    {currentFolder?.id === 'main-tvc' && (
+                      <div className="p-5 sm:p-6 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black text-white rounded-2xl border border-amber-500/30 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative overflow-hidden">
+                        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+                        <div className="relative z-10 space-y-2">
+                          <div className="flex items-center gap-2">
+                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-[#c69a53] text-black">
+                              Master Storyboard
+                            </span>
+                            <span className="text-xs text-zinc-400 font-medium">
+                              Main TVC Campaign Film
+                            </span>
+                          </div>
+                          <h3 className="text-lg sm:text-xl font-black text-white tracking-tight font-heading">
+                            Alaska Batteries Main TVC Storyboard Master Board
+                          </h3>
+                          <p className="text-xs sm:text-sm text-zinc-300 max-w-2xl leading-relaxed">
+                            Official master storyboard folder housing the comprehensive multi-cut commercial sequence, narrative shot progression, and high-resolution visual director boards across all vehicle battery segments.
+                          </p>
+                        </div>
+                        <div className="relative z-10 flex flex-wrap items-center gap-3 shrink-0">
+                          <a
+                            href="https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-[#c69a53] text-black font-extrabold text-xs sm:text-sm hover:from-amber-300 hover:to-amber-500 transition-all flex items-center gap-2 shadow-lg hover:shadow-amber-500/20 cursor-pointer"
+                          >
+                            <FolderOpen className="w-4 h-4 text-black" />
+                            <span>Open Master Board on Drive</span>
+                            <ExternalLink className="w-3.5 h-3.5 text-black" />
+                          </a>
+                        </div>
+                      </div>
+                    )}
 
                     <div className="flex flex-col gap-8">
                       {galleryList.map((img, idx) => (
@@ -954,47 +1027,45 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                 Attached Documents
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {chapter.attachedFiles.map((file, i) => (
-                  <div
-                    key={i}
-                    onClick={() => {
-                      if (file.url && file.url !== '#') {
-                        window.open(file.url, '_blank');
-                      } else {
-                        handleDownload();
-                      }
-                    }}
-                    className="p-3 bg-white border border-zinc-200 rounded-lg flex items-center justify-between hover:border-[#c69a53] hover:shadow-xs transition-all cursor-pointer group"
-                  >
-                    <div className="flex items-center gap-3 overflow-hidden">
-                      <div className="p-2 bg-zinc-100 group-hover:bg-amber-50 rounded-md text-zinc-600 group-hover:text-[#c69a53] transition-colors">
-                        <FileText className="w-4 h-4" />
-                      </div>
-                      <div className="overflow-hidden">
-                        <div className="text-xs font-semibold text-zinc-900 truncate group-hover:text-[#b8860b] transition-colors">
-                          {file.name}
-                        </div>
-                        {file.size && (
-                          <div className="text-[10px] text-zinc-400">{file.size}</div>
-                        )}
-                      </div>
-                    </div>
-                    <button
+                {chapter.attachedFiles.map((file, i) => {
+                  const isExternal = file.url && file.url.startsWith('http');
+                  return (
+                    <a
+                      key={i}
+                      href={file.url && file.url !== '#' ? file.url : undefined}
+                      target={isExternal ? '_blank' : undefined}
+                      rel={isExternal ? 'noopener noreferrer' : undefined}
                       onClick={(e) => {
-                        e.stopPropagation();
-                        if (file.url && file.url !== '#') {
-                          window.open(file.url, '_blank');
-                        } else {
+                        if (!file.url || file.url === '#') {
+                          e.preventDefault();
                           handleDownload();
                         }
                       }}
-                      className="p-1.5 text-zinc-500 hover:text-[#b8860b] hover:bg-zinc-100 rounded-md transition-all cursor-pointer"
-                      title="Open / Download"
+                      className="p-3 bg-white border border-zinc-200 rounded-lg flex items-center justify-between hover:border-[#c69a53] hover:shadow-xs transition-all cursor-pointer group text-left no-underline"
                     >
-                      <FileDown className="w-4 h-4" />
-                    </button>
-                  </div>
-                ))}
+                      <div className="flex items-center gap-3 overflow-hidden">
+                        <div className="p-2 bg-zinc-100 group-hover:bg-amber-50 rounded-md text-zinc-600 group-hover:text-[#c69a53] transition-colors">
+                          <FileText className="w-4 h-4" />
+                        </div>
+                        <div className="overflow-hidden">
+                          <div className="text-xs font-semibold text-zinc-900 truncate group-hover:text-[#b8860b] transition-colors">
+                            {file.name}
+                          </div>
+                          {file.size && (
+                            <div className="text-[10px] text-zinc-400">{file.size}</div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="p-1.5 text-zinc-400 group-hover:text-[#b8860b] group-hover:bg-amber-50/50 rounded-md transition-all">
+                        {isExternal ? (
+                          <ExternalLink className="w-4 h-4" />
+                        ) : (
+                          <FileDown className="w-4 h-4" />
+                        )}
+                      </div>
+                    </a>
+                  );
+                })}
               </div>
             </div>
           )}
