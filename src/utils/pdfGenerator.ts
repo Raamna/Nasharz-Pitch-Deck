@@ -657,31 +657,118 @@ export async function generateChapterPDF(
     // 3. Concluding End Page: Key points / summary & official seal stamp
     // -------------------------------------------------------------
 
-    // Pre-calculate image natural dimensions to size the PDF canvas accurately
-    const loadImageDimensions = (url: string): Promise<{ width: number; height: number; aspect: number }> => {
-      return new Promise((resolve) => {
-        const img = new Image();
-        img.crossOrigin = 'anonymous';
-        img.onload = () => {
-          const w = img.naturalWidth || 1920;
-          const h = img.naturalHeight || 1080;
-          resolve({ width: w, height: h, aspect: w / h });
-        };
-        img.onerror = () => {
-          resolve({ width: 1920, height: 1080, aspect: 1920 / 1080 });
-        };
-        img.src = url;
-      });
+    // Helper: Convert any remote image to high quality base64 data URL with multiple fallbacks
+    const loadBase64Image = async (
+      rawUrl: string
+    ): Promise<{ dataUrl: string; width: number; height: number; aspect: number }> => {
+      // Extract Google Drive file ID if present
+      const driveIdMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+      const driveId = driveIdMatch ? driveIdMatch[1] : null;
+
+      const urlCandidates: string[] = [rawUrl];
+      if (driveId) {
+        urlCandidates.push(`https://lh3.googleusercontent.com/d/${driveId}`);
+        urlCandidates.push(`https://drive.google.com/thumbnail?id=${driveId}&sz=w2560`);
+        urlCandidates.push(`https://lh3.googleusercontent.com/u/0/d/${driveId}=w2560`);
+      }
+
+      // Strategy 1: HTMLImageElement -> Canvas (respects browser cache & CORS)
+      for (const candidate of urlCandidates) {
+        try {
+          const res = await new Promise<{ dataUrl: string; width: number; height: number; aspect: number } | null>(
+            (resolve) => {
+              const img = new Image();
+              img.crossOrigin = 'anonymous';
+              let resolved = false;
+
+              const timer = setTimeout(() => {
+                if (!resolved) {
+                  resolved = true;
+                  resolve(null);
+                }
+              }, 4000);
+
+              img.onload = () => {
+                if (resolved) return;
+                resolved = true;
+                clearTimeout(timer);
+                try {
+                  const w = img.naturalWidth || 1920;
+                  const h = img.naturalHeight || 1080;
+                  const canvas = document.createElement('canvas');
+                  canvas.width = w;
+                  canvas.height = h;
+                  const ctx = canvas.getContext('2d');
+                  if (ctx) {
+                    ctx.fillStyle = '#ffffff';
+                    ctx.fillRect(0, 0, w, h);
+                    ctx.drawImage(img, 0, 0);
+                    const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+                    resolve({ dataUrl, width: w, height: h, aspect: w / h });
+                    return;
+                  }
+                } catch {
+                  // Tainted canvas
+                }
+                resolve(null);
+              };
+
+              img.onerror = () => {
+                if (!resolved) {
+                  resolved = true;
+                  clearTimeout(timer);
+                  resolve(null);
+                }
+              };
+
+              img.src = candidate;
+            }
+          );
+          if (res && res.dataUrl) return res;
+        } catch {
+          // continue
+        }
+      }
+
+      // Strategy 2: Fetch Blob -> FileReader
+      for (const candidate of urlCandidates) {
+        try {
+          const resp = await fetch(candidate, { mode: 'cors' });
+          if (resp.ok) {
+            const blob = await resp.blob();
+            const reader = new FileReader();
+            const base64 = await new Promise<string>((res) => {
+              reader.onloadend = () => res(reader.result as string);
+              reader.readAsDataURL(blob);
+            });
+            if (base64 && base64.startsWith('data:image')) {
+              const tempImg = new Image();
+              tempImg.src = base64;
+              await new Promise((res) => {
+                tempImg.onload = () => res(null);
+                tempImg.onerror = () => res(null);
+              });
+              const w = tempImg.naturalWidth || 1920;
+              const h = tempImg.naturalHeight || 1080;
+              return { dataUrl: base64, width: w, height: h, aspect: w / h };
+            }
+          }
+        } catch {
+          // continue
+        }
+      }
+
+      return { dataUrl: '', width: 1920, height: 1080, aspect: 16 / 9 };
     };
 
     // Extract storyboard metadata (Concept Name / Product)
     const activeFolder = chapter.folders && chapter.folders.length > 0 ? chapter.folders[0] : null;
-    const titleVal = urduToRomanUrdu(activeFolder?.name || 'Battery Expert');
-    const productVal = activeFolder?.product || (titleVal.toLowerCase().includes('car') ? 'CAR' : 'CAR');
+    const titleVal = urduToRomanUrdu(activeFolder?.name || 'Storyboard Master');
+    const productVal = activeFolder?.product || (titleVal.toLowerCase().includes('msb') ? 'Alaska Batteries Master Storyboard' : 'ALASKA BATTERIES');
 
-    // Get dominant aspect ratio from first image so Title & End pages match storyboard canvas aspect ratio
-    const firstImgDims = await loadImageDimensions(chapter.galleryImages[0].url);
-    const isLandscape = firstImgDims.aspect >= 1.0;
+    // Preload first image dimensions
+    const firstImgData = await loadBase64Image(chapter.galleryImages[0].url);
+    const isLandscape = firstImgData.aspect >= 1.0;
     
     const baseW = isLandscape ? 1123 : 794;
     const baseH = isLandscape ? 794 : 1123;
@@ -689,7 +776,8 @@ export async function generateChapterPDF(
     // Direct Storyboard PDF item list
     interface SbPdfPage {
       type: 'title' | 'image' | 'end';
-      imageUrl?: string;
+      title?: string;
+      dataUrl?: string;
       domElement?: HTMLDivElement;
       aspect?: number;
       widthMm?: number;
@@ -726,11 +814,11 @@ export async function generateChapterPDF(
       <!-- Centered Title Block -->
       <div style="max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; justify-content: center;">
         <div style="font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.18em; color: #b8860b; margin-bottom: 12px;">
-          Alaska Electronic Campaign
+          Alaska Batteries Campaign
         </div>
 
         <h1 style="font-size: 38px; font-weight: 900; letter-spacing: -0.02em; color: #18181b; margin: 0 0 16px 0; text-transform: uppercase; line-height: 1.15; font-family: 'Inter', system-ui, sans-serif;">
-          Concept Presentation
+          Storyboard Presentation
         </h1>
 
         <div style="width: 58px; height: 4px; background: #b8860b; border-radius: 9999px; margin-bottom: 24px;"></div>
@@ -739,7 +827,7 @@ export async function generateChapterPDF(
         <div style="background: #f4f3f0; border: 1.5px solid #dcd8d0; border-radius: 18px; padding: 24px 42px; display: flex; flex-direction: column; gap: 12px; min-width: 360px; box-shadow: 0 2px 8px rgba(0,0,0,0.04);">
           <div style="font-size: 20px; font-weight: 800; color: #18181b; letter-spacing: -0.01em;">
             <span style="color: #b8860b; font-weight: 700; font-size: 15px; text-transform: uppercase; letter-spacing: 0.1em; display: inline-block; min-width: 90px;">Title:</span>
-            ${titleVal.replace(' / Car', '').replace('/ Car', '') || 'Battery Expert'}
+            ${titleVal}
           </div>
 
           <div style="height: 1px; background: #e2ded5; width: 100%;"></div>
@@ -770,12 +858,13 @@ export async function generateChapterPDF(
     // -------------------------------------------------------------
     for (let gIdx = 0; gIdx < chapter.galleryImages.length; gIdx++) {
       const img = chapter.galleryImages[gIdx];
-      const dims = await loadImageDimensions(img.url);
+      const imgData = gIdx === 0 && firstImgData.dataUrl ? firstImgData : await loadBase64Image(img.url);
       sbPages.push({
         type: 'image',
-        imageUrl: img.url,
-        aspect: dims.aspect,
-        orientation: dims.aspect >= 1.0 ? 'landscape' : 'portrait'
+        title: img.title || `Sheet ${gIdx + 1}`,
+        dataUrl: imgData.dataUrl,
+        aspect: imgData.aspect,
+        orientation: imgData.aspect >= 1.0 ? 'landscape' : 'portrait'
       });
     }
 
@@ -911,35 +1000,31 @@ export async function generateChapterPDF(
             const imgData = canvas.toDataURL('image/jpeg', 0.95);
             pdf.addImage(imgData, 'JPEG', 0, 0, pageW, pageH);
           }
-        } else if (p.type === 'image' && p.imageUrl) {
-          const imgBlob = await fetch(p.imageUrl, { mode: 'cors' }).then(r => r.blob());
-          const reader = new FileReader();
-          const base64Promise = new Promise<string>((resolve) => {
-            reader.onloadend = () => resolve(reader.result as string);
-            reader.readAsDataURL(imgBlob);
-          });
-          const rawBase64 = await base64Promise;
-
-          const pageAspect = pageW / pageH;
-          const imgAspect = p.aspect || 1.0;
-          let drawW = pageW;
-          let drawH = pageH;
-          let offsetX = 0;
-          let offsetY = 0;
-
-          if (imgAspect > pageAspect) {
-            drawW = pageW;
-            drawH = pageW / imgAspect;
-            offsetY = (pageH - drawH) / 2;
-          } else {
-            drawH = pageH;
-            drawW = pageH * imgAspect;
-            offsetX = (pageW - drawW) / 2;
-          }
-
-          pdf.setFillColor(0, 0, 0);
+        } else if (p.type === 'image') {
+          // Always set clean white background for storyboard canvas
+          pdf.setFillColor(255, 255, 255);
           pdf.rect(0, 0, pageW, pageH, 'F');
-          pdf.addImage(rawBase64, 'JPEG', offsetX, offsetY, drawW, drawH);
+
+          if (p.dataUrl) {
+            const pageAspect = pageW / pageH;
+            const imgAspect = p.aspect || 1.0;
+            let drawW = pageW;
+            let drawH = pageH;
+            let offsetX = 0;
+            let offsetY = 0;
+
+            if (imgAspect > pageAspect) {
+              drawW = pageW;
+              drawH = pageW / imgAspect;
+              offsetY = (pageH - drawH) / 2;
+            } else {
+              drawH = pageH;
+              drawW = pageH * imgAspect;
+              offsetX = (pageW - drawW) / 2;
+            }
+
+            pdf.addImage(p.dataUrl, 'JPEG', offsetX, offsetY, drawW, drawH);
+          }
         }
       }
 

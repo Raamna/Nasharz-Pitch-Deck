@@ -212,7 +212,7 @@ export const initialDeckData: DeckData = {
       number: '01',
       title: 'Brief',
       category: 'The Ask',
-      visualImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/tractor_r0ppy6.png',
+      visualImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/tractor_2_bb9d4y.png',
       overlayHeadline: 'Har Lamha Aitemaad — From Availability to Total Trust',
       summary: "Convert Alaska's extraordinary distribution-led market entry into customer-led brand pull. Building Alaska into Pakistan's default trusted battery brand.",
       fullText: `CONFIDENTIAL - CREATIVE BRIEF
@@ -599,7 +599,33 @@ Explore each concept folder above to review the high-resolution storyboard seque
           conceptName: 'Main TVC Master Storyboard',
           product: 'Alaska Batteries Master TVC Campaign',
           pdfUrl: 'https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing',
-          images: []
+          images: [
+            {
+              title: 'Main TVC Master Board — Key Sequence 01 (Bike / Street Reporter)',
+              url: 'https://lh3.googleusercontent.com/d/1V34IZzvcW8e1Hi1P891n4N0DXmqh8698',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Main TVC Master Board — Key Sequence 02 (Car / Winter Luxury Ignition)',
+              url: 'https://lh3.googleusercontent.com/d/1Hv7Vu1IgLujmqJCuXoROTZQI8T81H6Fe',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Main TVC Master Board — Key Sequence 03 (Truck / Port Logistics)',
+              url: 'https://lh3.googleusercontent.com/d/1vg9_oO5mgFVtfYBnhurA49x3UXss0PW4',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Main TVC Master Board — Key Sequence 04 (Tractor / Agricultural Power Field)',
+              url: 'https://lh3.googleusercontent.com/d/1NTtmKqHWwF6ZCNw_9LuLxjRLFVkDt0uJ',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Main TVC Master Board — Key Sequence 05 (UPS / Wedding Morning Continuity)',
+              url: 'https://lh3.googleusercontent.com/d/1Q3j1LeNDLNw4X7OplZON3tXbmag2eTSG',
+              objectPosition: 'center 20%'
+            }
+          ]
         },
         {
           id: 'bike',
@@ -770,6 +796,45 @@ Explore each concept folder above to review the high-resolution storyboard seque
               objectPosition: 'center 20%'
             }
           ]
+        },
+        {
+          id: 'msb',
+          name: 'MSB',
+          conceptName: 'Master Storyboard (MSB)',
+          product: 'Alaska Batteries Master Storyboard',
+          pdfUrl: 'https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing',
+          images: [
+            {
+              title: 'Master Storyboard (MSB) — Sheet 01',
+              url: 'https://lh3.googleusercontent.com/d/1lxlow_AiObvWLeMoGlrRizLxwfYO9Duk',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Master Storyboard (MSB) — Sheet 02',
+              url: 'https://lh3.googleusercontent.com/d/1LQPtR0cbnOduuuRpdga1n_W-qyYhENDV',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Master Storyboard (MSB) — Sheet 03',
+              url: 'https://lh3.googleusercontent.com/d/1qjrhTiRs9D5WNf10lsYAKG7cDiNyiJi6',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Master Storyboard (MSB) — Sheet 04',
+              url: 'https://lh3.googleusercontent.com/d/1n4WbOx_ZL0slNJUNFU9G7GsoILHW0aFE',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Master Storyboard (MSB) — Sheet 05',
+              url: 'https://lh3.googleusercontent.com/d/11U6wqYrO8H66xw4ThPO7FFh6bVHncoAm',
+              objectPosition: 'center 20%'
+            },
+            {
+              title: 'Master Storyboard (MSB) — Sheet 06',
+              url: 'https://lh3.googleusercontent.com/d/1hq2oUNR_w-mkEYZkFgUjCt3QouhsYzMs',
+              objectPosition: 'center 20%'
+            }
+          ]
         }
       ],
       galleryImages: [
@@ -813,7 +878,8 @@ Explore each concept folder above to review the high-resolution storyboard seque
         { name: 'Alaska_Car_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/1sWxXPJjGc4nsM3-0itMLXAdPCGq8MPwq/view?usp=sharing', size: 'Vector PDF' },
         { name: 'Alaska_Truck_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/1bFUAzuk1YXAzDZ1suaXZRZxB7pXDpjcA/view?usp=sharing', size: 'Vector PDF' },
         { name: 'Alaska_Tractor_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/1xRmqRTPztmVc7lRa_24FwK4HdLgQSVvd/view?usp=sharing', size: 'Vector PDF' },
-        { name: 'Alaska_UPS_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/13trOf5UyzTaSFILdxO19Ns5zDgYF8irY/view?usp=sharing', size: 'Vector PDF' }
+        { name: 'Alaska_UPS_Storyboard_Full.pdf', url: 'https://drive.google.com/file/d/13trOf5UyzTaSFILdxO19Ns5zDgYF8irY/view?usp=sharing', size: 'Vector PDF' },
+        { name: 'Alaska_MSB_Master_Storyboard.pdf', url: 'https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing', size: 'Master PDF' }
       ]
     },
     {

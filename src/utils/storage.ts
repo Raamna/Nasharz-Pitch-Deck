@@ -1,7 +1,7 @@
 import { DeckData, LoginLog } from '../types';
 import { initialDeckData } from '../data/defaultData';
 
-const STORAGE_KEY = 'nasharz_alaska_deck_data_v56';
+const STORAGE_KEY = 'nasharz_alaska_deck_data_v62';
 
 export function getStoredData(): DeckData {
   try {
