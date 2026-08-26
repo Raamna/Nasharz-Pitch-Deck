@@ -599,33 +599,7 @@ Explore each concept folder above to review the high-resolution storyboard seque
           conceptName: 'Main TVC Master Storyboard',
           product: 'Alaska Batteries Master TVC Campaign',
           pdfUrl: 'https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing',
-          images: [
-            {
-              title: 'Main TVC Master Board — Key Sequence 01 (Bike / Street Reporter)',
-              url: 'https://lh3.googleusercontent.com/d/1V34IZzvcW8e1Hi1P891n4N0DXmqh8698',
-              objectPosition: 'center 20%'
-            },
-            {
-              title: 'Main TVC Master Board — Key Sequence 02 (Car / Winter Luxury Ignition)',
-              url: 'https://lh3.googleusercontent.com/d/1Hv7Vu1IgLujmqJCuXoROTZQI8T81H6Fe',
-              objectPosition: 'center 20%'
-            },
-            {
-              title: 'Main TVC Master Board — Key Sequence 03 (Truck / Port Logistics)',
-              url: 'https://lh3.googleusercontent.com/d/1vg9_oO5mgFVtfYBnhurA49x3UXss0PW4',
-              objectPosition: 'center 20%'
-            },
-            {
-              title: 'Main TVC Master Board — Key Sequence 04 (Tractor / Agricultural Power Field)',
-              url: 'https://lh3.googleusercontent.com/d/1NTtmKqHWwF6ZCNw_9LuLxjRLFVkDt0uJ',
-              objectPosition: 'center 20%'
-            },
-            {
-              title: 'Main TVC Master Board — Key Sequence 05 (UPS / Wedding Morning Continuity)',
-              url: 'https://lh3.googleusercontent.com/d/1Q3j1LeNDLNw4X7OplZON3tXbmag2eTSG',
-              objectPosition: 'center 20%'
-            }
-          ]
+          images: []
         },
         {
           id: 'bike',

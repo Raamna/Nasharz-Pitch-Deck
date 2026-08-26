@@ -666,14 +666,15 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                               <Folder className={`w-3.5 h-3.5 ${isMainTVC ? 'text-amber-700' : 'text-zinc-400'}`} />
                             )}
                             <span>{folder.name}</span>
-                            {isMainTVC && (
-                              <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-black uppercase tracking-wider ${isActive ? 'bg-black text-amber-300' : 'bg-amber-500/30 text-amber-900'}`}>
-                                Master
+                            {isMainTVC ? (
+                              <span className={`text-[9px] px-2 py-0.5 rounded-full font-black uppercase tracking-wider ${isActive ? 'bg-black text-amber-300' : 'bg-amber-500/30 text-amber-900'}`}>
+                                Master Doc
+                              </span>
+                            ) : (
+                              <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? 'bg-white/20 text-white' : 'bg-zinc-200 text-zinc-600'}`}>
+                                {folder.images.length}
                               </span>
                             )}
-                            <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isActive ? (isMainTVC ? 'bg-black/20 text-black' : 'bg-white/20 text-white') : 'bg-zinc-200 text-zinc-600'}`}>
-                              {folder.images.length}
-                            </span>
                           </button>
                         );
                       })}
@@ -685,7 +686,7 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         onClick={(e) => e.stopPropagation()}
-                        className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-950 border border-amber-500/40 hover:bg-amber-500/25 transition-all shadow-2xs group"
+                        className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-bold bg-amber-500/15 text-amber-950 border border-amber-500/40 hover:bg-amber-500/25 transition-all shadow-2xs group"
                       >
                         <Sparkles className="w-3.5 h-3.5 text-[#c69a53] group-hover:scale-110 transition-transform" />
                         <span>Main TVC Master Board (Drive)</span>
@@ -705,119 +706,195 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                           {currentFolder?.name || 'Storyboard Sequence'}
                         </span>
                         <span className="text-xs text-zinc-500 font-medium">
-                          ({galleryList.length} Storyboard Sheets)
+                          {currentFolder?.id === 'main-tvc' ? '(Master Production Document)' : `(${galleryList.length} Storyboard Sheets)`}
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <a
-                          href="https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="text-[11px] font-bold text-black bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 px-3 py-1 rounded-lg flex items-center gap-1.5 transition-all shadow-2xs"
-                        >
-                          <FolderOpen className="w-3.5 h-3.5 text-black" />
-                          <span>Main TVC Master Board (Drive)</span>
-                          <ExternalLink className="w-3 h-3 text-black" />
-                        </a>
-                        {currentFolder?.pdfUrl && (
-                          <a
-                            href={currentFolder.pdfUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="text-[11px] font-semibold text-zinc-800 bg-white border border-zinc-300 hover:border-[#c69a53] hover:text-[#b8860b] px-3 py-1 rounded-lg flex items-center gap-1.5 transition-all shadow-2xs"
-                          >
-                            <FileText className="w-3.5 h-3.5 text-[#c69a53]" />
-                            <span>View {currentFolder.name} PDF</span>
-                          </a>
+                        {currentFolder?.id === 'main-tvc' ? (
+                          <>
+                            <a
+                              href="https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-[11px] font-bold text-black bg-gradient-to-r from-amber-400 to-[#c69a53] hover:from-amber-300 hover:to-amber-500 px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer"
+                            >
+                              <FileText className="w-3.5 h-3.5 text-black" />
+                              <span>View Main TVC Doc</span>
+                              <ExternalLink className="w-3 h-3 text-black" />
+                            </a>
+                            <a
+                              href="https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-[11px] font-bold text-zinc-800 bg-white border border-zinc-300 hover:border-[#c69a53] hover:text-[#b8860b] px-3.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer"
+                            >
+                              <Download className="w-3.5 h-3.5 text-[#c69a53]" />
+                              <span>Download PDF</span>
+                            </a>
+                          </>
+                        ) : (
+                          <>
+                            <a
+                              href="https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                              className="text-[11px] font-bold text-black bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 px-3 py-1 rounded-lg flex items-center gap-1.5 transition-all shadow-2xs"
+                            >
+                              <FolderOpen className="w-3.5 h-3.5 text-black" />
+                              <span>Main TVC Master Board (Drive)</span>
+                              <ExternalLink className="w-3 h-3 text-black" />
+                            </a>
+                            {currentFolder?.pdfUrl && (
+                              <a
+                                href={currentFolder.pdfUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="text-[11px] font-semibold text-zinc-800 bg-white border border-zinc-300 hover:border-[#c69a53] hover:text-[#b8860b] px-3 py-1 rounded-lg flex items-center gap-1.5 transition-all shadow-2xs"
+                              >
+                                <FileText className="w-3.5 h-3.5 text-[#c69a53]" />
+                                <span>View {currentFolder.name} PDF</span>
+                              </a>
+                            )}
+                            <span className="text-[11px] text-[#b8860b] font-medium hidden sm:flex items-center gap-1">
+                              <ZoomIn className="w-3.5 h-3.5" /> Click any sheet to zoom in with magnifier
+                            </span>
+                          </>
                         )}
-                        <span className="text-[11px] text-[#b8860b] font-medium hidden sm:flex items-center gap-1">
-                          <ZoomIn className="w-3.5 h-3.5" /> Click any sheet to zoom in with magnifier
-                        </span>
                       </div>
                     </div>
 
-                    {currentFolder?.id === 'main-tvc' && (
-                      <div className="p-5 sm:p-6 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black text-white rounded-2xl border border-amber-500/30 shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-5 relative overflow-hidden">
-                        <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
-                        <div className="relative z-10 space-y-2">
-                          <div className="flex items-center gap-2">
-                            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-widest bg-[#c69a53] text-black">
-                              Master Storyboard
-                            </span>
-                            <span className="text-xs text-zinc-400 font-medium">
-                              Main TVC Campaign Film
-                            </span>
+                    {currentFolder?.id === 'main-tvc' ? (
+                      /* Clean Document View for Main TVC */
+                      <div className="space-y-6">
+                        <div className="p-6 sm:p-8 bg-gradient-to-br from-zinc-900 via-zinc-950 to-black text-white rounded-2xl border border-amber-500/40 shadow-2xl relative overflow-hidden">
+                          <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none -mr-20 -mt-20"></div>
+                          
+                          <div className="relative z-10 space-y-4">
+                            <div className="flex flex-wrap items-center gap-2">
+                              <span className="px-3 py-1 rounded-full text-[11px] font-black uppercase tracking-widest bg-gradient-to-r from-amber-400 to-[#c69a53] text-black">
+                                Production Master Storyboard
+                              </span>
+                              <span className="px-3 py-1 rounded-full text-[11px] font-semibold bg-white/10 text-zinc-300 border border-white/10 flex items-center gap-1.5">
+                                <FolderOpen className="w-3 h-3 text-[#c69a53]" /> Google Drive Shared Master Folder
+                              </span>
+                            </div>
+
+                            <h3 className="text-xl sm:text-2xl font-black text-white tracking-tight font-heading">
+                              Alaska Batteries Main TVC Storyboard Master Board
+                            </h3>
+
+                            <p className="text-sm text-zinc-300 max-w-2xl leading-relaxed">
+                              Access the full master storyboard folder containing the comprehensive multi-cut commercial sequence, director's visual board, camera shot progression, and high-resolution master production PDFs.
+                            </p>
+
+                            <div className="pt-3 flex flex-wrap items-center gap-3.5">
+                              <a
+                                href="https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="px-5 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-[#c69a53] to-amber-500 text-black font-extrabold text-xs sm:text-sm hover:brightness-110 transition-all flex items-center gap-2.5 shadow-xl hover:shadow-amber-500/25 cursor-pointer"
+                              >
+                                <FileText className="w-4 h-4 text-black" />
+                                <span>View Document in Google Drive</span>
+                                <ExternalLink className="w-3.5 h-3.5 text-black" />
+                              </a>
+
+                              <a
+                                href="https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
+                                className="px-5 py-3 rounded-xl bg-zinc-800/90 hover:bg-zinc-700 text-white font-bold text-xs sm:text-sm border border-zinc-700 hover:border-zinc-500 transition-all flex items-center gap-2 cursor-pointer"
+                              >
+                                <Download className="w-4 h-4 text-amber-400" />
+                                <span>Download Master TVC Files</span>
+                              </a>
+                            </div>
                           </div>
-                          <h3 className="text-lg sm:text-xl font-black text-white tracking-tight font-heading">
-                            Alaska Batteries Main TVC Storyboard Master Board
-                          </h3>
-                          <p className="text-xs sm:text-sm text-zinc-300 max-w-2xl leading-relaxed">
-                            Official master storyboard folder housing the comprehensive multi-cut commercial sequence, narrative shot progression, and high-resolution visual director boards across all vehicle battery segments.
-                          </p>
                         </div>
-                        <div className="relative z-10 flex flex-wrap items-center gap-3 shrink-0">
+
+                        {/* Document Info Card */}
+                        <div className="p-5 bg-amber-50/50 border border-amber-200/80 rounded-2xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                          <div className="flex items-center gap-3.5">
+                            <div className="p-3 bg-amber-100/80 rounded-xl text-amber-900 border border-amber-300/60">
+                              <FileText className="w-6 h-6 text-[#b8860b]" />
+                            </div>
+                            <div>
+                              <div className="text-sm font-bold text-zinc-900">
+                                Main_TVC_Storyboard_Master_Board.pdf
+                              </div>
+                              <div className="text-xs text-zinc-500 flex items-center gap-2 mt-0.5">
+                                <span>Master Production Document</span>
+                                <span>•</span>
+                                <span className="text-amber-800 font-semibold">Available on Google Drive</span>
+                              </div>
+                            </div>
+                          </div>
+
                           <a
                             href="https://drive.google.com/drive/folders/1_rQ45ecjYo-UKBahraNM_rXHW5ycCMda?usp=sharing"
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-[#c69a53] text-black font-extrabold text-xs sm:text-sm hover:from-amber-300 hover:to-amber-500 transition-all flex items-center gap-2 shadow-lg hover:shadow-amber-500/20 cursor-pointer"
+                            className="px-4 py-2 rounded-lg bg-zinc-900 hover:bg-black text-white text-xs font-bold flex items-center gap-2 transition-all shadow-sm shrink-0 cursor-pointer"
                           >
-                            <FolderOpen className="w-4 h-4 text-black" />
-                            <span>Open Master Board on Drive</span>
-                            <ExternalLink className="w-3.5 h-3.5 text-black" />
+                            <span>Open Link</span>
+                            <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
                           </a>
                         </div>
                       </div>
+                    ) : (
+                      <div className="flex flex-col gap-8">
+                        {galleryList.map((img, idx) => (
+                          <div
+                            key={idx}
+                            onClick={() => {
+                              setEnlargedIndex(idx);
+                              setZoomScale(1.4); // Auto initial crisp reading zoom
+                            }}
+                            className="group cursor-pointer flex flex-col bg-white rounded-2xl border border-zinc-200/90 shadow-sm hover:shadow-xl hover:border-zinc-300 transition-all duration-300 overflow-hidden"
+                          >
+                            {/* Storyboard Top Bar */}
+                            <div className="px-5 py-3 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
+                              <div className="flex items-center gap-2.5">
+                                <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-[11px] font-bold flex items-center justify-center font-mono">
+                                  0{idx + 1}
+                                </span>
+                                <h5 className="text-sm font-bold text-zinc-900 group-hover:text-[#b8860b] transition-colors">
+                                  {img.title}
+                                </h5>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-[11px] font-semibold text-zinc-500 bg-white border border-zinc-200 px-2.5 py-1 rounded-full flex items-center gap-1.5 group-hover:border-[#c69a53] group-hover:text-[#b8860b] transition-all">
+                                  <ZoomIn className="w-3.5 h-3.5" /> Click to Zoom & Read
+                                </span>
+                              </div>
+                            </div>
+
+                            {/* Large High-Res Storyboard Frame */}
+                            <div className="relative w-full bg-zinc-950 flex items-center justify-center p-2 sm:p-4 overflow-hidden">
+                              <img
+                                src={img.url}
+                                alt={img.title}
+                                className="w-full h-auto max-h-[650px] object-contain rounded-lg transition-transform duration-500 ease-out group-hover:scale-[1.01]"
+                              />
+                              {/* Hover overlay hint */}
+                              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                                <span className="px-4 py-2 bg-zinc-900/90 text-white rounded-full text-xs font-semibold tracking-wide shadow-xl backdrop-blur-md flex items-center gap-2">
+                                  <ZoomIn className="w-4 h-4 text-[#c69a53]" />
+                                  <span>Enlarge with Magnifying Glass</span>
+                                </span>
+                              </div>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
                     )}
-
-                    <div className="flex flex-col gap-8">
-                      {galleryList.map((img, idx) => (
-                        <div
-                          key={idx}
-                          onClick={() => {
-                            setEnlargedIndex(idx);
-                            setZoomScale(1.4); // Auto initial crisp reading zoom
-                          }}
-                          className="group cursor-pointer flex flex-col bg-white rounded-2xl border border-zinc-200/90 shadow-sm hover:shadow-xl hover:border-zinc-300 transition-all duration-300 overflow-hidden"
-                        >
-                          {/* Storyboard Top Bar */}
-                          <div className="px-5 py-3 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
-                            <div className="flex items-center gap-2.5">
-                              <span className="w-6 h-6 rounded-full bg-zinc-900 text-white text-[11px] font-bold flex items-center justify-center font-mono">
-                                0{idx + 1}
-                              </span>
-                              <h5 className="text-sm font-bold text-zinc-900 group-hover:text-[#b8860b] transition-colors">
-                                {img.title}
-                              </h5>
-                            </div>
-                            <div className="flex items-center gap-2">
-                              <span className="text-[11px] font-semibold text-zinc-500 bg-white border border-zinc-200 px-2.5 py-1 rounded-full flex items-center gap-1.5 group-hover:border-[#c69a53] group-hover:text-[#b8860b] transition-all">
-                                <ZoomIn className="w-3.5 h-3.5" /> Click to Zoom & Read
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Large High-Res Storyboard Frame */}
-                          <div className="relative w-full bg-zinc-950 flex items-center justify-center p-2 sm:p-4 overflow-hidden">
-                            <img
-                              src={img.url}
-                              alt={img.title}
-                              className="w-full h-auto max-h-[650px] object-contain rounded-lg transition-transform duration-500 ease-out group-hover:scale-[1.01]"
-                            />
-                            {/* Hover overlay hint */}
-                            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-                              <span className="px-4 py-2 bg-zinc-900/90 text-white rounded-full text-xs font-semibold tracking-wide shadow-xl backdrop-blur-md flex items-center gap-2">
-                                <ZoomIn className="w-4 h-4 text-[#c69a53]" />
-                                <span>Enlarge with Magnifying Glass</span>
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
                   </div>
                 ) : (
                   /* Standard 2-Column Gallery Grid (e.g. Art & Talent) */
