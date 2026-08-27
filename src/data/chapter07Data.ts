@@ -1,0 +1,716 @@
+import { Chapter } from '../types';
+
+export const MASTER_PRODUCTION_DESIGN_TEXT = `ALASKA BATTERIES
+BATTERY EXPERT — PRODUCTION DESIGN MASTER SHEET
+
+01. CAMPAIGN VISUAL WORLD
+
+Overall Look
+Contemporary Pakistani realism with heightened comic situations.
+
+The world should feel:
+• Authentic
+• Cinematic
+• Premium
+• Warm
+• Lived-in
+• Highly detailed
+• Recognizably Pakistani
+
+The comedy should come from the situations and characters, not from exaggerated production design.
+The environments must always feel real, while the arrival of the Battery Expert and his team introduces a sudden, stylish and slightly absurd technical spectacle.
+
+________________________________________
+
+02. MAIN TALENT LOOK
+IFTIKHAR THAKUR — CHARACTER TRANSFORMATIONS
+
+The central visual device of the campaign is that Iftikhar Thakur appears as different characters in different situations, while the Battery Expert version remains visually consistent.
+
+A. BATTERY EXPERT — MASTER LOOK
+Wardrobe:
+• Clean white laboratory coat
+• Crisp, practical and contemporary
+• White or very light neutral shalwar qameez underneath
+• Minimal styling
+• No tie
+• No medical costume clichés
+• No gloves unless required for a technical action
+
+Head:
+• Absolutely no cap, no turban and no headwear.
+
+Appearance:
+• Recognizable Iftikhar Thakur face
+• Clean, professional presentation
+• Slightly serious
+• Experienced
+• Confident
+• Technically authoritative
+
+Performance:
+He should feel like a combination of:
+• Senior surgeon
+• Technical scientist
+• Emergency-response expert
+But still unmistakably Iftikhar Thakur.
+
+Key Visual Rule:
+The Battery Expert should always feel cleaner, sharper and more premium than the character version of Thakur.
+
+________________________________________
+
+03. WARDROBE & CASTING BY SEQUENCE
+
+MAIN WARDROBE
+1. Thakur as Battery Pehlwan (Master Look)
+• Clean white laboratory coat (crisp, practical, contemporary)
+• White or very light neutral shalwar qameez underneath
+• Minimal styling, no tie, no medical costume clichés
+• No gloves unless required for a technical action
+• CRITICAL: Absolutely no cap, no turban and no headwear.
+• Performance: Senior surgeon meets emergency technology specialist, unmistakably Iftikhar Thakur.
+
+2. Alaska Battery Expert Team
+• Contemporary technical uniforms with clean silhouettes
+• Practical jackets or utility-style clothing
+• Subtle Alaska branding insignia
+• Functional equipment belts and technical diagnostic cases
+• Modern technical specialists — DO NOT look like hospital staff.
+
+________________________________________
+
+CAR SEQUENCE (FILM 01 — CAR)
+1. Character Thakur: Traffic Policeman
+• Authentic Pakistani traffic police uniform (shirt and trousers)
+• Official police cap, duty belt, naturally worn finish, appropriate shoes
+• Special sequence: silver-foil heat resistance suit for comedy scene
+• Must wear official police cap (creates stark visual separation from Battery Expert who has NO headwear)
+• Personality: Stern, irritated, street-smart, confident
+
+2. Policeman Uniform Color Options & Insignia Palette
+• Authentic provincial traffic police color variations: Blue-grey, khaki, navy, and white trim insignia options
+• High-visibility finish designed for urban intersection gridlock
+
+3. Car Owner (Supporting Cast)
+• Well-groomed Pakistani man, late 30s to mid-40s, affluent urban professional.
+• He should look successful, sophisticated and slightly impatient, but still believable and relatable.
+• His wardrobe should communicate that he owns an expensive car without making him look like a celebrity, politician or fashion model.
+• Modern corporate attire: tailored blazer, crisp shirt, leather strap watch, expressive in dead-battery crisis.
+
+________________________________________
+
+BIKE SEQUENCE (FILM 04 — BIKE)
+1. Character Thakur: Office Executive in Safari Suit
+• Senior office executive commuting during morning rush hour
+• Classic tailored safari suit (beige/khaki or grey-blue)
+• Epaulettes, flap chest pockets, belted or structured jacket silhouette
+• Polished leather shoes, frantic commuter watch-checking
+• No headwear (natural groomed morning hair)
+
+2. Taxi Bike Rider (Supporting Cast)
+• The character is a practical Pakistani taxi motorcycle rider, urban, hardworking and realistic.
+• He should look like an authentic everyday bike rider, not a fashion model, delivery rider or generic construction worker.
+• Weathered windbreaker or lightweight utility jacket, everyday shalwar qameez or jeans, practical riding shoes, worn safety helmet, mobile phone handlebar mount.
+
+3. Office Executive & Interview Candidate (Supporting Cast)
+• Desperate to reach a career-defining job interview on time
+• Tailored modern corporate charcoal/navy blazer, crisp ironed pastel blue/white shirt, silk tie, dark trousers
+• Commuter leather backpack or clear CV portfolio folder, safety helmet for transit shots.
+
+________________________________________
+
+TRUCK SEQUENCE (FILM 02 — TRUCK)
+1. Character Thakur: Fisherman & Port Logistics Captain
+• Simple traditional shalwar qameez in earthy, practical fabric
+• Embroidered waistcoat details, brass ring keys, weathered working look
+• KEY MANDATORY RULE: Truck Driver / Fisherman Thakur MUST always wear the white Pathan cap.
+• Battery Expert contrasts with white lab coat, NO Pathan cap, and NO headwear.
+
+2. Truck Driver & Port Cargo Crew (Supporting Ensemble)
+• Weathered workwear, rolled-up sleeves, waterproof boots, heavy ice crates
+• Grounded Karachi fish harbor maritime atmosphere.
+
+________________________________________
+
+TRACTOR SEQUENCE (FILM 03 — TRACTOR)
+1. Character Thakur: Chaudhary Sb (Option A — Red Polka Turban)
+• Vibrant red turban / safa with golden-yellow polka-dot pattern
+• Traditional fan-style front knot (Turra / Shamla)
+• Mustard-yellow kurta with matching dhoti or lacha
+• Red floral-print stole, traditional tilla khussa
+• Bushy handlebar moustache, thick eyebrows, rustic Punjabi Chaudhary personality
+
+2. Character Thakur: Chaudhary Sb (Option B — Traditional Boski Elder)
+• Starched pristine white Cotton Boski Kurta Pajama
+• Traditional starched white/cream turban
+• Authentic handmade Tilla Khussa & carved cane
+• Authoritative village patriarch presence
+
+3. Farmer & Agricultural Harvester Crew
+• Earthy Khaki/Olive breathable cotton kurta, traditional Punjabi Tehband (Lungi)
+• Checkered gamchha / patka shoulder wrap
+• Realistic harvest soil and field patina, genuine Punjabi agricultural realism.
+
+________________________________________
+
+UPS / INVERTER SEQUENCE (FILM 05 — UPS)
+1. Character Thakur: Festive Wedding Guest
+• Traditional formal Pakistani wedding outfit with tasteful waistcoat
+• Light festive styling, elegant but natural
+• Must fit naturally inside an old Lahore wedding house celebration.
+
+2. UPS Guy / Young Groom (Supporting Cast)
+• Young Pakistani groom, approximately mid-20s to mid-30s.
+• He is energetic, busy and slightly stressed because he is personally managing the wedding arrangements.
+• He should look like he is constantly being pulled in different directions on the morning of his own wedding — checking preparations, arranging things and managing the chaos.
+• Natural, well-groomed appearance with realistic hair, beard or clean-shaven grooming.
+
+3. Mother (Supporting Cast)
+• Pakistani mother, approximately late 40s to late 50s.
+• Warm, commanding, practical and expressive.
+• She should look like the person who is managing the entire wedding household and knows exactly what everyone should be doing.
+• Natural Pakistani beauty, realistic skin texture, graceful but strong presence.
+
+________________________________________
+
+04. THE ALASKA BATTERY EXPERT TEAM
+
+Overall Look:
+The team should not look like hospital staff.
+They are modern battery technology specialists.
+
+Wardrobe Direction:
+• Contemporary technical uniforms
+• Clean silhouettes
+• Practical jackets or utility-style clothing
+• Subtle Alaska branding
+• Functional equipment belts
+• Technical cases
+
+Visual Feel:
+Think:
+• Premium mobile technology response unit
+Not:
+• Doctors in a hospital
+
+________________________________________
+
+05. PRODUCTION DESIGN LANGUAGE
+ALASKA MOBILE LABORATORY
+
+Every Battery Expert arrival should be visually distinctive and location-specific.
+
+• CAR
+  Roadside mobile technical laboratory.
+
+• TRUCK
+  Large Alaska-branded mobile laboratory truck.
+
+• TRACTOR
+  Sophisticated Alaska-branded laboratory caravan towed by a tractor.
+
+• BIKE
+  Dramatic high-production arrival — designed according to the final approved helicopter sequence.
+
+• HOME
+  Household power-response setup entering through the wedding house environment.
+
+________________________________________
+
+06. SETS, PROPS & PRODUCT PRESENTATION
+• The Hero Alaska Graphite Battery Prop: 1:1 scale hero casing, graphite cutaway, pyrotechnic spark terminal ignition, 9-Month Replacement Warranty seal.
+• Mobile Diagnostic Workbenches: Brushed aluminum flight cases, LED status indicators, digital oscilloscope readouts.
+• Vehicle Fleet Rigging: Low-angle tow dollies and camera process trailers across executive sedan, Bedford truck, agri tractor, commuter bike.
+
+________________________________________
+
+07. COLOR DIRECTION
+
+The campaign should feel rich and cinematic.
+
+Base World
+• Warm Pakistani sunlight
+• Earthy natural tones
+• Real environments
+• Controlled contrast
+
+Alaska Visual Identity
+• Use Alaska yellow as the strongest brand colour.
+
+The Alaska yellow should appear through:
+• Batteries
+• Vehicles
+• Laboratory branding
+• Equipment
+• Technical details
+
+The yellow must feel premium and controlled, not randomly scattered throughout the frame.
+
+________________________________________
+
+08. MAIN PRODUCTION PRIORITIES
+
+• Every Location Must Feel Real
+  Do not over-design the real environment.
+
+• The Battery Expert Must Feel Premium
+  His entrance should always elevate the visual world.
+
+• Character Separation Is Critical
+  Different versions of Iftikhar Thakur must never be visually confused.
+
+• Product Is Always Clear
+  The Alaska Battery must receive a strong premium hero reveal.
+
+• USP Must Remain Visible
+  Where applicable:
+  - Graphite Technology
+  - Heat Resistance
+  - Long Battery Life
+  - Uptime
+  - Reliability
+  - Dependability
+  - Warranty (9-Month Free Replacement)
+  - Thick Plates
+  - Long Backup
+
+• Final Tone
+  Pakistani realism + cinematic scale + Iftikhar Thakur comedy + premium Alaska technology.`;
+
+export const SHOOTING_LOCATIONS_TEXT = `LOCATION DESIGN & SHOOTING SITES DOSSIER
+ALASKA BATTERIES — 5 CAMPAIGN FILMS & SOUNDSTAGE MATRIX
+
+FILM 01 — CAR / TRAFFIC JAM
+• Suggested Location: Food Street / Badshahi Masjid, Lahore
+• GPS Coordinates: 31.5881° N, 74.3106° E
+• Production Design:
+  - Major traffic congestion
+  - Luxury car with bonnet open
+  - Multiple vehicles, motorcycles, rickshaws & heavy public movement
+  - Badshahi Mosque architecture visible where possible
+• Visual Goal:
+  - A major Pakistani landmark combined with an everyday battery emergency.
+  - The environment should feel: Busy, Chaotic, Premium, Cinematic.
+
+________________________________________
+
+FILM 02 — TRUCK / FISHING PORT
+• Suggested Location: Ibrahim Hyderi, Karachi
+• GPS Coordinates: 24.7933° N, 67.1352° E
+• Production Design:
+  - Traditional fishing boats & wooden docks
+  - Fishing nets, fish crates, workers, ice boxes
+  - Refrigerated truck breakdown
+  - Small charpai & authentic roadside chai setup
+• Key Visual:
+  - Iftikhar Thakur casually drinking chai near the boat while the truck crisis develops.
+• Alaska Expert Arrival:
+  - A large Alaska mobile laboratory truck enters the fishing-port environment.
+  - The contrast between traditional fishing port and massive mobile battery laboratory creates immediate visual comedy.
+
+________________________________________
+
+FILM 03 — TRACTOR / BARAAT IN THE FIELD
+• Suggested Location: Agricultural fields near Kareem Block / Wahdat Road, Lahore
+• GPS Coordinates: 31.5085° N, 74.2882° E
+• Production Requirements:
+  - Large open agricultural space with long horizon
+  - Working tractor access & space for Alaska laboratory caravan
+  - Clear pathway for dynamic Baraat movement & Dhol players
+  - Sweeping final wide shot
+• Key Visual:
+  - The baraat must be visible in the distance before becoming part of the comedy.
+  - The field allows: Baraat far away -> Baraat approaching -> Baraat becomes chorus -> Baraat disappears in the opposite direction.
+
+________________________________________
+
+FILM 04 — BIKE / INTERVIEW
+• Suggested Location: Packages Mall — Outdoor Promenade Zone, Walton Road, Lahore
+• GPS Coordinates: 31.4745° N, 74.3562° E
+• Production Design:
+  - Modern urban promenade & young professionals
+  - Clean architectural environment
+  - Motorcycle lane or controlled roadway
+  - Interview candidate in suit & visible commercial environment
+• Key Visual:
+  - A suited young man is pushing a motorcycle while anxiously checking his watch.
+  - The modern location makes the absurd arrival of the Battery Expert more visually entertaining.
+
+________________________________________
+
+FILM 05 — UPS / WEDDING HOME
+• Primary Suggested Location: Fakir Khana, Lahore
+• Alternative: A controlled private haveli or heritage-style residence with a similar visual character (e.g. Model Town Heritage Haveli).
+• GPS Coordinates: 31.5839° N, 74.3168° E
+• Production Design:
+  - The house must feel completely alive:
+  - Wedding preparations, kitchen activity, tea, blender, iron, hair dryer, fans, decorative lights, family members, wedding clothes, gifts, luggage, large UPS setup.
+• Key Visual:
+  - The entire house is alive and running.
+  - Then: LIGHTS OUT. Everything freezes.
+  - Battery Expert restores instantaneous power to the household.
+
+________________________________________
+
+FILM 06 — CONTROLLED PRODUCT SOUNDSTAGE
+• Suggested Location: Evernew Studios (Studio Soundstage), Multan Road, Lahore
+• GPS Coordinates: 31.4800° N, 74.3000° E
+• Features: High-speed Phantom Flex 4K camera rig, specialized graphite cutaway stage, and cryogenic vapor injectors for product macro shots.
+
+________________________________________
+
+PRODUCTION LOCATION NOTICE:
+All shooting locations are subject to availability and scheduling permissions, and may be refined or substituted during pre-production based on logistical, weather, or operational limitations.`;
+
+export const TALENT_CONTRACT_RAW = `MODELING, TALENT & DIGITAL LIKENESS AGREEMENT
+
+This Agreement is made and entered into on this ___ day of __________ 2026, by and between:
+
+1. THE MODEL
+Mr. Iftikhar Ahmad Sheikh
+Address: _______________________________________________
+CNIC No.: ______________________________________________
+(hereinafter referred to as the “Model”)
+
+AND
+
+2. THE CLIENT
+M/s. Alaska Batteries
+Head Office: 7th Floor, B-3 Tower, Sector F-9, G-9 Jinnah Avenue, New Blue Area, Islamabad, 44010, Pakistan
+(hereinafter referred to as the “Client” or “Alaska Batteries”)
+
+The Model and the Client are hereinafter individually referred to as a “Party” and collectively as the “Parties.”
+
+For purposes of this Agreement, “Nasharz” means the advertising agency / production house / digital agency appointed or authorized in connection with this engagement to produce, create, develop and/or reproduce advertising and promotional material featuring the Model.
+
+________________________________________
+
+3. CONTRACT PERIOD
+3.1 This Agreement shall commence on ________________ 2026 (“Effective Date”) and shall remain valid for a period of two (2) years, expiring on ________________ 2028 (“Contract Period”).
+3.2 The rights granted under this Agreement shall be available during the Contract Period on a worldwide basis, subject to the limitations and conditions expressly set out herein.
+
+________________________________________
+
+4. MODELING SERVICES & SHOOT DAYS
+4.1 The Model agrees to provide modeling, photographic, audiovisual and related performance services for the advertising and promotional communication of Alaska Batteries.
+4.2 The engagement shall include five (5) shoot days during the Contract Period.
+4.3 The shoot days may take place at any location, including studio, indoor or outdoor locations, within Pakistan or internationally, as mutually agreed.
+4.4 The shoot days may include photography, video, television commercials, digital films, social-media content, still photography, promotional material, radio/voice recording and other advertising content relating to Alaska Batteries.
+
+________________________________________
+
+5. MODELING FEE & TALENT AGENCY COMMISSION
+5.1 The Client shall pay the Model a total modeling fee of:
+PKR 3,000,000/- (Rupees Three Million Only), NET TO THE MODEL.
+5.2 In addition, a 10% Talent Agency Commission shall be payable to the Model’s appointed Talent Agency.
+5.3 Accordingly:
+• Model’s Net Fee: PKR 3,000,000/-
+• Talent Agency Commission (10%): PKR 300,000/-
+• Total Professional Consideration: PKR 3,300,000/-
+5.4 The above amounts are exclusive of all applicable taxes, duties, levies, withholding taxes and governmental charges, if applicable. No taxes are included in the above amounts.
+
+________________________________________
+
+6. EXCLUSIVE PRODUCTION & AI / DIGITAL LIKENESS RIGHTS
+6.1 The Parties expressly agree that Nasharz shall be the sole authorized advertising agency / production house / digital agency permitted to create, produce, reproduce, manipulate, generate or otherwise develop any advertising or promotional material involving the Model’s face, likeness, image, voice or performance under this Agreement.
+6.2 Without limiting the foregoing, Nasharz shall have the exclusive authority, during the Contract Period, to produce or create any:
+a. still photography featuring the Model;
+b. video or audiovisual material featuring the Model;
+c. AI-generated or digitally generated representation of the Model;
+d. AI-generated or synthetically reproduced face or facial likeness of the Model;
+e. AI-generated or synthetically reproduced voice of the Model;
+f. digital double or virtual representation of the Model;
+g. facial animation, facial mapping or lip-sync representation;
+h. digitally modified or composited representation of the Model;
+i. AI-assisted or digitally enhanced images or videos featuring the Model;
+j. reproduction, adaptation or manipulation of any approved element of the Model’s appearance, likeness, face, voice or performance; and
+k. any other still or video photography or digital advertising material reasonably relevant to the Model and the Alaska Batteries campaign.
+6.3 No other advertising agency, production house, digital agency, AI company, post-production company or third party shall have the right to independently create, reproduce, generate, clone, synthesize, manipulate or otherwise exploit the Model’s face, voice, likeness or any other identifiable element of the Model under this Agreement.
+6.4 The Client may appoint other service providers for ordinary media buying, publishing, distribution, printing, broadcasting, placement, technical hosting or other campaign-support functions, but such appointment shall not grant such third party any independent right to create or reproduce the Model’s face, voice, likeness or AI/digital representation.
+
+________________________________________
+
+7. AI FACE, VOICE & DIGITAL REPRODUCTION
+7.1 The Model expressly grants consent for the use of his face, likeness, image, voice, appearance, expressions, movements, photographs, recordings and performance for the creation of advertising material for Alaska Batteries during the Contract Period.
+7.2 However, the Parties expressly agree that the creation, reproduction and generation of such material shall be exclusively controlled and undertaken by Nasharz.
+7.3 The Client’s rights are therefore limited to the use, publication, distribution, broadcast, display and communication of the approved campaign material produced by Nasharz.
+7.4 The Client shall not independently:
+a. upload the Model’s photographs, videos, voice recordings or other identifiable material into an AI system for the purpose of generating a new likeness or voice;
+b. create an AI clone of the Model;
+c. create a digital twin or digital double of the Model;
+d. commission another agency or production house to create an AI representation of the Model;
+e. provide the Model’s face, voice, likeness or source materials to another agency or production house for independent reproduction;
+f. authorize another advertising agency or production house to reproduce any element of the Model;
+g. license, sublicense, sell, transfer or commercially exploit the Model’s AI likeness or voice independently of the campaign material produced by Nasharz.
+7.5 Where AI or digital technology is required to create campaign material, Nasharz shall remain the authorized entity responsible for such creation and production.
+7.6 Nasharz may use appropriate third-party technical platforms, software, AI systems, post-production facilities or specialist vendors where necessary to produce the agreed campaign material, provided that such use is solely for the purpose of producing the Alaska Batteries campaign and does not grant those third parties independent commercial rights in the Model’s face, voice or likeness.
+
+________________________________________
+
+8. CLIENT USAGE RIGHTS
+8.1 Alaska Batteries shall have the right, during the Contract Period, to use the final approved campaign material featuring the Model across the following media:
+• Television / TVC
+• Cinema
+• Social Media (Facebook, Instagram, TikTok, YouTube)
+• Digital Platforms, Websites & Online Advertising
+• Electronic Media
+• Outdoor / OOH & Digital Outdoor / DOOH (Billboards, Hoardings)
+• Print (Newspapers, Magazines, Brochures, Flyers, Posters)
+• POS Material, Retail Displays, Standees & Banners
+• Radio & Audio Advertising
+• Corporate / Promotional Films & Dealer / Distributor Communication
+• All other conventional advertising and publicity formats.
+8.2 The Client may reproduce and distribute the final campaign material produced by Nasharz in different technical formats, sizes, durations, aspect ratios, resolutions and media formats as reasonably required for advertising purposes.
+8.3 The Client may translate, subtitle, dub, shorten, crop, resize or technically adapt the final campaign material for different advertising platforms and territories, provided that such adaptation does not constitute the independent creation of a new AI clone, voice clone or digital likeness of the Model.
+
+________________________________________
+
+9. NO TRANSFER OF MODEL’S REPRODUCTION RIGHTS
+9.1 The rights granted to Alaska Batteries under this Agreement are usage rights only and shall not be interpreted as an unrestricted transfer of the Model’s underlying face, voice, likeness, AI or reproduction rights.
+9.2 Alaska Batteries shall not assign, transfer, sublicense or otherwise grant the Model’s face, voice, likeness, AI rights or reproduction rights to any other advertising agency, production house or third party without the Model’s prior written consent and, where applicable, the prior written consent of Nasharz.
+9.3 For clarity, the Client may provide completed campaign materials to broadcasters, publishers, social-media platforms, media agencies, outdoor media owners, printers and other distribution channels solely for the purpose of publishing, displaying, broadcasting or distributing the completed campaign.
+9.4 Such distribution shall not be considered a transfer of the Model’s reproduction rights.
+
+________________________________________
+
+10. OWNERSHIP & CONTROL OF AI / DIGITAL SOURCE MATERIAL
+10.1 Any AI prompts, AI-generated assets, digital models, facial mappings, voice models, edited source material, digital doubles, production files and other technical assets created by Nasharz for the campaign shall remain under the control of Nasharz and/or the respective rights holder, subject to the Client’s right to use the final approved campaign material during the Contract Period.
+10.2 The Client shall not extract, reuse or repurpose the Model’s AI/digital representation from the campaign for a separate campaign, separate product, unrelated brand or third-party commercial purpose.
+10.3 The Model’s face, voice and likeness shall not be treated as a transferable generic advertising asset.
+
+________________________________________
+
+11. EXCLUSIVITY
+11.1 During the Contract Period, the Model agrees not to appear in advertising or promotional communication for any company or brand directly competing with Alaska Batteries in the automotive/storage battery industry.
+11.2 The Model shall remain free to work for companies and brands outside the directly competing battery category.
+
+________________________________________
+
+12. TERM & EXPIRY OF USAGE RIGHTS
+12.1 All commercial usage rights granted under this Agreement shall expire upon completion of the two-year Contract Period, unless renewed in writing by the Parties.
+12.2 Upon expiry, Alaska Batteries shall not commence any new commercial campaign using the Model’s image, likeness, voice or AI/digital representation without a new written agreement.
+12.3 Campaign material already lawfully distributed during the Contract Period may remain accessible through third-party platforms, archives, social-media feeds, search engines, press references and other environments outside the Client’s reasonable control.
+12.4 The Client may retain archival copies of campaign material for internal records, legal compliance, corporate history and archival purposes.
+
+________________________________________
+
+13. CONFIDENTIALITY
+The Model shall maintain confidentiality regarding all unreleased campaign concepts, scripts, photographs, videos, AI material, production details, commercial information and other confidential information relating to Alaska Batteries and Nasharz.
+
+________________________________________
+
+14. GOVERNING LAW & DISPUTE RESOLUTION
+14.1 This Agreement shall be governed by and construed in accordance with the laws of the Islamic Republic of Pakistan.
+14.2 Any dispute arising out of or relating to this Agreement shall first be attempted to be resolved amicably between the Parties.
+14.3 If the dispute cannot be resolved amicably, the matter may be referred to arbitration in Islamabad under applicable Pakistani law.
+14.4 The courts of competent jurisdiction at Islamabad shall have jurisdiction in matters requiring judicial intervention.
+
+________________________________________
+
+15. ENTIRE AGREEMENT
+This Agreement constitutes the entire understanding between the Parties concerning the Model’s engagement and the rights granted herein.
+Any amendment, extension, modification or additional grant of rights must be made in writing and signed by the relevant Parties.
+
+________________________________________
+
+SIGNATURES & EXECUTION
+
+THE MODEL
+Name: Mr. Iftikhar Ahmad Sheikh (Iftikhar Thakur)
+CNIC No.: ___________________________________________
+Address: _____________________________________________
+Signature: ___________________________________________
+Date: _______________________________________________
+
+FOR M/s. ALASKA BATTERIES (CLIENT)
+Authorized Representative: ____________________________
+Designation: _________________________________________
+Signature: ___________________________________________
+Date: _______________________________________________
+Company Stamp: ______________________________________
+
+FOR NASHARZ (AGENCY & PRODUCTION HOUSE)
+Authorized Representative: ____________________________
+Designation: _________________________________________
+Signature: ___________________________________________
+Date: _______________________________________________
+
+TALENT AGENCY
+Agency Name: _________________________________________
+Authorized Representative: ____________________________
+Signature: ___________________________________________
+Date: _______________________________________________
+
+WITNESS 1
+Name: _______________________________________________
+CNIC No.: ____________________________________________
+Signature: ___________________________________________
+
+WITNESS 2
+Name: _______________________________________________
+CNIC No.: ____________________________________________
+Signature: ___________________________________________`;
+
+export const chapter07Data: Chapter = {
+  id: 'art-talent',
+  number: '07',
+  title: 'Art & Talent',
+  category: 'Production, Wardrobe & Casting',
+  visualImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/ITrobot_qwhvys.png',
+  visualImagePosition: 'center center',
+  overlayHeadline: 'Battery Expert Production Design & Celebrity Talent.',
+  summary: 'Official production design master sheet, character transformations of Iftikhar Thakur, 12 wardrobe & costume sheets by sequence, technical expert team styling, props, multi-city shooting locations, and signed Talent Agreement.',
+  lastUpdated: 'Aug/26',
+  fullText: `${MASTER_PRODUCTION_DESIGN_TEXT}\n\n_____________________________________________________________________________________\n\n${SHOOTING_LOCATIONS_TEXT}\n\n_____________________________________________________________________________________\n\n${TALENT_CONTRACT_RAW}`,
+  
+  // High-Definition Costume & Character Sheets ordered strictly by sequence
+  galleryImages: [
+    {
+      title: 'Main Wardrobe 01: Battery Expert — Master Look (Iftikhar Thakur)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Sheet_w2wp4c.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Main Wardrobe 02: The Alaska Battery Expert Team (Modern Tech Specialists)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Medical_Team_Sheet_v07k88.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Car Seq 01: Character Thakur — Traffic Policeman',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Traf_Policeman_Sheet_bmo9yi.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Car Seq 02: Policeman Uniform Color Options & Insignia',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Traf_Policeman_Color_Options_yhw9p8.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Car Seq 03: Car Owner (Luxury Sedan Commuter)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Car_Owner_Sheet_y7jdpt.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Bike Seq 01: Character Thakur — Office Executive in Safari Suit',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Office_Executive_Sheet_k7dybx.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Bike Seq 02: Taxi Bike Rider',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Taxi_Biker_Sheet_hwhgny.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Bike Seq 03: Supporting Cast — Job Interview Candidate',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Interview_Candidate_Sheet_r01msw.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Truck Seq 01: Character Thakur — Fisherman & Logistics Captain',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Pathan_Thakur_Sheet_d2i9er.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Truck Seq 02: Truck Driver & Port Cargo Transport Crew',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Truck_Driver_Sheet_kbbtsv.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Tractor Seq 01: Character Thakur — Chaudhary Sb (Option A: Red Polka Turban)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Chaudharsb_1_Sheet_zbnlik.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Tractor Seq 02: Character Thakur — Chaudhary Sb (Option B: Traditional Boski Elder)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_ch_sb_Sheet_hi8350.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Tractor Seq 03: Farmer & Agricultural Harvester Crew',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Farmer_Sheet_dpryzu.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'UPS Seq 01: Character Thakur — Festive Wedding Guest',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Wedding_Guest_Sheet_yij1ox.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'UPS Seq 02: UPS Guy / Young Groom (Option A: Two Wardrobe Options)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Guy_1_Sheet_irwm7w.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'UPS Seq 03: UPS Guy / Young Groom (Option B: Master Look)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Guy_Sheet_ilqhb2.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'UPS Seq 04: Mother of the Groom / Household Matriarch',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Mother_Sheet_trglgq.png',
+      objectPosition: 'center 20%'
+    }
+  ],
+
+  conceptTabs: [
+    {
+      id: 'wardrobe',
+      name: 'Wardrobe & Casting',
+      badge: '16 Character Sheets',
+      summary: 'Complete wardrobe, styling guidelines, and character costume sheets for all roles ordered strictly across Main Wardrobe, Car Seq, Bike Seq, Truck Seq, Tractor Seq, and UPS Seq.',
+      content: `${MASTER_PRODUCTION_DESIGN_TEXT}`
+    },
+    {
+      id: 'films',
+      name: 'Rules by Sequence',
+      badge: 'Transformations',
+      summary: 'Film-by-film character transformations, wardrobe separation, and headwear mandates for Iftikhar Thakur vs Battery Expert.',
+      content: `${MASTER_PRODUCTION_DESIGN_TEXT}`
+    },
+    {
+      id: 'production-design',
+      name: 'Sets, Props & Specs',
+      badge: 'Props & Sets',
+      summary: 'Set construction, hero Alaska graphite battery prop specs, mobile laboratory rigs, vehicle fleet, and cinematic lighting palettes.',
+      content: `${MASTER_PRODUCTION_DESIGN_TEXT}`
+    },
+    {
+      id: 'locations-map',
+      name: 'Locations & Maps',
+      badge: 'Location Map + GPS',
+      summary: 'Detailed shooting locations: Food Street / Badshahi Masjid, Ibrahim Hyderi Karachi, Kareem Block Agri Fields, Packages Mall Promenade, Fakir Khana Haveli & Soundstage.',
+      content: `${SHOOTING_LOCATIONS_TEXT}`
+    },
+    {
+      id: 'moodboard',
+      name: 'Visual Moodboard',
+      badge: 'Cinematic Refs',
+      summary: 'Cinematic visual references, lighting direction, texture palettes, and environmental tone references for all 5 commercial worlds.',
+      content: `${MASTER_PRODUCTION_DESIGN_TEXT}\n\n${SHOOTING_LOCATIONS_TEXT}`
+    },
+    {
+      id: 'talent-contract',
+      name: 'Talent Agreement',
+      badge: 'Signed Legal Contract',
+      summary: 'Official Modeling, Talent & Exclusive Digital Likeness Agreement for Mr. Iftikhar Ahmad Sheikh (Iftikhar Thakur).',
+      content: `${TALENT_CONTRACT_RAW}`
+    }
+  ],
+
+  keyPoints: [
+    'Celebrity Ambassador: Mr. Iftikhar Ahmad Sheikh (Iftikhar Thakur)',
+    '16 Character & Wardrobe Breakdown Sheets ordered across Main Wardrobe, Car Seq, Bike Seq, Truck Seq, Tractor Seq, and UPS Seq',
+    'Includes Policeman Uniform Color Options & Insignia Palette and detailed specifications for Car Owner, Taxi Bike Rider, Interview Candidate, UPS Groom, and Mother',
+    'Production Locations: Food Street/Badshahi Masjid (Car), Ibrahim Hyderi Karachi (Truck), Kareem Block Agri Fields (Tractor), Packages Mall Promenade (Bike), Fakir Khana Haveli (UPS)',
+    'Core Rule: Battery Expert always in clean white lab coat with neutral shalwar qameez; absolutely no cap, turban, or headwear',
+    'Exclusive 2-Year Contract (2026–2028), 5 Shoot Days, Worldwide Commercial Usage & AI/Likeness Exclusivity'
+  ],
+
+  pageCount: 16,
+  attachedFiles: [
+    { name: 'Celebrity Talent Contract Copy (Iftikhar Thakur)', url: '#contract', size: 'Full Legal Agreement' },
+    { name: 'Alaska_Production_Design_Master_Lookbook.pdf', url: '#', size: '14.2 MB' },
+    { name: 'Shooting_Locations_and_Permits_Dossier.pdf', url: '#', size: '6.8 MB' }
+  ]
+};

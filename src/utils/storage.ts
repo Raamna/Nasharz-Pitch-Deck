@@ -1,7 +1,7 @@
 import { DeckData, LoginLog } from '../types';
 import { initialDeckData } from '../data/defaultData';
 
-const STORAGE_KEY = 'nasharz_alaska_deck_data_v62';
+const STORAGE_KEY = 'nasharz_alaska_deck_data_v65';
 
 export function getStoredData(): DeckData {
   try {
@@ -16,6 +16,16 @@ export function getStoredData(): DeckData {
     const hydratedChapters = (parsed.chapters && parsed.chapters.length > 0 ? parsed.chapters : initialDeckData.chapters).map(ch => {
       const defaultCh = initialDeckData.chapters.find(c => c.id === ch.id);
       if (defaultCh) {
+        if (ch.id === 'art-talent') {
+          return {
+            ...ch,
+            ...defaultCh,
+            galleryImages: defaultCh.galleryImages,
+            fullText: defaultCh.fullText,
+            conceptTabs: defaultCh.conceptTabs,
+            attachedFiles: defaultCh.attachedFiles,
+          };
+        }
         return {
           ...defaultCh,
           ...ch,

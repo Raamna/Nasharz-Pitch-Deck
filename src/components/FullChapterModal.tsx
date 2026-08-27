@@ -2,6 +2,7 @@ import React from 'react';
 import { Chapter, BrandingConfig } from '../types';
 import { generateChapterPDF } from '../utils/pdfGenerator';
 import { BrandLogo } from './BrandLogo';
+import { ArtTalentChapterView } from './ArtTalentChapterView';
 import { 
   X, 
   Download, 
@@ -635,6 +636,17 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
                 )}
 
               </div>
+            ) : chapter.id === 'art-talent' ? (
+              <ArtTalentChapterView
+                chapter={chapter}
+                branding={branding}
+                onImageClick={(index) => {
+                  setEnlargedIndex(index);
+                  setZoomScale(1);
+                }}
+                onDownloadPdf={handleDownload}
+                isGeneratingPdf={isGenerating}
+              />
             ) : (chapter.folders && chapter.folders.length > 0) || (chapter.galleryImages && chapter.galleryImages.length > 0) ? (
               <div className="space-y-6 my-2">
                 
