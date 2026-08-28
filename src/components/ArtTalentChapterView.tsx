@@ -400,7 +400,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       title: 'Unified Battery Pehlwan Mobile Lab Van (Option 1 — Master Livery)',
       subtitle: 'Aerodynamic high-roof emergency vehicle with slide-out battery diagnostic racks',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op1_esdu3i.png',
-      altOptionUrl: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op2_s09h1o.png',
+      altOptionUrl: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_jog7cv.png',
       badge: 'Master Livery Option 1',
       mainVehicle: [
         'Aerodynamic high-roof commercial vehicle with custom yellow-and-white Alaska livery',
@@ -428,7 +428,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       filmLabel: 'Master Vehicle • Option 2',
       title: 'Unified Battery Pehlwan Mobile Lab Van (Option 2 — Aero Graphic Livery)',
       subtitle: 'Streamlined commercial response van with sport aero Alaska side graphics',
-      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op2_s09h1o.png',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_jog7cv.png',
       altOptionUrl: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op3_g0tgpa.png',
       badge: 'Aero Livery Option 2',
       mainVehicle: [

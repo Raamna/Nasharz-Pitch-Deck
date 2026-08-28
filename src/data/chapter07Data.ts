@@ -817,7 +817,7 @@ export const chapter07Data: Chapter = {
     },
     {
       title: 'Unified Master Vehicle: Battery Pehlwan Branded Mobile Laboratory Van (Option 2 — Aero Graphic Livery)',
-      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op2_s09h1o.png',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_jog7cv.png',
       objectPosition: 'center 20%'
     },
     {

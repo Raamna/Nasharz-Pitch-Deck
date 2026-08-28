@@ -1431,7 +1431,7 @@ export async function generateChapterPDF(
             sheetNum: 'Van Opt 2',
             title: 'Unified Battery Pehlwan Mobile Lab Van (Option 2 — Aero Graphic Livery)',
             badge: 'Aero Livery Option 2',
-            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op2_s09h1o.png',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_jog7cv.png',
             mainVehicle: [
               'Sport-aero commercial high-roof van configuration with extended rear cargo bay',
               'Full side-profile livery featuring dynamic speed-chevron Alaska brand graphics',
