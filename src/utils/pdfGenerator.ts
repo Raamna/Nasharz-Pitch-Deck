@@ -650,6 +650,111 @@ export async function generateChapterPDF(
   const isStoryboard = chapter.id === 'storyboards' || chapter.number === '06';
   const isArtTalent = chapter.id === 'art-talent' || chapter.number === '07';
 
+  // Helper: Convert any remote image to high quality base64 data URL with multiple fallbacks
+  const loadBase64Image = async (
+    rawUrl: string
+  ): Promise<{ dataUrl: string; width: number; height: number; aspect: number }> => {
+    if (!rawUrl) return { dataUrl: '', width: 1920, height: 1080, aspect: 16 / 9 };
+    // Extract Google Drive file ID if present
+    const driveIdMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+    const driveId = driveIdMatch ? driveIdMatch[1] : null;
+
+    const urlCandidates: string[] = [rawUrl];
+    if (driveId) {
+      urlCandidates.push(`https://lh3.googleusercontent.com/d/${driveId}`);
+      urlCandidates.push(`https://drive.google.com/thumbnail?id=${driveId}&sz=w2560`);
+      urlCandidates.push(`https://lh3.googleusercontent.com/u/0/d/${driveId}=w2560`);
+    }
+
+    // Strategy 1: HTMLImageElement -> Canvas (respects browser cache & CORS)
+    for (const candidate of urlCandidates) {
+      try {
+        const res = await new Promise<{ dataUrl: string; width: number; height: number; aspect: number } | null>(
+          (resolve) => {
+            const img = new Image();
+            img.crossOrigin = 'anonymous';
+            let resolved = false;
+
+            const timer = setTimeout(() => {
+              if (!resolved) {
+                resolved = true;
+                resolve(null);
+              }
+            }, 4000);
+
+            img.onload = () => {
+              if (resolved) return;
+              resolved = true;
+              clearTimeout(timer);
+              try {
+                const w = img.naturalWidth || 1920;
+                const h = img.naturalHeight || 1080;
+                const canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                if (ctx) {
+                  ctx.fillStyle = '#ffffff';
+                  ctx.fillRect(0, 0, w, h);
+                  ctx.drawImage(img, 0, 0);
+                  const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+                  resolve({ dataUrl, width: w, height: h, aspect: w / h });
+                  return;
+                }
+              } catch {
+                // Tainted canvas
+              }
+              resolve(null);
+            };
+
+            img.onerror = () => {
+              if (!resolved) {
+                resolved = true;
+                clearTimeout(timer);
+                resolve(null);
+              }
+            };
+
+            img.src = candidate;
+          }
+        );
+        if (res && res.dataUrl) return res;
+      } catch {
+        // continue
+      }
+    }
+
+    // Strategy 2: Fetch Blob -> FileReader
+    for (const candidate of urlCandidates) {
+      try {
+        const resp = await fetch(candidate, { mode: 'cors' });
+        if (resp.ok) {
+          const blob = await resp.blob();
+          const reader = new FileReader();
+          const base64 = await new Promise<string>((res) => {
+            reader.onloadend = () => res(reader.result as string);
+            reader.readAsDataURL(blob);
+          });
+          if (base64 && base64.startsWith('data:image')) {
+            const tempImg = new Image();
+            tempImg.src = base64;
+            await new Promise((res) => {
+              tempImg.onload = () => res(null);
+              tempImg.onerror = () => res(null);
+            });
+            const w = tempImg.naturalWidth || 1920;
+            const h = tempImg.naturalHeight || 1080;
+            return { dataUrl: base64, width: w, height: h, aspect: w / h };
+          }
+        }
+      } catch {
+        // continue
+      }
+    }
+
+    return { dataUrl: rawUrl, width: 1920, height: 1080, aspect: 16 / 9 };
+  };
+
   if (isStoryboard && chapter.galleryImages && chapter.galleryImages.length > 0) {
     // -------------------------------------------------------------
     // STORYBOARD DEDICATED PDF FLOW:
@@ -657,110 +762,6 @@ export async function generateChapterPDF(
     // 2. Storyboard Pages: Raw full-page original uncropped images
     // 3. Concluding End Page: Key points / summary & official seal stamp
     // -------------------------------------------------------------
-
-    // Helper: Convert any remote image to high quality base64 data URL with multiple fallbacks
-    const loadBase64Image = async (
-      rawUrl: string
-    ): Promise<{ dataUrl: string; width: number; height: number; aspect: number }> => {
-      // Extract Google Drive file ID if present
-      const driveIdMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-      const driveId = driveIdMatch ? driveIdMatch[1] : null;
-
-      const urlCandidates: string[] = [rawUrl];
-      if (driveId) {
-        urlCandidates.push(`https://lh3.googleusercontent.com/d/${driveId}`);
-        urlCandidates.push(`https://drive.google.com/thumbnail?id=${driveId}&sz=w2560`);
-        urlCandidates.push(`https://lh3.googleusercontent.com/u/0/d/${driveId}=w2560`);
-      }
-
-      // Strategy 1: HTMLImageElement -> Canvas (respects browser cache & CORS)
-      for (const candidate of urlCandidates) {
-        try {
-          const res = await new Promise<{ dataUrl: string; width: number; height: number; aspect: number } | null>(
-            (resolve) => {
-              const img = new Image();
-              img.crossOrigin = 'anonymous';
-              let resolved = false;
-
-              const timer = setTimeout(() => {
-                if (!resolved) {
-                  resolved = true;
-                  resolve(null);
-                }
-              }, 4000);
-
-              img.onload = () => {
-                if (resolved) return;
-                resolved = true;
-                clearTimeout(timer);
-                try {
-                  const w = img.naturalWidth || 1920;
-                  const h = img.naturalHeight || 1080;
-                  const canvas = document.createElement('canvas');
-                  canvas.width = w;
-                  canvas.height = h;
-                  const ctx = canvas.getContext('2d');
-                  if (ctx) {
-                    ctx.fillStyle = '#ffffff';
-                    ctx.fillRect(0, 0, w, h);
-                    ctx.drawImage(img, 0, 0);
-                    const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-                    resolve({ dataUrl, width: w, height: h, aspect: w / h });
-                    return;
-                  }
-                } catch {
-                  // Tainted canvas
-                }
-                resolve(null);
-              };
-
-              img.onerror = () => {
-                if (!resolved) {
-                  resolved = true;
-                  clearTimeout(timer);
-                  resolve(null);
-                }
-              };
-
-              img.src = candidate;
-            }
-          );
-          if (res && res.dataUrl) return res;
-        } catch {
-          // continue
-        }
-      }
-
-      // Strategy 2: Fetch Blob -> FileReader
-      for (const candidate of urlCandidates) {
-        try {
-          const resp = await fetch(candidate, { mode: 'cors' });
-          if (resp.ok) {
-            const blob = await resp.blob();
-            const reader = new FileReader();
-            const base64 = await new Promise<string>((res) => {
-              reader.onloadend = () => res(reader.result as string);
-              reader.readAsDataURL(blob);
-            });
-            if (base64 && base64.startsWith('data:image')) {
-              const tempImg = new Image();
-              tempImg.src = base64;
-              await new Promise((res) => {
-                tempImg.onload = () => res(null);
-                tempImg.onerror = () => res(null);
-              });
-              const w = tempImg.naturalWidth || 1920;
-              const h = tempImg.naturalHeight || 1080;
-              return { dataUrl: base64, width: w, height: h, aspect: w / h };
-            }
-          }
-        } catch {
-          // continue
-        }
-      }
-
-      return { dataUrl: '', width: 1920, height: 1080, aspect: 16 / 9 };
-    };
 
     // Extract storyboard metadata (Concept Name / Product)
     const activeFolder = chapter.folders && chapter.folders.length > 0 ? chapter.folders[0] : null;
@@ -1041,16 +1042,393 @@ export async function generateChapterPDF(
 
   } else if (isArtTalent) {
     // -------------------------------------------------------------
-    // ART & TALENT (CHAPTER 07) DEDICATED PDF FLOW:
-    // Every image is displayed DIRECTLY IN FRONT OF / ABOVE its relevant text!
+    // ART & TALENT (CHAPTER 07) DEDICATED SECTIONED PDF FLOW:
+    // Organized with proper section headings by sequence (Bike, Car, Truck, Tractor, UPS)
+    // All images preloaded to base64 with fixed proportions to prevent cropping/splitting!
     // -------------------------------------------------------------
+
+    interface ArtTalentItem {
+      sheetNum: string;
+      title: string;
+      badge: string;
+      url: string;
+      actor: string;
+      role: string;
+      points: string[];
+      headRule: string;
+      performance: string;
+    }
+
+    interface ArtTalentSection {
+      sectionNum: string;
+      sectionTitle: string;
+      subtitle: string;
+      filmKey: string;
+      locationTag: string;
+      items: ArtTalentItem[];
+    }
+
+    const sections: ArtTalentSection[] = [
+      {
+        sectionNum: 'SECTION 01',
+        sectionTitle: 'MAIN WARDROBE & TECHNICAL ENSEMBLE',
+        subtitle: 'Master Brand Look & Rapid Technical Response Unit',
+        filmKey: 'Master Look',
+        locationTag: 'All Commercials & Mobile Labs',
+        items: [
+          {
+            sheetNum: 'Sheet 01',
+            title: 'Master Look: Battery Expert (Iftikhar Thakur)',
+            badge: 'Lead Technical Authority',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Sheet_w2wp4c.png',
+            actor: 'Iftikhar Thakur',
+            role: 'Senior Energy Authority & Emergency Response Specialist',
+            points: [
+              'Clean white laboratory coat (crisp, practical, contemporary)',
+              'White or very light neutral shalwar qameez underneath',
+              'Minimal styling, no tie, no medical costume clichés',
+              'No gloves unless required for a technical action',
+              'CRITICAL: Absolutely no cap, no turban and no headwear'
+            ],
+            headRule: 'CRITICAL: Absolutely no cap, no turban and no headwear.',
+            performance: 'Senior surgeon meets emergency technology specialist, unmistakably Iftikhar Thakur.'
+          },
+          {
+            sheetNum: 'Sheet 02',
+            title: 'The Alaska Battery Expert Team (Technical Specialists)',
+            badge: 'Mobile Technical Unit',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Medical_Team_Sheet_v07k88.png',
+            actor: 'Technical Specialists Ensemble',
+            role: 'Mobile Diagnostic & Rapid Response Specialists',
+            points: [
+              'Contemporary technical uniforms with clean silhouettes',
+              'Practical jackets or utility-style clothing with subtle Alaska branding',
+              'Functional equipment belts and technical diagnostic flight cases',
+              'Modern technical specialists — DO NOT look like hospital staff'
+            ],
+            headRule: 'Modern technical utility headgear / bareheaded.',
+            performance: 'High-speed, disciplined, synchronized mobile technology pit-crew.'
+          }
+        ]
+      },
+      {
+        sectionNum: 'SECTION 02',
+        sectionTitle: 'FILM 01 — CAR SEQUENCE (URBAN GRIDLOCK)',
+        subtitle: 'Traffic Warden Crisis & Heat Resistance Demonstration',
+        filmKey: 'Film 01 — Car',
+        locationTag: 'Food Street / Ring Road Junction, Lahore',
+        items: [
+          {
+            sheetNum: 'Sheet 03',
+            title: 'Character Thakur: Traffic Policeman',
+            badge: 'Car Sequence',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Traf_Policeman_Sheet_bmo9yi.png',
+            actor: 'Iftikhar Thakur',
+            role: 'Gridlock Traffic Policeman',
+            points: [
+              'Authentic Pakistani traffic police uniform (shirt & trousers)',
+              'Official Police cap and duty belt',
+              'Clean but naturally worn appearance with appropriate shoes',
+              'Special sequence: silver-foil heat resistance suit for comedy scene'
+            ],
+            headRule: 'Must wear official police cap (creates stark visual separation from Battery Expert).',
+            performance: 'Stern, irritated, street-smart, comically confident in traffic gridlock.'
+          },
+          {
+            sheetNum: 'Sheet 04',
+            title: 'Traffic Policeman Uniform Color Options & Insignia',
+            badge: 'Wardrobe Reference',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Traf_Policeman_Color_Options_yhw9p8.png',
+            actor: 'Wardrobe Department Reference',
+            role: 'Provincial Uniform Color Palette & Insignia Variations',
+            points: [
+              'Authentic provincial traffic police color variations: Blue-grey, khaki, navy, and white trim insignia options',
+              'Official high-visibility chest badges and reflective shoulder epaulettes',
+              'Approved color palette ensures maximum contrast against urban streetscapes'
+            ],
+            headRule: 'Official peaked traffic warden cap matching selected provincial tunic color.',
+            performance: 'Authoritative regulatory palette for high-traffic Lahore Ring Road / Food Street junction.'
+          },
+          {
+            sheetNum: 'Sheet 05',
+            title: 'Car Owner (Luxury Sedan Commuter)',
+            badge: 'Supporting Cast',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Car_Owner_Sheet_y7jdpt.png',
+            actor: 'Supporting Cast',
+            role: 'Affluent Urban Professional',
+            points: [
+              'Well-groomed Pakistani man, late 30s to mid-40s, affluent urban professional',
+              'He should look successful, sophisticated and slightly impatient, but still believable and relatable',
+              'His wardrobe should communicate that he owns an expensive car without making him look like a celebrity, politician or fashion model',
+              'Modern corporate attire: tailored blazer, crisp shirt, leather strap watch'
+            ],
+            headRule: 'Neatly groomed metropolitan professional haircut.',
+            performance: 'Stressed urban commuter stranded in dead-battery gridlock on the way to an important engagement.'
+          }
+        ]
+      },
+      {
+        sectionNum: 'SECTION 03',
+        sectionTitle: 'FILM 04 — BIKE SEQUENCE (MORNING COMMUTE)',
+        subtitle: 'High-Stakes Office Rush & Ride-Hail Commute Challenge',
+        filmKey: 'Film 04 — Bike',
+        locationTag: 'Packages Mall Boulevard / Main Market, Lahore',
+        items: [
+          {
+            sheetNum: 'Sheet 06',
+            title: 'Character Thakur: Office Executive in Safari Suit',
+            badge: 'Bike Sequence',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Office_Executive_Sheet_k7dybx.png',
+            actor: 'Iftikhar Thakur',
+            role: 'Senior Executive Commuter (Formerly Morning Man)',
+            points: [
+              'Senior office executive commuting during morning rush hour',
+              'Classic tailored safari suit (beige/khaki or grey-blue)',
+              'Epaulettes, flap chest pockets, belted or structured jacket silhouette',
+              'Polished leather shoes, frantic commuter watch-checking'
+            ],
+            headRule: 'No headwear (natural groomed executive morning hair).',
+            performance: 'Stressed senior executive desperate to beat the morning gridlock.'
+          },
+          {
+            sheetNum: 'Sheet 07',
+            title: 'Taxi Bike Rider',
+            badge: 'Supporting Cast',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Taxi_Biker_Sheet_hwhgny.png',
+            actor: 'Supporting Cast',
+            role: 'Hardworking Urban Motorcycle Taxi Operator',
+            points: [
+              'The character is a practical Pakistani taxi motorcycle rider, urban, hardworking and realistic',
+              'He should look like an authentic everyday bike rider, not a fashion model, delivery rider or generic construction worker',
+              'Weathered windbreaker or lightweight utility jacket, everyday shalwar qameez or jeans',
+              'Practical riding shoes, worn safety helmet, mobile phone handlebar mount'
+            ],
+            headRule: 'Worn everyday motorcycle safety helmet with quick-release chin strap.',
+            performance: 'Street-savvy, energetic, resourceful daily bike taxi pilot navigating dense urban alleys.'
+          },
+          {
+            sheetNum: 'Sheet 08',
+            title: 'Supporting Cast: Job Interview Candidate',
+            badge: 'Supporting Cast',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Interview_Candidate_Sheet_r01msw.png',
+            actor: 'Supporting Cast',
+            role: 'Anxious Job Interview Candidate',
+            points: [
+              'Tailored modern corporate charcoal/navy blazer, crisp ironed pastel blue/white shirt, silk tie, dark trousers',
+              'Commuter leather backpack or clear CV portfolio folder',
+              'Safety motorcycle helmet for transit shots',
+              'Desperate to reach a career-defining job interview on time'
+            ],
+            headRule: 'Groomed corporate hairstyle under motorcycle helmet.',
+            performance: 'Nervous tension, checking watch frantically as the minutes tick down.'
+          }
+        ]
+      },
+      {
+        sectionNum: 'SECTION 04',
+        sectionTitle: 'FILM 02 — TRUCK SEQUENCE (KARACHI FISH HARBOR)',
+        subtitle: 'Commercial Fleet Transport & Ice-Preserved Perishable Cargo',
+        filmKey: 'Film 02 — Truck',
+        locationTag: 'Ibrahim Hyderi / Fish Harbor Jetty, Karachi',
+        items: [
+          {
+            sheetNum: 'Sheet 09',
+            title: 'Character Thakur: Fisherman & Port Logistics Captain',
+            badge: 'Truck Sequence',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Pathan_Thakur_Sheet_d2i9er.png',
+            actor: 'Iftikhar Thakur',
+            role: 'Fish Harbor Logistics Captain',
+            points: [
+              'Simple traditional shalwar qameez in earthy, practical fabric',
+              'Embroidered waistcoat details, brass ring keys, weathered working look',
+              'KEY MANDATORY RULE: Truck Driver / Fisherman Thakur MUST always wear the white Pathan cap',
+              'Battery Expert contrasts with white lab coat, NO Pathan cap, and NO headwear'
+            ],
+            headRule: 'KEY MANDATORY RULE: Truck Driver Thakur must always wear the white Pathan cap.',
+            performance: 'Brave, resilient, protective of his fresh seafood cargo at Karachi port.'
+          },
+          {
+            sheetNum: 'Sheet 10',
+            title: 'Truck Driver & Port Cargo Crew',
+            badge: 'Supporting Ensemble',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Truck_Driver_Sheet_kbbtsv.png',
+            actor: 'Supporting Ensemble',
+            role: 'Fish Port Cargo Workers & Transport Crew',
+            points: [
+              'Weathered utility workwear, rolled-up sleeves, waterproof rubber boots',
+              'Heavy ice crates, wet fish containers, sea-spray salt patina',
+              'Grounded Karachi fish harbor maritime atmosphere'
+            ],
+            headRule: 'Practical cotton patkas or bareheaded harbor workwear.',
+            performance: 'Hardworking, bustling dock workers racing against melting ice and spoiling cargo.'
+          }
+        ]
+      },
+      {
+        sectionNum: 'SECTION 05',
+        sectionTitle: 'FILM 03 — TRACTOR SEQUENCE (PUNJABI AGRICULTURAL BARAAT)',
+        subtitle: 'Rural Wedding Procession & Heavy Agricultural Machinery',
+        filmKey: 'Film 03 — Tractor',
+        locationTag: 'Kareem Block Agricultural Fields & Village Track',
+        items: [
+          {
+            sheetNum: 'Sheet 11',
+            title: 'Character Thakur: Chaudhary Sb (Option A — Red Polka Turban)',
+            badge: 'Tractor Sequence',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Chaudharsb_1_Sheet_zbnlik.png',
+            actor: 'Iftikhar Thakur',
+            role: 'Baraat Patriarch & Farm Landlord',
+            points: [
+              'Vibrant red turban / safa with golden-yellow polka-dot pattern',
+              'Traditional fan-style front knot (Turra / Shamla)',
+              'Mustard-yellow kurta with matching dhoti or lacha',
+              'Red floral-print stole, traditional tilla khussa',
+              'Bushy handlebar moustache, thick eyebrows, rustic Punjabi Chaudhary personality'
+            ],
+            headRule: 'Vibrant red polka turban (Battery Expert wears NO turban, NO headwear).',
+            performance: 'Bushy handlebar moustache, thick eyebrows, rustic Punjabi Chaudhary charisma.'
+          },
+          {
+            sheetNum: 'Sheet 12',
+            title: 'Character Thakur: Chaudhary Sb (Option B — Traditional Boski Elder)',
+            badge: 'Tractor Sequence',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_ch_sb_Sheet_hi8350.png',
+            actor: 'Iftikhar Thakur',
+            role: 'Traditional Rural Grandfather',
+            points: [
+              'Starched pristine white Cotton Boski Kurta Pajama',
+              'Traditional starched white/cream turban',
+              'Authentic handmade Tilla Khussa & carved cane',
+              'Authoritative village patriarch presence'
+            ],
+            headRule: 'Traditional starched turban.',
+            performance: 'Wise, prestigious, authoritative village elder.'
+          },
+          {
+            sheetNum: 'Sheet 13',
+            title: 'Farmer & Agricultural Harvester Crew',
+            badge: 'Supporting Ensemble',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Farmer_Sheet_dpryzu.png',
+            actor: 'Supporting Ensemble',
+            role: 'Agricultural Harvesters',
+            points: [
+              'Earthy Khaki/Olive breathable cotton kurta, Punjabi Tehband (Lungi)',
+              'Checkered gamchha / patka shoulder wrap',
+              'Realistic harvest soil and field patina, genuine Punjabi agricultural realism'
+            ],
+            headRule: 'Traditional farmer patka wrap.',
+            performance: 'Hardworking, genuine, joyful celebration when the tractor restarts.'
+          }
+        ]
+      },
+      {
+        sectionNum: 'SECTION 06',
+        sectionTitle: 'FILM 05 — UPS / HOME INVERTER SEQUENCE (HAVELI BLACKOUT)',
+        subtitle: 'Haveli Wedding Morning Crisis & Emergency Power Backup',
+        filmKey: 'Film 05 — UPS / Home',
+        locationTag: 'Fakir Khana Museum Haveli, Walled City Lahore',
+        items: [
+          {
+            sheetNum: 'Sheet 14',
+            title: 'Character Thakur: Festive Wedding Guest',
+            badge: 'UPS Sequence',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Wedding_Guest_Sheet_yij1ox.png',
+            actor: 'Iftikhar Thakur & Ensemble',
+            role: 'Festive Wedding Guests (Baraat)',
+            points: [
+              'Traditional formal Pakistani wedding outfit with tasteful waistcoat',
+              'Light festive styling, elegant but natural',
+              'Must fit naturally inside an old Lahore wedding house celebration'
+            ],
+            headRule: 'Festive wedding styling without clinical lab elements.',
+            performance: 'Ecstatic celebratory energy interrupted by blackout, then restored by Battery Expert.'
+          },
+          {
+            sheetNum: 'Sheet 15',
+            title: 'UPS Guy / Young Groom (Option A — Two Wardrobe Options)',
+            badge: 'Supporting Cast',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Guy_1_Sheet_irwm7w.png',
+            actor: 'Lead Supporting Cast',
+            role: 'Stressed Groom Managing Wedding Morning (Kurta & Casual Options)',
+            points: [
+              'Young Pakistani groom, approximately mid-20s to mid-30s',
+              'Two distinct wardrobe options: Traditional festive embroidered kurta pajama vs contemporary semi-formal casual shirt & trousers',
+              'Energetic, busy and managing chaotic preparations on the morning of his wedding',
+              'Natural, well-groomed appearance with realistic hair and trimmed beard'
+            ],
+            headRule: 'Well-groomed modern festive haircut.',
+            performance: 'Juggling phone calls, relatives, and household electrical crisis on his big day.'
+          },
+          {
+            sheetNum: 'Sheet 16',
+            title: 'UPS Guy / Young Groom (Option B — Master Look)',
+            badge: 'Supporting Cast',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Guy_Sheet_ilqhb2.png',
+            actor: 'Lead Supporting Cast',
+            role: 'Stressed Groom Managing Wedding Morning (Master Styling)',
+            points: [
+              'Young Pakistani groom, approximately mid-20s to mid-30s',
+              'He is energetic, busy and slightly stressed because he is personally managing the wedding arrangements',
+              'He should look like he is constantly being pulled in different directions on the morning of his own wedding — checking preparations, arranging things and managing the chaos',
+              'Natural, well-groomed appearance with realistic hair, beard or clean-shaven grooming'
+            ],
+            headRule: 'Well-groomed modern festive haircut.',
+            performance: 'Juggling phone calls, relatives, and household electrical crisis on his big day.'
+          },
+          {
+            sheetNum: 'Sheet 17',
+            title: 'Mother of the Groom / Household Matriarch',
+            badge: 'Supporting Cast',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Mother_Sheet_trglgq.png',
+            actor: 'Supporting Cast',
+            role: 'Commanding & Practical Pakistani Mother',
+            points: [
+              'Pakistani mother, approximately late 40s to late 50s',
+              'Warm, commanding, practical and expressive',
+              'She should look like the person who is managing the entire wedding household and knows exactly what everyone should be doing',
+              'Natural Pakistani beauty, realistic skin texture, graceful but strong presence'
+            ],
+            headRule: 'Graceful festive dupatta drape over styled hair.',
+            performance: 'Authoritative matriarch orchestrating wedding preparations with practical urgency.'
+          }
+        ]
+      }
+    ];
+
+    // Preload ALL images in parallel to Base64 data URLs to prevent canvas taint / network delays
+    const allImageUrls: string[] = [];
+    sections.forEach(sec => {
+      sec.items.forEach(it => {
+        if (it.url) allImageUrls.push(it.url);
+      });
+    });
+    if (branding.sealStamp) allImageUrls.push(branding.sealStamp);
+
+    const base64Cache = new Map<string, string>();
+    await Promise.all(
+      [...new Set(allImageUrls)].map(async (url) => {
+        try {
+          const res = await loadBase64Image(url);
+          if (res && res.dataUrl) {
+            base64Cache.set(url, res.dataUrl);
+          }
+        } catch {
+          // fallback to raw URL
+        }
+      })
+    );
+
+    // Setup pagination engine with smart section break management
     let currentPage = createNewPage(0);
     let currentHeight = 0;
-    let maxContentHeight = 720;
+    let maxContentHeight = 730; // Page 1 has title & cover metadata
 
-    const appendElementWithPagination = (el: HTMLElement) => {
+    const appendElementWithPagination = (el: HTMLElement, isSectionHeader = false) => {
       const h = measureElementHeight(el);
-      if (currentHeight + h > maxContentHeight && currentHeight > 0) {
+      // For section headers, guarantee enough space for header + at least one character card (~245px)
+      const requiredSpace = isSectionHeader ? h + 245 : h;
+
+      if (currentHeight + requiredSpace > maxContentHeight && currentHeight > 0) {
         currentPage = createNewPage(pages.length);
         currentHeight = 0;
         maxContentHeight = 920;
@@ -1061,484 +1439,334 @@ export async function generateChapterPDF(
 
     // 1. Chapter Title & Visual Principles Overview Block
     const overviewBlock = document.createElement('div');
-    overviewBlock.style.marginBottom = '14px';
+    overviewBlock.style.marginBottom = '12px';
     overviewBlock.style.backgroundColor = '#18181b';
     overviewBlock.style.color = '#ffffff';
-    overviewBlock.style.padding = '14px 18px';
-    overviewBlock.style.borderRadius = '10px';
+    overviewBlock.style.padding = '12px 16px';
+    overviewBlock.style.borderRadius = '8px';
     overviewBlock.style.border = '1px solid #27272a';
     overviewBlock.innerHTML = `
-      <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #c69a53; margin-bottom: 4px;">
+      <div style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #c69a53; margin-bottom: 4px;">
         01. Campaign Visual World & Central Separation Rule
       </div>
-      <div style="font-size: 11px; line-height: 1.5; color: #d4d4d8;">
+      <div style="font-size: 10.5px; line-height: 1.45; color: #d4d4d8;">
         <strong>Overall Look:</strong> Contemporary Pakistani realism with heightened comic situations. Authentic, Cinematic, Premium, Warm, Lived-in, and Recognizably Pakistani.<br/>
-        <strong>Separation Rule:</strong> Iftikhar Thakur plays different commercial roles per film, whereas the <strong>Battery Expert</strong> wears a crisp white lab coat, light shalwar qameez underneath, and <strong style="color: #fbbf24;">ABSOLUTELY NO CAP, TURBAN OR HEADWEAR</strong>.
+        <strong>Separation Rule:</strong> Iftikhar Thakur plays different character variants per film, whereas the <strong>Battery Expert</strong> wears a crisp white lab coat, light neutral shalwar qameez underneath, and <strong style="color: #fbbf24;">ABSOLUTELY NO CAP, TURBAN OR HEADWEAR</strong>.
       </div>
     `;
     appendElementWithPagination(overviewBlock);
 
-    // 2. Character & Wardrobe Items ordered strictly by sequence
-    // Each item renders its image directly on top (in front of), followed by its specs!
-    const artTalentItems = [
-      // Main Wardrobe
-      {
-        sequence: 'Main Wardrobe',
-        title: 'Master Look: Battery Expert (Iftikhar Thakur)',
-        badge: 'Lead Technical Authority',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Sheet_w2wp4c.png',
-        actor: 'Iftikhar Thakur',
-        role: 'Senior Energy Authority & Emergency Response Specialist',
-        points: [
-          'Clean white laboratory coat (crisp, practical, contemporary)',
-          'White or very light neutral shalwar qameez underneath',
-          'Minimal styling, no tie, no medical costume clichés',
-          'No gloves unless required for a technical action',
-          'CRITICAL: Absolutely no cap, no turban and no headwear'
-        ],
-        headRule: 'CRITICAL: Absolutely no cap, no turban and no headwear.',
-        performance: 'Senior surgeon meets emergency technology specialist, unmistakably Iftikhar Thakur.'
-      },
-      {
-        sequence: 'Main Wardrobe',
-        title: 'The Alaska Battery Expert Team (Technical Specialists)',
-        badge: 'Mobile Technical Unit',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Medical_Team_Sheet_v07k88.png',
-        actor: 'Technical Specialists Ensemble',
-        role: 'Mobile Diagnostic & Rapid Response Specialists',
-        points: [
-          'Contemporary technical uniforms with clean silhouettes',
-          'Practical jackets or utility-style clothing with subtle Alaska branding',
-          'Functional equipment belts and technical diagnostic flight cases',
-          'Modern technical specialists — DO NOT look like hospital staff'
-        ],
-        headRule: 'Modern technical utility headgear / bareheaded.',
-        performance: 'High-speed, disciplined, synchronized mobile technology pit-crew.'
-      },
-      // Car Sequence
-      {
-        sequence: 'Film 01 — Car',
-        title: 'Character Thakur: Traffic Policeman',
-        badge: 'Car Sequence',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Traf_Policeman_Sheet_bmo9yi.png',
-        actor: 'Iftikhar Thakur',
-        role: 'Gridlock Traffic Policeman',
-        points: [
-          'Authentic Pakistani traffic police uniform (shirt & trousers)',
-          'Official Police cap and duty belt',
-          'Clean but naturally worn appearance with appropriate shoes',
-          'Special sequence: silver-foil heat resistance suit for comedy scene'
-        ],
-        headRule: 'Must wear official police cap (creates stark visual separation from Battery Expert).',
-        performance: 'Stern, irritated, street-smart, comically confident in traffic gridlock.'
-      },
-      {
-        sequence: 'Film 01 — Car',
-        title: 'Traffic Policeman Uniform Color Options & Insignia',
-        badge: 'Wardrobe Reference',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Traf_Policeman_Color_Options_yhw9p8.png',
-        actor: 'Wardrobe Department Reference',
-        role: 'Provincial Uniform Color Palette & Insignia Variations',
-        points: [
-          'Authentic provincial traffic police color variations: Blue-grey, khaki, navy, and white trim insignia options',
-          'Official high-visibility chest badges and reflective shoulder epaulettes',
-          'Approved color palette ensures maximum contrast against urban streetscapes'
-        ],
-        headRule: 'Official peaked traffic warden cap matching selected provincial tunic color.',
-        performance: 'Authoritative regulatory palette for high-traffic Lahore Ring Road / Food Street junction.'
-      },
-      {
-        sequence: 'Film 01 — Car',
-        title: 'Car Owner (Luxury Sedan Commuter)',
-        badge: 'Supporting Cast',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Car_Owner_Sheet_y7jdpt.png',
-        actor: 'Supporting Cast',
-        role: 'Affluent Urban Professional',
-        points: [
-          'Well-groomed Pakistani man, late 30s to mid-40s, affluent urban professional',
-          'He should look successful, sophisticated and slightly impatient, but still believable and relatable',
-          'His wardrobe should communicate that he owns an expensive car without making him look like a celebrity, politician or fashion model',
-          'Modern corporate attire: tailored blazer, crisp shirt, leather strap watch'
-        ],
-        headRule: 'Neatly groomed metropolitan professional haircut.',
-        performance: 'Stressed urban commuter stranded in dead-battery gridlock on the way to an important engagement.'
-      },
-      // Bike Sequence
-      {
-        sequence: 'Film 04 — Bike',
-        title: 'Character Thakur: Office Executive in Safari Suit',
-        badge: 'Bike Sequence',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Interview_Candidate_Sheet_r01msw.png',
-        actor: 'Iftikhar Thakur',
-        role: 'Senior Executive Commuter (Formerly Morning Man)',
-        points: [
-          'Senior office executive commuting during morning rush hour',
-          'Classic tailored safari suit (beige/khaki or grey-blue)',
-          'Epaulettes, flap chest pockets, belted or structured jacket silhouette',
-          'Polished leather shoes, frantic commuter watch-checking'
-        ],
-        headRule: 'No headwear (natural groomed executive morning hair).',
-        performance: 'Stressed senior executive desperate to beat the morning gridlock.'
-      },
-      {
-        sequence: 'Film 04 — Bike',
-        title: 'Taxi Bike Rider',
-        badge: 'Supporting Cast',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Taxi_Biker_Sheet_hwhgny.png',
-        actor: 'Supporting Cast',
-        role: 'Hardworking Urban Motorcycle Taxi Operator',
-        points: [
-          'The character is a practical Pakistani taxi motorcycle rider, urban, hardworking and realistic',
-          'He should look like an authentic everyday bike rider, not a fashion model, delivery rider or generic construction worker',
-          'Weathered windbreaker or lightweight utility jacket, everyday shalwar qameez or jeans',
-          'Practical riding shoes, worn safety helmet, mobile phone handlebar mount'
-        ],
-        headRule: 'Worn everyday motorcycle safety helmet with quick-release chin strap.',
-        performance: 'Street-savvy, energetic, resourceful daily bike taxi pilot navigating dense urban alleys.'
-      },
-      {
-        sequence: 'Film 04 — Bike',
-        title: 'Office Executive & Interview Candidate',
-        badge: 'Supporting Cast',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Office_Executive_Sheet_k7dybx.png',
-        actor: 'Supporting Cast',
-        role: 'Anxious Job Interview Candidate',
-        points: [
-          'Tailored modern corporate charcoal/navy blazer, crisp ironed pastel blue/white shirt, silk tie, dark trousers',
-          'Commuter leather backpack or clear CV portfolio folder',
-          'Safety motorcycle helmet for transit shots',
-          'Desperate to reach a career-defining job interview on time'
-        ],
-        headRule: 'Groomed corporate hairstyle under motorcycle helmet.',
-        performance: 'Nervous tension, checking watch frantically as the minutes tick down.'
-      },
-      // Truck Sequence
-      {
-        sequence: 'Film 02 — Truck',
-        title: 'Character Thakur: Fisherman & Port Logistics Captain',
-        badge: 'Truck Sequence',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Pathan_Thakur_Sheet_d2i9er.png',
-        actor: 'Iftikhar Thakur',
-        role: 'Fish Harbor Logistics Captain',
-        points: [
-          'Simple traditional shalwar qameez in earthy, practical fabric',
-          'Embroidered waistcoat details, brass ring keys, weathered working look',
-          'KEY MANDATORY RULE: Truck Driver / Fisherman Thakur MUST always wear the white Pathan cap',
-          'Battery Expert contrasts with white lab coat, NO Pathan cap, and NO headwear'
-        ],
-        headRule: 'KEY MANDATORY RULE: Truck Driver Thakur must always wear the white Pathan cap.',
-        performance: 'Brave, resilient, protective of his fresh seafood cargo at Karachi port.'
-      },
-      {
-        sequence: 'Film 02 — Truck',
-        title: 'Truck Driver & Port Cargo Crew',
-        badge: 'Supporting Ensemble',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Truck_Driver_Sheet_kbbtsv.png',
-        actor: 'Supporting Ensemble',
-        role: 'Fish Port Cargo Workers & Transport Crew',
-        points: [
-          'Weathered utility workwear, rolled-up sleeves, waterproof rubber boots',
-          'Heavy ice crates, wet fish containers, sea-spray salt patina',
-          'Grounded Karachi fish harbor maritime atmosphere'
-        ],
-        headRule: 'Practical cotton patkas or bareheaded harbor workwear.',
-        performance: 'Hardworking, bustling dock workers racing against melting ice and spoiling cargo.'
-      },
-      // Tractor Sequence
-      {
-        sequence: 'Film 03 — Tractor',
-        title: 'Character Thakur: Chaudhary Sb (Option A — Red Polka Turban)',
-        badge: 'Tractor Sequence',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Chaudharsb_1_Sheet_zbnlik.png',
-        actor: 'Iftikhar Thakur',
-        role: 'Baraat Patriarch & Farm Landlord',
-        points: [
-          'Vibrant red turban / safa with golden-yellow polka-dot pattern',
-          'Traditional fan-style front knot (Turra / Shamla)',
-          'Mustard-yellow kurta with matching dhoti or lacha',
-          'Red floral-print stole, traditional tilla khussa',
-          'Bushy handlebar moustache, thick eyebrows, rustic Punjabi Chaudhary personality'
-        ],
-        headRule: 'Vibrant red polka turban (Battery Expert wears NO turban, NO headwear).',
-        performance: 'Bushy handlebar moustache, thick eyebrows, rustic Punjabi Chaudhary charisma.'
-      },
-      {
-        sequence: 'Film 03 — Tractor',
-        title: 'Character Thakur: Chaudhary Sb (Option B — Traditional Boski Elder)',
-        badge: 'Tractor Sequence',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_ch_sb_Sheet_hi8350.png',
-        actor: 'Iftikhar Thakur',
-        role: 'Traditional Rural Grandfather',
-        points: [
-          'Starched pristine white Cotton Boski Kurta Pajama',
-          'Traditional starched white/cream turban',
-          'Authentic handmade Tilla Khussa & carved cane',
-          'Authoritative village patriarch presence'
-        ],
-        headRule: 'Traditional starched turban.',
-        performance: 'Wise, prestigious, authoritative village elder.'
-      },
-      {
-        sequence: 'Film 03 — Tractor',
-        title: 'Farmer & Agricultural Harvester Crew',
-        badge: 'Supporting Ensemble',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Farmer_Sheet_dpryzu.png',
-        actor: 'Supporting Ensemble',
-        role: 'Agricultural Harvesters',
-        points: [
-          'Earthy Khaki/Olive breathable cotton kurta, Punjabi Tehband (Lungi)',
-          'Checkered gamchha / patka shoulder wrap',
-          'Realistic harvest soil and field patina, genuine Punjabi agricultural realism'
-        ],
-        headRule: 'Traditional farmer patka wrap.',
-        performance: 'Hardworking, genuine, joyful celebration when the tractor restarts.'
-      },
-      // UPS Sequence
-      {
-        sequence: 'Film 05 — UPS',
-        title: 'Character Thakur: Festive Wedding Guest',
-        badge: 'UPS Sequence',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Wedding_Guest_Sheet_yij1ox.png',
-        actor: 'Iftikhar Thakur & Ensemble',
-        role: 'Festive Wedding Guests (Baraat)',
-        points: [
-          'Traditional formal Pakistani wedding outfit with tasteful waistcoat',
-          'Light festive styling, elegant but natural',
-          'Must fit naturally inside an old Lahore wedding house celebration'
-        ],
-        headRule: 'Festive wedding styling without clinical lab elements.',
-        performance: 'Ecstatic celebratory energy interrupted by blackout, then restored by Battery Expert.'
-      },
-      {
-        sequence: 'Film 05 — UPS',
-        title: 'UPS Guy / Young Groom (Option A — Two Wardrobe Options)',
-        badge: 'Supporting Cast',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Guy_1_Sheet_irwm7w.png',
-        actor: 'Lead Supporting Cast',
-        role: 'Stressed Groom Managing Wedding Morning (Kurta & Casual Options)',
-        points: [
-          'Young Pakistani groom, approximately mid-20s to mid-30s',
-          'Two distinct wardrobe options: Traditional festive embroidered kurta pajama vs contemporary semi-formal casual shirt & trousers',
-          'Energetic, busy and managing chaotic preparations on the morning of his wedding',
-          'Natural, well-groomed appearance with realistic hair and trimmed beard'
-        ],
-        headRule: 'Well-groomed modern festive haircut.',
-        performance: 'Juggling phone calls, relatives, and household electrical crisis on his big day.'
-      },
-      {
-        sequence: 'Film 05 — UPS',
-        title: 'UPS Guy / Young Groom (Option B — Master Look)',
-        badge: 'Supporting Cast',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Guy_Sheet_ilqhb2.png',
-        actor: 'Lead Supporting Cast',
-        role: 'Stressed Groom Managing Wedding Morning (Master Styling)',
-        points: [
-          'Young Pakistani groom, approximately mid-20s to mid-30s',
-          'He is energetic, busy and slightly stressed because he is personally managing the wedding arrangements',
-          'He should look like he is constantly being pulled in different directions on the morning of his own wedding — checking preparations, arranging things and managing the chaos',
-          'Natural, well-groomed appearance with realistic hair, beard or clean-shaven grooming'
-        ],
-        headRule: 'Well-groomed modern festive haircut.',
-        performance: 'Juggling phone calls, relatives, and household electrical crisis on his big day.'
-      },
-      {
-        sequence: 'Film 05 — UPS',
-        title: 'Mother of the Groom / Household Matriarch',
-        badge: 'Supporting Cast',
-        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Mother_Sheet_trglgq.png',
-        actor: 'Supporting Cast',
-        role: 'Commanding & Practical Pakistani Mother',
-        points: [
-          'Pakistani mother, approximately late 40s to late 50s',
-          'Warm, commanding, practical and expressive',
-          'She should look like the person who is managing the entire wedding household and knows exactly what everyone should be doing',
-          'Natural Pakistani beauty, realistic skin texture, graceful but strong presence'
-        ],
-        headRule: 'Graceful festive dupatta drape over styled hair.',
-        performance: 'Authoritative matriarch orchestrating wedding preparations with practical urgency.'
-      }
-    ];
-
-    for (let idx = 0; idx < artTalentItems.length; idx++) {
-      const item = artTalentItems[idx];
-      const card = document.createElement('div');
-      card.style.marginBottom = '14px';
-      card.style.border = '1px solid #e2e8f0';
-      card.style.borderRadius = '10px';
-      card.style.overflow = 'hidden';
-      card.style.backgroundColor = '#ffffff';
-      card.style.boxShadow = '0 1px 3px rgba(0,0,0,0.04)';
-
-      let imageHtml = '';
-      if (item.url) {
-        imageHtml = `
-          <div style="background: #09090b; padding: 10px; text-align: center; border-bottom: 1px solid #e2e8f0;">
-            <img 
-              src="${item.url}" 
-              style="max-height: 220px; width: auto; max-width: 100%; object-fit: contain; margin: 0 auto; display: block; border-radius: 6px;" 
-              crossorigin="anonymous" 
-              alt="${item.title}" 
-            />
+    // 2. Render all character sections
+    sections.forEach((sec) => {
+      // Section Header Element
+      const secHeaderEl = document.createElement('div');
+      secHeaderEl.style.marginBottom = '10px';
+      secHeaderEl.style.marginTop = '8px';
+      secHeaderEl.style.backgroundColor = '#18181b';
+      secHeaderEl.style.borderRadius = '8px';
+      secHeaderEl.style.padding = '8px 14px';
+      secHeaderEl.style.borderLeft = '4px solid #c69a53';
+      secHeaderEl.style.display = 'flex';
+      secHeaderEl.style.justifyContent = 'space-between';
+      secHeaderEl.style.alignItems = 'center';
+      secHeaderEl.innerHTML = `
+        <div>
+          <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
+            ${sec.sectionNum} • ${sec.filmKey.toUpperCase()}
           </div>
-        `;
-      }
-
-      card.innerHTML = `
-        <div style="background: #f8fafc; padding: 8px 14px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <div style="font-size: 8.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b;">
-              Sheet ${idx < 9 ? `0${idx + 1}` : `${idx + 1}`} • ${item.sequence}
-            </div>
-            <div style="font-size: 12px; font-weight: 800; color: #0f172a; margin-top: 1px;">
-              ${item.title}
-            </div>
+          <div style="font-size: 12.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
+            ${sec.sectionTitle}
           </div>
-          <span style="font-size: 9px; font-weight: 700; color: #0f172a; background: #f1f5f9; padding: 3px 8px; border-radius: 9999px; border: 1px solid #e2e8f0;">
-            ${item.badge}
-          </span>
         </div>
-        ${imageHtml}
-        <div style="padding: 10px 14px;">
-          <div style="display: flex; justify-content: space-between; font-size: 10px; margin-bottom: 6px;">
-            <span>Actor / Role: <strong style="color: #0f172a;">${item.actor}</strong></span>
-            <span style="color: #b8860b; font-weight: 600;">${item.role}</span>
-          </div>
-          <div style="background: #faf8f5; padding: 8px 10px; border-radius: 6px; border: 1px solid #f1ece4; margin-bottom: 6px;">
-            <div style="font-size: 8.5px; font-weight: 800; text-transform: uppercase; color: #64748b; margin-bottom: 4px;">Wardrobe Specifications:</div>
-            <ul style="margin: 0; padding-left: 14px; font-size: 10px; color: #334155; line-height: 1.45;">
-              ${item.points.map(p => `<li>${p}</li>`).join('')}
-            </ul>
-          </div>
-          <div style="font-size: 9.5px; color: #475569; display: flex; justify-content: space-between; gap: 8px; border-top: 1px solid #f1f5f9; padding-top: 5px;">
-            <span><strong>Headwear Rule:</strong> ${item.headRule}</span>
-          </div>
+        <div style="font-size: 8.5px; color: #a1a1aa; font-weight: 600; text-align: right;">
+          ${sec.items.length} Character Sheets • ${sec.locationTag}
         </div>
       `;
+      appendElementWithPagination(secHeaderEl, true);
 
-      appendElementWithPagination(card);
-    }
+      // Character Cards
+      sec.items.forEach((item) => {
+        const card = document.createElement('div');
+        card.style.marginBottom = '10px';
+        card.style.border = '1px solid #e2e8f0';
+        card.style.borderRadius = '8px';
+        card.style.backgroundColor = '#ffffff';
+        card.style.overflow = 'hidden';
+        card.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.05)';
 
-    // 3. Production Design Language, Mobile Laboratories & Color Direction
-    const prodDesignText = `
-PRODUCTION DESIGN LANGUAGE & MOBILE LABORATORIES
-Every Battery Expert arrival is visually distinctive and location-specific:
-• CAR: Roadside mobile technical laboratory.
-• TRUCK: Large Alaska-branded mobile laboratory truck.
-• TRACTOR: Sophisticated Alaska-branded laboratory caravan towed by a tractor.
-• BIKE: Dramatic high-production arrival — designed according to the approved helicopter sequence.
-• HOME: Household power-response setup entering through the wedding house environment.
+        const imgSrc = base64Cache.get(item.url) || item.url;
 
-COLOR DIRECTION & BRAND IDENTITY
-• Base World: Warm Pakistani sunlight, earthy natural tones, real environments, controlled contrast.
-• Alaska Visual Identity: Alaska yellow is the strongest brand color (batteries, vehicles, laboratory branding, equipment, and technical details). Yellow feels premium and controlled.
-
-MAIN PRODUCTION PRIORITIES
-1. Every Location Must Feel Real (do not over-design the real environment).
-2. The Battery Expert Must Feel Premium (his entrance elevates the visual world).
-3. Character Separation Is Critical (different versions of Iftikhar Thakur never visually confused).
-4. Product Is Always Clear (Alaska Battery receives a strong premium hero reveal).
-5. 9 USPs Highlighted: Graphite Technology, Heat Resistance, Long Battery Life, Uptime, Reliability, Dependability, 9-Month Replacement Warranty, Thick Plates, Long Backup.
-6. Final Tone: Pakistani realism + cinematic scale + Iftikhar Thakur comedy + premium Alaska technology.
-    `;
-
-    const prodDesignBlock = document.createElement('div');
-    prodDesignBlock.style.marginBottom = '14px';
-    prodDesignBlock.style.backgroundColor = '#f8fafc';
-    prodDesignBlock.style.border = '1px solid #cbd5e1';
-    prodDesignBlock.style.borderRadius = '10px';
-    prodDesignBlock.style.padding = '12px 16px';
-    prodDesignBlock.innerHTML = `
-      <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #b8860b; margin-bottom: 6px;">
-        Production Design Language & Priorities
-      </div>
-      <div style="font-size: 10px; color: #334155; line-height: 1.5; white-space: pre-line;">
-        ${prodDesignText.trim()}
-      </div>
-    `;
-    appendElementWithPagination(prodDesignBlock);
-
-    // 4. Locations Matrix
-    const locationsMatrix = [
-      { name: 'Food Street / Badshahi Masjid Area', city: 'Lahore', film: 'Film 01 Car', coord: '31.5881° N, 74.3106° E', permits: 'WCLA & CTPL', design: 'Major traffic congestion, luxury car with bonnet open, Badshahi Mosque backdrop' },
-      { name: 'Ibrahim Hyderi Fishing Port', city: 'Karachi', film: 'Film 02 Truck', coord: '24.7933° N, 67.1352° E', permits: 'Karachi Fisheries Harbor Authority', design: 'Fishing boats, wooden docks, nets, fish crates, refrigerated truck, chai setup' },
-      { name: 'Kareem Block Agricultural Fields', city: 'Lahore', film: 'Film 03 Tractor', coord: '31.5085° N, 74.2882° E', permits: 'Private Agricultural Estate Landlords', design: 'Open fields, working tractor, dynamic Baraat corridor, sweeping wide shots' },
-      { name: 'Packages Mall Outdoor Promenade', city: 'Lahore', film: 'Film 04 Bike', coord: '31.4745° N, 74.3562° E', permits: 'Packages Mall Commercial Operations', design: 'Modern corporate architecture, commuter motorcycle lane, interview candidate in suit' },
-      { name: 'Fakir Khana Museum Haveli', city: 'Old Lahore', film: 'Film 05 UPS', coord: '31.5839° N, 74.3142° E', permits: 'Fakir Khana Trust & WCLA', design: 'Historic courtyard, festive wedding lighting, warm candlelit interior blackout' },
-      { name: 'Evernew Studios (Studio Soundstage)', city: 'Multan Road, Lahore', film: 'All Films Product Insert', coord: '31.4800° N, 74.3000° E', permits: 'Evernew Studios Master Booking', design: 'Graphite spark pyrotechnics, battery cutaways, macro 4K product hero lighting' }
-    ];
-
-    const locBlock = document.createElement('div');
-    locBlock.style.marginBottom = '14px';
-    locBlock.style.border = '1px solid #cbd5e1';
-    locBlock.style.borderRadius = '10px';
-    locBlock.style.padding = '12px 16px';
-    locBlock.style.backgroundColor = '#ffffff';
-    locBlock.innerHTML = `
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-        <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #b8860b;">
-          Shooting Locations & Multi-City Production Matrix
-        </div>
-        <div style="font-size: 8px; font-weight: 700; color: #64748b; background: #f1f5f9; padding: 2px 8px; border-radius: 4px; border: 1px solid #e2e8f0;">
-          *All locations subject to availability and may change based on limitations
-        </div>
-      </div>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-        ${locationsMatrix.map(l => `
-          <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 10px; font-size: 9.5px;">
-            <div style="font-weight: 800; color: #0f172a;">${l.name} (${l.city})</div>
-            <div style="color: #b8860b; font-weight: 600; margin-top: 1px;">${l.film} • GPS: ${l.coord}</div>
-            <div style="color: #64748b; margin-top: 3px; font-size: 9px;"><strong>Permits:</strong> ${l.permits}</div>
-            <div style="color: #334155; margin-top: 2px; font-size: 9px;"><strong>Design:</strong> ${l.design}</div>
+        card.innerHTML = `
+          <!-- Card Header Bar -->
+          <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 9px; font-weight: 800; color: #b8860b; background: #fefce8; border: 1px solid #fef08a; padding: 1px 6px; border-radius: 4px;">
+                ${item.sheetNum}
+              </span>
+              <span style="font-size: 11px; font-weight: 800; color: #0f172a;">
+                ${item.title}
+              </span>
+            </div>
+            <span style="font-size: 8.5px; font-weight: 700; color: #475569; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 7px; border-radius: 9999px;">
+              ${item.badge}
+            </span>
           </div>
-        `).join('')}
+
+          <!-- Card Content Body (Side-by-side: fixed aspect ratio image left, specs right) -->
+          <div style="padding: 9px 12px; display: flex; gap: 12px; align-items: stretch; background: #ffffff;">
+            <!-- Left: Character Image (contained, non-cropping) -->
+            <div style="width: 240px; min-width: 240px; height: 180px; max-height: 180px; background-color: #09090b; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center;">
+              <img src="${imgSrc}" style="width: 100%; height: 100%; object-fit: contain; display: block;" alt="${item.title}" crossorigin="anonymous" />
+            </div>
+
+            <!-- Right: Details & Specifications -->
+            <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 4px;">
+              <div>
+                <div style="font-size: 9.5px; color: #475569; margin-bottom: 4px;">
+                  <strong style="color: #0f172a;">Actor:</strong> ${item.actor} • <strong style="color: #0f172a;">Role:</strong> <span style="color: #b8860b; font-weight: 600;">${item.role}</span>
+                </div>
+                <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 5px 8px; margin-bottom: 4px;">
+                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #78716c; margin-bottom: 2px;">Wardrobe Specifications</div>
+                  <ul style="margin: 0; padding-left: 12px; font-size: 8.5px; line-height: 1.35; color: #334155;">
+                    ${item.points.map(p => `<li style="margin-bottom: 1.5px;">${p}</li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+
+              <div>
+                <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 4px; padding: 3.5px 6px; font-size: 8px; color: #854d0e; line-height: 1.25; margin-bottom: 3px;">
+                  <strong>Headwear Rule:</strong> ${item.headRule}
+                </div>
+                <div style="font-size: 8px; color: #64748b; line-height: 1.25;">
+                  <strong style="color: #475569;">Performance:</strong> ${item.performance}
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        appendElementWithPagination(card);
+      });
+    });
+
+    // -------------------------------------------------------------
+    // SECTION 07: PRODUCTION DESIGN & MOBILE LABORATORIES
+    // -------------------------------------------------------------
+    const prodDesignHeader = document.createElement('div');
+    prodDesignHeader.style.marginBottom = '10px';
+    prodDesignHeader.style.marginTop = '8px';
+    prodDesignHeader.style.backgroundColor = '#18181b';
+    prodDesignHeader.style.borderRadius = '8px';
+    prodDesignHeader.style.padding = '8px 14px';
+    prodDesignHeader.style.borderLeft = '4px solid #c69a53';
+    prodDesignHeader.style.display = 'flex';
+    prodDesignHeader.style.justifyContent = 'space-between';
+    prodDesignHeader.style.alignItems = 'center';
+    prodDesignHeader.innerHTML = `
+      <div>
+        <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
+          SECTION 07 • PRODUCTION DESIGN LANGUAGE
+        </div>
+        <div style="font-size: 12.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
+          Mobile Diagnostic Units & Color Architecture
+        </div>
+      </div>
+      <div style="font-size: 8.5px; color: #a1a1aa; font-weight: 600;">
+        5 Vehicle Units • 6 Production Priorities • 9 USPs
       </div>
     `;
-    appendElementWithPagination(locBlock);
+    appendElementWithPagination(prodDesignHeader, true);
 
-    // 5. Signed Talent Contract Summary & Sign-off Box
-    const contractBlock = document.createElement('div');
-    contractBlock.style.marginBottom = '14px';
-    contractBlock.style.border = '1.5px solid #c69a53';
-    contractBlock.style.borderRadius = '10px';
-    contractBlock.style.padding = '12px 16px';
-    contractBlock.style.backgroundColor = '#faf8f5';
-    contractBlock.innerHTML = `
-      <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: #b8860b; margin-bottom: 6px;">
-        Official Celebrity Talent & Likeness Agreement (Executed)
+    const mobileLabsBlock = document.createElement('div');
+    mobileLabsBlock.style.marginBottom = '10px';
+    mobileLabsBlock.style.border = '1px solid #e2e8f0';
+    mobileLabsBlock.style.borderRadius = '8px';
+    mobileLabsBlock.style.padding = '10px 12px';
+    mobileLabsBlock.style.backgroundColor = '#ffffff';
+    mobileLabsBlock.innerHTML = `
+      <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b; margin-bottom: 6px;">
+        Mobile Diagnostic Response Units by Sequence
       </div>
-      <div style="font-size: 10px; color: #1e293b; line-height: 1.5;">
-        <strong>Talent:</strong> Mr. Iftikhar Ahmad Sheikh (Iftikhar Thakur)<br/>
-        <strong>Production Company:</strong> Nasharz Films (Aatif Rasheed — Producer/Director)<br/>
-        <strong>Brand:</strong> Alaska Batteries (Lead Brand Ambassador)<br/>
-        <strong>Scope:</strong> 5 Hero Commercial Films, 5 Shoot Days, 2-Year Term (2026–2028), Worldwide Commercial & Digital Likeness Exclusivity.
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 7px 9px;">
+          <div style="font-size: 9.5px; font-weight: 800; color: #0f172a;">1. Film 01 (Car): Specialized High-Tech Diagnostic Van</div>
+          <div style="font-size: 8.5px; color: #475569; margin-top: 2px;">Matte metallic finish, motorized slide-out battery tester trays, rapid LED diagnostic scopes.</div>
+        </div>
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 7px 9px;">
+          <div style="font-size: 9.5px; font-weight: 800; color: #0f172a;">2. Film 02 (Truck): Heavy Commercial Marine Support Unit</div>
+          <div style="font-size: 8.5px; color: #475569; margin-top: 2px;">Reinforced steel crane arm, heavy-duty marine battery testing harness for wet port logistics.</div>
+        </div>
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 7px 9px;">
+          <div style="font-size: 9.5px; font-weight: 800; color: #0f172a;">3. Film 03 (Tractor): All-Terrain Agricultural Mobile Workshop</div>
+          <div style="font-size: 8.5px; color: #475569; margin-top: 2px;">Dust-sealed field unit with high-torque cranking test meters for rural farmlands.</div>
+        </div>
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 7px 9px;">
+          <div style="font-size: 9.5px; font-weight: 800; color: #0f172a;">4. Film 04 (Bike): Rapid Motorcycle Emergency Unit</div>
+          <div style="font-size: 8.5px; color: #475569; margin-top: 2px;">High-speed agile city scooter with rapid battery swap racks and diagnostic pods.</div>
+        </div>
+      </div>
+    `;
+    appendElementWithPagination(mobileLabsBlock);
+
+    // -------------------------------------------------------------
+    // SECTION 08: SHOOTING LOCATIONS MATRIX
+    // -------------------------------------------------------------
+    const locationsHeader = document.createElement('div');
+    locationsHeader.style.marginBottom = '10px';
+    locationsHeader.style.marginTop = '8px';
+    locationsHeader.style.backgroundColor = '#18181b';
+    locationsHeader.style.borderRadius = '8px';
+    locationsHeader.style.padding = '8px 14px';
+    locationsHeader.style.borderLeft = '4px solid #c69a53';
+    locationsHeader.style.display = 'flex';
+    locationsHeader.style.justifyContent = 'space-between';
+    locationsHeader.style.alignItems = 'center';
+    locationsHeader.innerHTML = `
+      <div>
+        <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
+          SECTION 08 • SHOOTING LOCATIONS MATRIX
+        </div>
+        <div style="font-size: 12.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
+          Multi-City Production Matrix (Lahore, Karachi & Studio Stages)
+        </div>
+      </div>
+      <div style="font-size: 8.5px; color: #a1a1aa; font-weight: 600;">
+        6 Prime Locations • GPS Verified
+      </div>
+    `;
+    appendElementWithPagination(locationsHeader, true);
+
+    const locationsBlock = document.createElement('div');
+    locationsBlock.style.marginBottom = '10px';
+    locationsBlock.style.border = '1px solid #e2e8f0';
+    locationsBlock.style.borderRadius = '8px';
+    locationsBlock.style.padding = '10px 12px';
+    locationsBlock.style.backgroundColor = '#ffffff';
+    locationsBlock.innerHTML = `
+      <table style="width: 100%; border-collapse: collapse; font-size: 8.5px; color: #334155;">
+        <thead>
+          <tr style="background-color: #f1f5f9; text-align: left; color: #0f172a; font-weight: 800; font-size: 8px; text-transform: uppercase;">
+            <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">Film Sequence</th>
+            <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">Selected Location</th>
+            <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">City / Area</th>
+            <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">Key Art & Production Highlights</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 01 — Car</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Food Street / Ring Road Bypass</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lahore Walled City</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">High-density traffic gridlock with Badshahi Mosque archway backdrop.</td>
+          </tr>
+          <tr style="background-color: #fafafa;">
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 02 — Truck</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Ibrahim Hyderi Fish Harbor</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Karachi Port Jetty</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Active maritime cargo wharf, ice crates, heavy Bedford truck fleet.</td>
+          </tr>
+          <tr>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 03 — Tractor</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Kareem Block Agricultural Fields</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lahore Suburbs</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lush golden wheat harvest corridor, decorated baraat tractor trolleys.</td>
+          </tr>
+          <tr style="background-color: #fafafa;">
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 04 — Bike</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Packages Mall Promenade / Gulberg</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lahore Central</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Morning corporate rush hour boulevard, dense bike taxi traffic.</td>
+          </tr>
+          <tr>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 05 — UPS / Home</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Fakir Khana Museum Haveli</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Old Lahore</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Historic courtyard decorated for wedding, sudden blackout to full illumination.</td>
+          </tr>
+        </tbody>
+      </table>
+    `;
+    appendElementWithPagination(locationsBlock);
+
+    // -------------------------------------------------------------
+    // SECTION 09: CELEBRITY TALENT AGREEMENT & SIGN-OFF
+    // -------------------------------------------------------------
+    const talentHeader = document.createElement('div');
+    talentHeader.style.marginBottom = '10px';
+    talentHeader.style.marginTop = '8px';
+    talentHeader.style.backgroundColor = '#18181b';
+    talentHeader.style.borderRadius = '8px';
+    talentHeader.style.padding = '8px 14px';
+    talentHeader.style.borderLeft = '4px solid #c69a53';
+    talentHeader.style.display = 'flex';
+    talentHeader.style.justifyContent = 'space-between';
+    talentHeader.style.alignItems = 'center';
+    talentHeader.innerHTML = `
+      <div>
+        <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
+          SECTION 09 • CELEBRITY TALENT & LIKENESS AGREEMENT
+        </div>
+        <div style="font-size: 12.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
+          Executed Agreement & Executive Authorization
+        </div>
+      </div>
+      <div style="font-size: 8.5px; color: #a1a1aa; font-weight: 600;">
+        Iftikhar Thakur • Category Exclusivity Secured
+      </div>
+    `;
+    appendElementWithPagination(talentHeader, true);
+
+    const contractBlock = document.createElement('div');
+    contractBlock.style.marginBottom = '10px';
+    contractBlock.style.border = '1px solid #e2e8f0';
+    contractBlock.style.borderRadius = '8px';
+    contractBlock.style.padding = '10px 12px';
+    contractBlock.style.backgroundColor = '#ffffff';
+    contractBlock.innerHTML = `
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+        <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 6px; padding: 8px;">
+          <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #b8860b; margin-bottom: 4px;">Principal Artist Representation</div>
+          <div style="font-size: 8.5px; line-height: 1.4; color: #334155;">
+            <strong>Artist Name:</strong> Mr. Iftikhar Ahmad Sheikh (p/k/a Iftikhar Thakur)<br/>
+            <strong>Campaign Role:</strong> Brand Ambassador & Character Variants<br/>
+            <strong>Exclusivity:</strong> Exclusive to Alaska Batteries across all battery categories for Pakistan & GCC territories.
+          </div>
+        </div>
+        <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 6px; padding: 8px;">
+          <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #b8860b; margin-bottom: 4px;">Production Scope & Media Rights</div>
+          <div style="font-size: 8.5px; line-height: 1.4; color: #334155;">
+            <strong>Shooting Schedule:</strong> 5 Commercial Films + Stills + BTS Digital Assets<br/>
+            <strong>Media Term:</strong> 1 Year All-Media Pakistan & GCC Broadcast Rights<br/>
+            <strong>Status:</strong> Executed & Confirmed for March 2026 Production Window.
+          </div>
+        </div>
       </div>
     `;
     appendElementWithPagination(contractBlock);
 
     // Executive Sign-off Box
     const signoffBox = document.createElement('div');
-    signoffBox.style.marginTop = '16px';
-    signoffBox.style.paddingTop = '12px';
+    signoffBox.style.marginTop = '10px';
+    signoffBox.style.paddingTop = '10px';
     signoffBox.style.borderTop = '1.5px dashed #cbd5e1';
     signoffBox.style.display = 'flex';
     signoffBox.style.justifyContent = 'space-between';
     signoffBox.style.alignItems = 'flex-end';
     signoffBox.innerHTML = `
       <div>
-        <div style="font-size: 12px; font-weight: 800; color: #0f172a;">Nasharz Films Confidential Presentation</div>
-        <div style="font-size: 11px; font-weight: 700; color: #b8860b; margin-top: 2px;">
+        <div style="font-size: 11px; font-weight: 800; color: #0f172a;">Nasharz Films Confidential Presentation</div>
+        <div style="font-size: 10px; font-weight: 700; color: #b8860b; margin-top: 1px;">
           Prepared By: <span style="color: #0f172a;">Aatif Rasheed</span> • Producer / Director
         </div>
-        <div style="font-size: 9.5px; color: #64748b; margin-top: 2px;">Proprietary production lookbook prepared strictly for Alaska Batteries.</div>
+        <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Proprietary production lookbook prepared strictly for Alaska Batteries.</div>
       </div>
       <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
-        <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b; font-weight: 700; margin-bottom: 3px;">Executive Authorization</div>
-        <img src="${branding.sealStamp}" style="height: 60px; width: auto; object-fit: contain;" alt="Official Stamp" />
+        <div style="font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b; font-weight: 700; margin-bottom: 2px;">Executive Authorization</div>
+        <img src="${base64Cache.get(branding.sealStamp) || branding.sealStamp}" style="height: 55px; width: auto; object-fit: contain;" alt="Official Stamp" />
       </div>
     `;
     appendElementWithPagination(signoffBox);
 
-    // Update Footers
+    // Update Footers with actual total page count
     const totalPages = pages.length;
     pages.forEach((p, idx) => {
       p.footerArea.innerHTML = `

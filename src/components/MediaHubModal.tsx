@@ -578,14 +578,6 @@ export const MediaHubModal: React.FC<MediaHubModalProps> = ({
               })}
             </div>
 
-            {/* Bottom info note for client */}
-            <div className="mt-4 pt-3 border-t border-zinc-800/80 flex items-center gap-2 text-[11px] text-zinc-400 bg-zinc-900/40 p-3 rounded-xl">
-              <Info className="w-4 h-4 text-[#c69a53] shrink-0" />
-              <span>
-                All video and audio links are hosted on secure high-speed Cloudinary & Google Drive CDNs with unrestricted client downloads.
-              </span>
-            </div>
-
           </div>
 
         </div>

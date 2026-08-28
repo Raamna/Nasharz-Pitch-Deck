@@ -705,6 +705,54 @@ Explore each concept folder above to review the high-resolution storyboard seque
   ],
   mediaAssets: [
     {
+      id: 'media-color-grade-1',
+      title: 'Color Grade Ref 1: Cello Butterflow Ballpen (Mr. Lamba Naam)',
+      type: 'video',
+      category: 'Color Grade & Tone Reference',
+      url: 'https://res.cloudinary.com/zpwicpo5/video/upload/vidssave.com_Cello_Butterflow_Ballpen_Mr._Lamba_Naam_40_sec_480P.mp4',
+      downloadUrl: 'https://res.cloudinary.com/zpwicpo5/video/upload/vidssave.com_Cello_Butterflow_Ballpen_Mr._Lamba_Naam_40_sec_480P.mp4',
+      description: 'Color grade, comedic timing, sharp contrast and character pacing reference — Cello Butterflow (Mr. Lamba Naam).',
+      duration: '0:40',
+      fileSize: '4.8 MB',
+      uploadedAt: '2026-08-27'
+    },
+    {
+      id: 'media-color-grade-2',
+      title: 'Color Grade Ref 2: Cadbury 5 Star (Ramesh Suresh & Tailor)',
+      type: 'video',
+      category: 'Color Grade & Tone Reference',
+      url: 'https://res.cloudinary.com/zpwicpo5/video/upload/vidssave.com_Cadbury_5_Star_latest_ad_-_Ramesh_Suresh_and_Tailor_-_TVC.flv_360P.mp4',
+      downloadUrl: 'https://res.cloudinary.com/zpwicpo5/video/upload/vidssave.com_Cadbury_5_Star_latest_ad_-_Ramesh_Suresh_and_Tailor_-_TVC.flv_360P.mp4',
+      description: 'Warm studio palette, expressive lighting contrast, and quirky deadpan character humor — Cadbury 5 Star TVC.',
+      duration: '0:45',
+      fileSize: '3.6 MB',
+      uploadedAt: '2026-08-27'
+    },
+    {
+      id: 'media-color-grade-3',
+      title: 'Color Grade Ref 3: Center Fresh TVC',
+      type: 'video',
+      category: 'Color Grade & Tone Reference',
+      url: 'https://res.cloudinary.com/zpwicpo5/video/upload/Centre_Fresh.mp4',
+      downloadUrl: 'https://res.cloudinary.com/zpwicpo5/video/upload/Centre_Fresh.mp4',
+      description: 'Punchy vibrant commercial palette, dynamic camera transitions, and comedic punchline lighting grade — Center Fresh TVC.',
+      duration: '0:35',
+      fileSize: '4.2 MB',
+      uploadedAt: '2026-08-27'
+    },
+    {
+      id: 'media-color-grade-4',
+      title: 'Color Grade Ref 4: Har Koi Peera (Lahori Zeera 2.0)',
+      type: 'video',
+      category: 'Color Grade & Tone Reference',
+      url: 'https://res.cloudinary.com/zpwicpo5/video/upload/vidssave.com_Har_Koi_Peera_Lahori_Zeera_2.0_1080P.mp4',
+      downloadUrl: 'https://res.cloudinary.com/zpwicpo5/video/upload/vidssave.com_Har_Koi_Peera_Lahori_Zeera_2.0_1080P.mp4',
+      description: 'High-definition vibrant commercial grade, crisp Punjabi outdoor lighting, rich saturation and comedic rhythm — Lahori Zeera 2.0.',
+      duration: '0:45',
+      fileSize: '8.4 MB',
+      uploadedAt: '2026-08-27'
+    },
+    {
       id: 'media-jingle-jalwa',
       title: 'Jalwa (Reveal)',
       type: 'audio',

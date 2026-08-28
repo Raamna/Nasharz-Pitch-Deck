@@ -160,7 +160,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       title: 'Character Thakur: Office Executive in Safari Suit',
       actor: 'Iftikhar Thakur',
       role: 'Senior Executive Commuter',
-      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Interview_Candidate_Sheet_r01msw.png',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Office_Executive_Sheet_k7dybx.png',
       wardrobePoints: [
         'Senior office executive commuting during morning rush hour (formerly morning man)',
         'Classic tailored safari suit (beige/khaki or grey-blue)',
@@ -193,10 +193,10 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       id: 7,
       filmKey: 'bike',
       filmLabel: 'Film 04 — Bike Sequence',
-      title: 'Office Executive & Interview Candidate',
+      title: 'Supporting Cast: Job Interview Candidate',
       actor: 'Supporting Cast',
       role: 'Anxious Job Interview Candidate',
-      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Office_Executive_Sheet_k7dybx.png',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Interview_Candidate_Sheet_r01msw.png',
       wardrobePoints: [
         'Tailored modern corporate blazer, crisp ironed pastel blue/white shirt, silk tie, dark trousers',
         'Commuter leather backpack or clear CV portfolio folder',

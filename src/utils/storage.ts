@@ -46,7 +46,14 @@ export function getStoredData(): DeckData {
       chapters: hydratedChapters,
       estimates: parsed.estimates && parsed.estimates.length > 0 ? parsed.estimates : initialDeckData.estimates,
       logs: parsed.logs || initialDeckData.logs,
-      mediaAssets: Array.isArray(parsed.mediaAssets) && parsed.mediaAssets.length > 0 ? parsed.mediaAssets : (initialDeckData.mediaAssets || []),
+      mediaAssets: Array.isArray(parsed.mediaAssets) && parsed.mediaAssets.length > 0 
+        ? [
+            ...parsed.mediaAssets,
+            ...(initialDeckData.mediaAssets || []).filter(
+              (def) => !parsed.mediaAssets.some((m: any) => m.id === def.id || m.url === def.url)
+            )
+          ]
+        : (initialDeckData.mediaAssets || []),
     };
   } catch (e) {
     console.error('Error loading data from localStorage', e);
