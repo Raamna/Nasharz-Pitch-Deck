@@ -1395,7 +1395,7 @@ export async function generateChapterPDF(
       }
     ];
 
-    // Preload ALL images in parallel to Base64 data URLs to prevent canvas taint / network delays
+    // Preload ALL images in parallel to Base64 data URLs with full dimension metadata
     const allImageUrls: string[] = [];
     sections.forEach(sec => {
       sec.items.forEach(it => {
@@ -1404,13 +1404,19 @@ export async function generateChapterPDF(
     });
     if (branding.sealStamp) allImageUrls.push(branding.sealStamp);
 
-    const base64Cache = new Map<string, string>();
+    interface ImageMeta {
+      dataUrl: string;
+      width: number;
+      height: number;
+      aspect: number;
+    }
+    const imageMetaMap = new Map<string, ImageMeta>();
     await Promise.all(
       [...new Set(allImageUrls)].map(async (url) => {
         try {
           const res = await loadBase64Image(url);
           if (res && res.dataUrl) {
-            base64Cache.set(url, res.dataUrl);
+            imageMetaMap.set(url, res);
           }
         } catch {
           // fallback to raw URL
@@ -1425,8 +1431,8 @@ export async function generateChapterPDF(
 
     const appendElementWithPagination = (el: HTMLElement, isSectionHeader = false) => {
       const h = measureElementHeight(el);
-      // For section headers, guarantee enough space for header + at least one character card (~245px)
-      const requiredSpace = isSectionHeader ? h + 245 : h;
+      // For section headers, guarantee enough space for header + at least one full character card (~370px)
+      const requiredSpace = isSectionHeader ? h + 370 : h;
 
       if (currentHeight + requiredSpace > maxContentHeight && currentHeight > 0) {
         currentPage = createNewPage(pages.length);
@@ -1487,14 +1493,31 @@ export async function generateChapterPDF(
       // Character Cards
       sec.items.forEach((item) => {
         const card = document.createElement('div');
-        card.style.marginBottom = '10px';
+        card.style.marginBottom = '12px';
         card.style.border = '1px solid #e2e8f0';
         card.style.borderRadius = '8px';
         card.style.backgroundColor = '#ffffff';
         card.style.overflow = 'hidden';
-        card.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.05)';
+        card.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.04)';
 
-        const imgSrc = base64Cache.get(item.url) || item.url;
+        const meta = imageMetaMap.get(item.url);
+        const imgSrc = meta?.dataUrl || item.url;
+        const aspect = meta?.aspect && !isNaN(meta.aspect) && meta.aspect > 0.1 ? meta.aspect : (16 / 9);
+
+        // Calculate exact un-squeezed pixel width and height respecting natural aspect ratio
+        const maxCardImgW = 676;
+        const maxCardImgH = 220;
+
+        let finalW = maxCardImgW;
+        let finalH = Math.round(maxCardImgW / aspect);
+        if (finalH > maxCardImgH) {
+          finalH = maxCardImgH;
+          finalW = Math.round(maxCardImgH * aspect);
+        }
+        if (finalW > maxCardImgW) {
+          finalW = maxCardImgW;
+          finalH = Math.round(maxCardImgW / aspect);
+        }
 
         card.innerHTML = `
           <!-- Card Header Bar -->
@@ -1503,7 +1526,7 @@ export async function generateChapterPDF(
               <span style="font-size: 9px; font-weight: 800; color: #b8860b; background: #fefce8; border: 1px solid #fef08a; padding: 1px 6px; border-radius: 4px;">
                 ${item.sheetNum}
               </span>
-              <span style="font-size: 11px; font-weight: 800; color: #0f172a;">
+              <span style="font-size: 11.5px; font-weight: 800; color: #0f172a;">
                 ${item.title}
               </span>
             </div>
@@ -1512,33 +1535,44 @@ export async function generateChapterPDF(
             </span>
           </div>
 
-          <!-- Card Content Body (Side-by-side: fixed aspect ratio image left, specs right) -->
-          <div style="padding: 9px 12px; display: flex; gap: 12px; align-items: stretch; background: #ffffff;">
-            <!-- Left: Character Image (contained, non-cropping) -->
-            <div style="width: 240px; min-width: 240px; height: 180px; max-height: 180px; background-color: #09090b; border-radius: 6px; overflow: hidden; border: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: center;">
-              <img src="${imgSrc}" style="width: 100%; height: 100%; object-fit: contain; display: block;" alt="${item.title}" crossorigin="anonymous" />
+          <!-- Card Content Body -->
+          <div style="padding: 10px 12px 10px 12px; background: #ffffff;">
+            <!-- Character Sheet Showcase (Exact Aspect Ratio, Non-Distorted, Centered) -->
+            <div style="background-color: #0c0a09; border: 1px solid #1c1917; border-radius: 6px; padding: 5px; display: flex; align-items: center; justify-content: center; min-height: ${finalH + 10}px; margin-bottom: 8px;">
+              <img 
+                src="${imgSrc}" 
+                width="${finalW}" 
+                height="${finalH}" 
+                style="width: ${finalW}px; height: ${finalH}px; max-width: 100%; display: block; margin: 0 auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);" 
+                alt="${item.title}" 
+                crossorigin="anonymous" 
+              />
             </div>
 
-            <!-- Right: Details & Specifications -->
-            <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between; gap: 4px;">
+            <!-- Details & Specifications Grid -->
+            <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 10px; align-items: start;">
+              <!-- Left Column: Actor, Role & Wardrobe Specs -->
               <div>
                 <div style="font-size: 9.5px; color: #475569; margin-bottom: 4px;">
-                  <strong style="color: #0f172a;">Actor:</strong> ${item.actor} • <strong style="color: #0f172a;">Role:</strong> <span style="color: #b8860b; font-weight: 600;">${item.role}</span>
+                  <strong style="color: #0f172a;">Actor:</strong> ${item.actor} • <strong style="color: #0f172a;">Role:</strong> <span style="color: #b8860b; font-weight: 700;">${item.role}</span>
                 </div>
-                <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 5px 8px; margin-bottom: 4px;">
-                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #78716c; margin-bottom: 2px;">Wardrobe Specifications</div>
+                <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 6px 8px;">
+                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 2px;">Wardrobe Specifications</div>
                   <ul style="margin: 0; padding-left: 12px; font-size: 8.5px; line-height: 1.35; color: #334155;">
                     ${item.points.map(p => `<li style="margin-bottom: 1.5px;">${p}</li>`).join('')}
                   </ul>
                 </div>
               </div>
 
-              <div>
-                <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 4px; padding: 3.5px 6px; font-size: 8px; color: #854d0e; line-height: 1.25; margin-bottom: 3px;">
-                  <strong>Headwear Rule:</strong> ${item.headRule}
+              <!-- Right Column: Headwear Rule & Performance Directive -->
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 5px; padding: 5px 8px;">
+                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #854d0e; letter-spacing: 0.05em; margin-bottom: 2px;">Headwear & Styling Directive</div>
+                  <div style="font-size: 8.5px; color: #713f12; line-height: 1.3; font-weight: 600;">${item.headRule}</div>
                 </div>
-                <div style="font-size: 8px; color: #64748b; line-height: 1.25;">
-                  <strong style="color: #475569;">Performance:</strong> ${item.performance}
+                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px; padding: 5px 8px;">
+                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 2px;">Performance & Character Note</div>
+                  <div style="font-size: 8.5px; color: #334155; line-height: 1.3;">${item.performance}</div>
                 </div>
               </div>
             </div>
@@ -1761,7 +1795,7 @@ export async function generateChapterPDF(
       </div>
       <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
         <div style="font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b; font-weight: 700; margin-bottom: 2px;">Executive Authorization</div>
-        <img src="${base64Cache.get(branding.sealStamp) || branding.sealStamp}" style="height: 55px; width: auto; object-fit: contain;" alt="Official Stamp" />
+        <img src="${imageMetaMap.get(branding.sealStamp)?.dataUrl || branding.sealStamp}" style="height: 55px; width: auto; object-fit: contain;" alt="Official Stamp" />
       </div>
     `;
     appendElementWithPagination(signoffBox);
