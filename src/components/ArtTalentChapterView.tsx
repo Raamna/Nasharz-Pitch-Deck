@@ -27,7 +27,9 @@ import {
   Palette,
   Zap,
   Flame,
-  ShieldAlert
+  ShieldAlert,
+  Boxes,
+  Package
 } from 'lucide-react';
 
 interface ArtTalentChapterViewProps {
@@ -45,8 +47,9 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
   onDownloadPdf,
   isGeneratingPdf,
 }) => {
-  const [activeTab, setActiveTab] = useState<'wardrobe' | 'films' | 'mobile-labs' | 'color-priorities' | 'locations' | 'moodboard' | 'contract'>('wardrobe');
+  const [activeTab, setActiveTab] = useState<'wardrobe' | 'vehicles-props' | 'films' | 'mobile-labs' | 'color-priorities' | 'locations' | 'moodboard' | 'contract'>('wardrobe');
   const [characterFilter, setCharacterFilter] = useState<'all' | 'master' | 'car' | 'truck' | 'tractor' | 'bike' | 'ups'>('all');
+  const [vehicleFilter, setVehicleFilter] = useState<'all' | 'master' | 'car' | 'truck' | 'tractor' | 'bike' | 'ups'>('all');
   const [copiedContract, setCopiedContract] = useState(false);
   const [activeLocationIndex, setActiveLocationIndex] = useState<number>(0);
 
@@ -388,6 +391,225 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
     return c.filmKey === characterFilter;
   });
 
+  // Parallel Production Design Suite: Vehicle & Props Design Grids across all sequences
+  const vehiclePropSheets = [
+    {
+      id: 0,
+      filmKey: 'master',
+      filmLabel: 'Master Vehicle • Option 1',
+      title: 'Unified Battery Pehlwan Mobile Lab Van (Option 1 — Master Livery)',
+      subtitle: 'Aerodynamic high-roof emergency vehicle with slide-out battery diagnostic racks',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op1_esdu3i.png',
+      altOptionUrl: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op2_s09h1o.png',
+      badge: 'Master Livery Option 1',
+      mainVehicle: [
+        'Aerodynamic high-roof commercial vehicle with custom yellow-and-white Alaska livery',
+        'Roof-mounted high-intensity strobe beacon array and technical diagnostic antennas',
+        'Full front 3/4 view, side profile, rear deployable ramp, and slide-out diagnostic racks',
+        'Holds Alaska Graphite batteries, high-voltage oscilloscopes, and LED status meters'
+      ],
+      vehicleLook: [
+        'Pristine, futuristic yet practical Pakistani emergency-response mobile laboratory',
+        'High-gloss Alaska Yellow (#F59E0B) and Arctic White dual-tone body styling',
+        'Prominent Alaska Batteries branding and "BATTERY PEHLWAN EMERGENCY UNIT" insignia',
+        'Sharp professional finish creating comedic contrast against real-world breakdown environments'
+      ],
+      props: [
+        'Hero Alaska Graphite Battery with 1:1 cutaway casing & 9-Month Replacement Warranty seal',
+        'High-speed digital oscilloscope and diagnostic telemetry tablet',
+        'Heavy-duty insulated jumper clamps and spark-arrestor cables',
+        'Brushed aluminum mobile diagnostic flight cases and emergency LED work-lights'
+      ],
+      artDirective: 'ONE UNIFIED VEHICLE (OPTION 1): The Battery Pehlwan branded mobile van is the consistent high-tech heroic enabler appearing across all 5 campaign films.'
+    },
+    {
+      id: 101,
+      filmKey: 'master',
+      filmLabel: 'Master Vehicle • Option 2',
+      title: 'Unified Battery Pehlwan Mobile Lab Van (Option 2 — Aero Graphic Livery)',
+      subtitle: 'Streamlined commercial response van with sport aero Alaska side graphics',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op2_s09h1o.png',
+      altOptionUrl: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op3_g0tgpa.png',
+      badge: 'Aero Livery Option 2',
+      mainVehicle: [
+        'Sport-aero commercial high-roof van configuration with extended rear cargo bay',
+        'Full side-profile livery featuring dynamic speed-chevron Alaska brand graphics',
+        'Rapid-access side gullwing doors exposing high-speed battery replacement charging bay',
+        'Equipped with quick-crank mobile booster packs and graphite plate telemetry screens'
+      ],
+      vehicleLook: [
+        'Dynamic high-contrast Alaska Solar Gold & Ultra-Gloss Black accent scheme',
+        'Bold typographic Alaska logo across flank with reflective safety micro-prisms',
+        'Matte graphite alloy wheels with all-terrain emergency response tires',
+        'Crisp aerodynamic presence calibrated for rapid highway & city interventions'
+      ],
+      props: [
+        'Ultra-fast rapid-charge diagnostic dock with dual 12V/24V outputs',
+        'Titanium-finish battery carrier handles and magnetic terminal alignment probes',
+        'Wireless Bluetooth battery health analysis wand connected to mobile tablet',
+        'Emergency roadside traffic warning beacon pillars and Alaska floor mats'
+      ],
+      artDirective: 'AERO LIVERY OPTION 2: Sleeker, motorsport-inspired rapid response aesthetic for high-speed urban transit commercial sequences.'
+    },
+    {
+      id: 102,
+      filmKey: 'master',
+      filmLabel: 'Master Vehicle • Option 3',
+      title: 'Unified Battery Pehlwan Mobile Lab Van (Option 3 — Heavy Utility Livery)',
+      subtitle: 'Heavy-duty rugged dual-tone response unit with high-visibility emergency styling',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op3_g0tgpa.png',
+      altOptionUrl: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op1_esdu3i.png',
+      badge: 'Heavy Utility Option 3',
+      mainVehicle: [
+        'Reinforced heavy-duty commercial chassis with integrated front recovery winch & bull-bar',
+        'Dual rear barn-doors with heavy slide-out steel tray holding commercial & tractor batteries',
+        'Overhead LED floodlight illumination bar for night & storm emergencies',
+        'Built-in 220V inverter generator powering heavy field oscilloscopes and load testers'
+      ],
+      vehicleLook: [
+        'Industrial-grade high-durability finish with high-visibility reflective hazard striping',
+        'Solid Arctic White base with bold Alaska Gold power-wave accents along the wheelbase',
+        'Textured non-slip aluminum side-steps and heavy-duty roof rack for extra spare cells',
+        'Maximum authority and rugged reliability for tough rural and industrial deployments'
+      ],
+      props: [
+        'Heavy-duty industrial carbon-pile battery load tester and digital impedance analyzer',
+        'Heavy tractor & truck commercial battery lifting harness and safety clamps',
+        'Protective technician utility gloves, safety glasses, and heavy torque wrenches',
+        'Portable high-output emergency floodlight tripod with Alaska branding'
+      ],
+      artDirective: 'HEAVY UTILITY OPTION 3: Maximum rugged durability and high-capacity rescue capability suited for agricultural and commercial freight breakdown scenarios.'
+    },
+    {
+      id: 1,
+      filmKey: 'car',
+      filmLabel: 'Film 01 — Car Sequence',
+      title: 'Car Sequence: Luxury Sedan & Traffic Breakdown Props Grid',
+      subtitle: 'Modern executive vehicle breakdown & roadside emergency toolkit grid',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Car_Seq_uj7m0o.png',
+      badge: 'Film 01 — Car',
+      mainVehicle: [
+        'Full front three-quarter view, side profile, front view, and rear three-quarter view',
+        'Bonnet-open view with detailed engine-bay and battery compartment visible',
+        'Close-up of battery terminals, connection cables, wheel and headlight detail'
+      ],
+      vehicleLook: [
+        'New, premium, expensive Pakistani luxury sedan',
+        'Dark metallic grey, black or deep navy body; clean and well-maintained',
+        'No visible brand logos, no text decals, generic unreadable number plate'
+      ],
+      props: [
+        'Luxury car key & remote fob, open bonnet hardware, battery terminal cables',
+        'Basic roadside emergency toolkit & small hand tools',
+        'Reflective warning triangle, traffic cones, police traffic baton & whistle'
+      ],
+      artDirective: 'Clean square composition, pure white background, isolated objects and vehicle views, realistic automotive rendering.'
+    },
+    {
+      id: 2,
+      filmKey: 'truck',
+      filmLabel: 'Film 02 — Truck Sequence',
+      title: 'Truck Sequence: Refrigerated Cargo Truck & Fishing Port Props Grid',
+      subtitle: 'Heavy-duty marine seafood logistics & port cold-chain breakdown props',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Truck_Seq_wdek71.png',
+      badge: 'Film 02 — Truck',
+      mainVehicle: [
+        'Large refrigerated cargo delivery truck (Front 3/4, side profile, front, rear 3/4)',
+        'Bonnet-open view, heavy-duty engine-bay, and commercial truck battery compartment',
+        'Refrigeration unit mounted above cabin, heavy commercial wheel & tyre detail'
+      ],
+      vehicleLook: [
+        'Authentic Pakistani refrigerated delivery truck in practical working condition',
+        'Light white/off-white body with refrigerated cargo box',
+        'Slightly weathered but well-maintained, no decorative truck-art overload'
+      ],
+      props: [
+        'Stacked plastic fish crates, large crates with fresh catch, fishing nets, coiled rope',
+        'Heavy metal cargo hooks, insulated ice boxes, crushed ice, fish baskets',
+        'Wooden dock crates and large insulated seafood containers'
+      ],
+      artDirective: 'Premium square asset sheet on clean white background, isolated & evenly spaced items, realistic commercial vehicle concept render.'
+    },
+    {
+      id: 3,
+      filmKey: 'tractor',
+      filmLabel: 'Film 03 — Tractor Sequence',
+      title: 'Tractor Sequence: Agricultural Tractor & Baraat Props Grid',
+      subtitle: 'Field tractor, farming tools & festive Punjabi wedding celebration props',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Tractor_Seq_jd8v1u.png',
+      badge: 'Film 03 — Tractor',
+      mainVehicle: [
+        'Punjabi agricultural tractor (Front 3/4, side profile, front view, rear 3/4)',
+        'Bonnet-open view, engine and battery compartment detail, agricultural wheels',
+        'Front grille detail and heavy-duty battery terminal connections'
+      ],
+      vehicleLook: [
+        'Authentic modern Pakistani farm tractor, powerful working vehicle',
+        'Clean enough for commercial shoot, slightly dusty from agricultural use',
+        'No visible manufacturer logos, text decals, or unnecessary modifications'
+      ],
+      props: [
+        'Farm: Traditional farming tools, metal spanner, tractor battery, coiled rope, wooden crate, wheat bundles',
+        'Baraat: Punjabi dhol & sticks, colourful wedding safa/turban, decorative umbrella, floral garlands, traditional khussa footwear, flower petals'
+      ],
+      artDirective: 'Premium film vehicle and props development sheet, square composition, clean white background, rich material details.'
+    },
+    {
+      id: 4,
+      filmKey: 'bike',
+      filmLabel: 'Film 04 — Bike Sequence',
+      title: 'Motorcycle Sequence: Commuter Motorcycle & Interview Props Grid',
+      subtitle: 'Everyday urban motorcycle & high-stakes job interview candidate essentials',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Bike_cuffkf.png',
+      badge: 'Film 04 — Bike',
+      mainVehicle: [
+        'Practical Pakistani commuter motorcycle (Front 3/4, side profile, front, rear 3/4)',
+        'Detailed engine view, motorcycle battery compartment, battery removed, open side panel',
+        'Wheel and tyre detail, handlebar and rearview mirrors detail'
+      ],
+      vehicleLook: [
+        'Authentic everyday Pakistani commuter motorcycle, practical and slightly used',
+        'Reliable working condition, no racing modifications, no sports-bike styling',
+        'No visible manufacturer branding or text decals, generic number plate'
+      ],
+      props: [
+        'Motorcycle safety helmet, job interview file folder, printed CV resume papers',
+        'Official interview appointment letter, wristwatch, smartphone showing generic map',
+        'Motorcycle kick-start lever detail, basic roadside tool kit, battery cables'
+      ],
+      artDirective: 'Clean premium square production-design sheet, isolated motorcycle and props on pure white background, professional automotive presentation.'
+    },
+    {
+      id: 5,
+      filmKey: 'ups',
+      filmLabel: 'Film 05 — UPS Sequence',
+      title: 'UPS / Wedding Home: Electrical & Wedding Home Props Grid',
+      subtitle: 'Inverter unit, deep-cycle battery, wedding morning appliances & comedy plate box',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Wedding_zgf47s.png',
+      badge: 'Film 05 — UPS',
+      mainVehicle: [
+        'Modern household UPS / inverter unit and deep-cycle battery (hero product view)',
+        'Battery cable and terminal details, inverter connection cables',
+        'Electrical switchboard, extension board, and heavy-duty power plugs'
+      ],
+      vehicleLook: [
+        'Pristine modern domestic power backup system with thick heavy plates construction',
+        'Clean commercial household finish suitable for heritage Lahore home'
+      ],
+      props: [
+        'Wedding Appliances: Electric kettle, blender, clothes iron, hair dryer, pedestal fan, ceiling fan, table lamp, string lights, light bulbs',
+        'Wedding Preparation: Suitcase with groom clothes, folded kurta, waistcoat, traditional khussa, safa, ironing board, tea cups, garlands',
+        'KEY COMEDY PROP: Large humorous household carton filled with ordinary household dinner plates for the final comedy scene'
+      ],
+      artDirective: 'Clean premium square production-design asset sheet, pure white background, isolated objects floating in neat editorial grid.'
+    }
+  ];
+
+  const filteredVehicleProps = vehiclePropSheets.filter(v => {
+    if (vehicleFilter === 'all') return true;
+    return v.filmKey === vehicleFilter;
+  });
+
   const locationsList = [
     {
       id: 'loc-1',
@@ -408,7 +630,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       ],
       visualGoal: 'A major Pakistani landmark combined with an everyday battery emergency. The environment should feel: Busy, Chaotic, Premium, Cinematic.',
       keyVisual: 'Luxury car breakdown causes total traffic paralysis right against the majestic backdrop of Badshahi Mosque before Battery Expert and his technical crew make their arrival.',
-      refImage: 'https://share.google/NNtHVjJCxnVG87HCM',
+      refImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/car_seq_location_daydas.png',
       icon: Car,
     },
     {
@@ -430,7 +652,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       ],
       visualGoal: 'The contrast between traditional fishing port and massive mobile battery laboratory should create immediate visual comedy.',
       keyVisual: 'Iftikhar Thakur casually drinking hot chai on a wooden charpai near the fishing boats while the truck seafood crisis develops, until the large Alaska mobile laboratory truck enters the harbor.',
-      refImage: 'https://share.google/fyCZg0CfDUw86dsuG',
+      refImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Truck_location_en8hv0.png',
       icon: Anchor,
     },
     {
@@ -452,7 +674,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       ],
       visualGoal: 'The baraat must be visible in the distance before becoming part of the comedy. The field should allow: Baraat far away -> Baraat approaching -> Baraat becomes chorus -> Baraat disappears in the opposite direction.',
       keyVisual: 'The red tractor breakdown stops the lively Punjabi wedding Baraat in the middle of golden fields, turning the procession into a celebratory musical chorus when Alaska Battery Expert arrives.',
-      refImage: 'https://share.google/ssXNcx5YQRpy8ICNS',
+      refImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Tractor_seq_1_kqpwwa.png',
       icon: Tractor,
     },
     {
@@ -474,7 +696,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       ],
       visualGoal: 'The clean, modern commercial location makes the absurd arrival of the Battery Expert and his mobile pit-crew all the more visually entertaining and impactful.',
       keyVisual: 'A suited young candidate is anxiously pushing a stalled 125cc motorcycle while constantly checking his watch, when the high-tech Alaska response unit swarms in with lightning speed.',
-      refImage: 'https://share.google/iRmG8YfgXnFiY5FPa',
+      refImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Bike_Seq_Loc_qgltqe.png',
       icon: Building,
     },
     {
@@ -497,7 +719,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       ],
       visualGoal: 'The entire house is buzzing and alive. Then: LIGHTS OUT. Everything instantly freezes in dead silence and comic shock. Alaska Battery Expert restores radiant illumination.',
       keyVisual: 'Complete home blackout freezes Thakur and the wedding household in comical midway poses, until the Battery Expert powers up the Alaska Inverter Battery, exploding the house back into vibrant light.',
-      refImage: 'https://share.google/L8oiAFDKngOyrFdcD',
+      refImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/UPS_Location_ldzp72.png',
       icon: Home,
     },
     {
@@ -519,7 +741,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       ],
       visualGoal: 'Hyper-stylized, razor-sharp technical diagnostic world showcasing the internal graphite engineering, instant cranking power, and 9-Month Replacement Warranty of Alaska Batteries.',
       keyVisual: 'Super slow-motion macro reveal of internal graphite plates and controlled pyrotechnic spark ignition upon terminal connection.',
-      refImage: 'https://share.google/vPIQidVWkYKyy9k5x',
+      refImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Studio_Seq_gsrnsm.png',
       icon: Camera,
     }
   ];
@@ -551,6 +773,23 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
               activeTab === 'wardrobe' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-zinc-400'
             }`}>
               {characterSheets.length} Sheets
+            </span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('vehicles-props')}
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              activeTab === 'vehicles-props'
+                ? 'bg-[#c69a53] text-black shadow-md font-extrabold'
+                : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+            }`}
+          >
+            <Boxes className="w-4 h-4" />
+            <span>Vehicle & Prop Grids</span>
+            <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-mono ${
+              activeTab === 'vehicles-props' ? 'bg-black/20 text-black' : 'bg-zinc-800 text-zinc-400'
+            }`}>
+              {vehiclePropSheets.length} Grids
             </span>
           </button>
 
@@ -636,6 +875,22 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
               Legal
             </span>
           </button>
+
+          <div className="ml-auto">
+            <button
+              onClick={onDownloadPdf}
+              disabled={isGeneratingPdf}
+              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-md ${
+                isGeneratingPdf
+                  ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-extrabold hover:shadow-lg active:scale-98'
+              }`}
+              title="Download Complete Art, Vehicles, Locations & Talent Lookbook PDF"
+            >
+              <Download className={`w-4 h-4 ${isGeneratingPdf ? 'animate-bounce' : ''}`} />
+              <span>{isGeneratingPdf ? 'Generating PDF...' : 'Download Full PDF'}</span>
+            </button>
+          </div>
 
         </div>
       </div>
@@ -815,6 +1070,252 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
                 </div>
               </div>
             ))}
+          </div>
+
+        </div>
+      )}
+
+      {/* 2B. TAB CONTENT: VEHICLE & PROP GRIDS (Parallel Production Design Package) */}
+      {activeTab === 'vehicles-props' && (
+        <div className="space-y-6 animate-fadeIn">
+          
+          {/* Header Banner */}
+          <div className="p-5 sm:p-6 bg-gradient-to-r from-zinc-900 via-zinc-850 to-zinc-900 text-white rounded-2xl border border-zinc-800 space-y-4">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <div>
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#c69a53]">
+                  <Boxes className="w-3.5 h-3.5" /> PRODUCTION DESIGN • VEHICLE & PROPS PACKAGE
+                </div>
+                <h3 className="text-xl sm:text-2xl font-bold text-white font-heading mt-1">
+                  Vehicle & Prop Design Grids (Parallel to Wardrobe)
+                </h3>
+                <p className="text-xs text-zinc-400 mt-1 max-w-3xl">
+                  Comprehensive 5-sequence production design asset sheets detailing hero vehicles, specialized technical hardware, diagnostic telemetry, and sequence-specific props.
+                </p>
+              </div>
+
+              {/* Quick Sequence Filter Buttons */}
+              <div className="flex flex-wrap gap-1.5 bg-zinc-800/90 p-1.5 rounded-xl border border-zinc-700">
+                <button
+                  onClick={() => setVehicleFilter('all')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    vehicleFilter === 'all'
+                      ? 'bg-[#c69a53] text-black font-extrabold shadow-xs'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  All ({vehiclePropSheets.length})
+                </button>
+                <button
+                  onClick={() => setVehicleFilter('master')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    vehicleFilter === 'master'
+                      ? 'bg-[#c69a53] text-black font-extrabold shadow-xs'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  Pehlwan Van
+                </button>
+                <button
+                  onClick={() => setVehicleFilter('car')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    vehicleFilter === 'car'
+                      ? 'bg-[#c69a53] text-black font-extrabold shadow-xs'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  Car
+                </button>
+                <button
+                  onClick={() => setVehicleFilter('truck')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    vehicleFilter === 'truck'
+                      ? 'bg-[#c69a53] text-black font-extrabold shadow-xs'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  Truck
+                </button>
+                <button
+                  onClick={() => setVehicleFilter('tractor')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    vehicleFilter === 'tractor'
+                      ? 'bg-[#c69a53] text-black font-extrabold shadow-xs'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  Tractor
+                </button>
+                <button
+                  onClick={() => setVehicleFilter('bike')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    vehicleFilter === 'bike'
+                      ? 'bg-[#c69a53] text-black font-extrabold shadow-xs'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  Bike
+                </button>
+                <button
+                  onClick={() => setVehicleFilter('ups')}
+                  className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                    vehicleFilter === 'ups'
+                      ? 'bg-[#c69a53] text-black font-extrabold shadow-xs'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  UPS
+                </button>
+              </div>
+            </div>
+
+            {/* Master Vehicle Consistency Mandate Box */}
+            <div className="p-3.5 bg-amber-500/10 border border-amber-500/30 rounded-xl flex items-start gap-3 text-xs text-amber-200">
+              <Sparkles className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+              <div>
+                <strong className="text-amber-300">Unified Master Vehicle Architecture: </strong>
+                One consistent Alaska Battery Pehlwan Mobile Emergency Van is deployed across all 5 commercial films to establish immediate brand identity and high-tech credibility. Individual sequence vehicles (Sedan, Cargo Truck, Farm Tractor, Commuter Motorcycle, UPS Inverter) represent the distressed consumer setting.
+              </div>
+            </div>
+          </div>
+
+          {/* Grid of Vehicle & Prop Sheets */}
+          <div className="grid grid-cols-1 gap-6">
+            {filteredVehicleProps.map((sheet) => {
+              const galleryIdx = chapter.galleryImages?.findIndex(g => g.url === sheet.url);
+              const activeIndex = galleryIdx !== -1 && galleryIdx !== undefined ? galleryIdx : 0;
+
+              return (
+                <div
+                  key={sheet.id}
+                  className="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-all group"
+                >
+                  {/* Sheet Header */}
+                  <div className="bg-zinc-900 text-white px-5 py-3.5 flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800">
+                    <div className="flex items-center gap-3">
+                      <span className="text-[11px] font-mono font-bold bg-[#c69a53] text-black px-2.5 py-0.5 rounded-md">
+                        {sheet.filmLabel}
+                      </span>
+                      <h4 className="text-sm sm:text-base font-bold text-white tracking-tight">
+                        {sheet.title}
+                      </h4>
+                    </div>
+                    <span className="text-[11px] font-semibold text-zinc-300 bg-zinc-800 px-3 py-1 rounded-full border border-zinc-700">
+                      {sheet.badge}
+                    </span>
+                  </div>
+
+                  {/* Body Content */}
+                  <div className="p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+                    
+                    {/* Left Showcase (High-Res Asset Image with Zoom) */}
+                    <div className="lg:col-span-5 flex flex-col gap-3">
+                      <div
+                        onClick={() => onImageClick(activeIndex)}
+                        className="relative w-full aspect-square bg-zinc-950 rounded-xl overflow-hidden cursor-pointer border border-zinc-800 flex items-center justify-center group/img shadow-inner"
+                      >
+                        <img
+                          src={sheet.url}
+                          alt={sheet.title}
+                          className="w-full h-full object-contain p-2 group-hover/img:scale-102 transition-transform duration-300"
+                        />
+                        <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                          <span className="px-3 py-1.5 bg-black/80 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 backdrop-blur-xs border border-white/20">
+                            <ZoomIn className="w-3.5 h-3.5 text-[#c69a53]" /> Click to Inspect 4K Grid
+                          </span>
+                        </div>
+                      </div>
+
+                      {sheet.altOptionUrl && (
+                        <div className="flex items-center justify-between text-xs bg-zinc-50 p-2.5 rounded-xl border border-zinc-200">
+                          <span className="text-zinc-600 font-medium">Alternative Livery Concept:</span>
+                          <button
+                            onClick={() => {
+                              const altIdx = chapter.galleryImages?.findIndex(g => g.url === sheet.altOptionUrl);
+                              if (altIdx !== -1 && altIdx !== undefined) onImageClick(altIdx);
+                            }}
+                            className="text-[#b8860b] hover:underline font-bold flex items-center gap-1 cursor-pointer"
+                          >
+                            <Eye className="w-3.5 h-3.5" /> View Option 2 Livery
+                          </button>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Right Specifications (4-Box Grid) */}
+                    <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      
+                      {/* Box 1: Main Vehicle & Diagnostics */}
+                      <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-200 space-y-2">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-900 uppercase tracking-wider">
+                          <Car className="w-3.5 h-3.5 text-[#c69a53]" />
+                          <span>Main Vehicle & Diagnostic Hardware</span>
+                        </div>
+                        <ul className="space-y-1.5 text-xs text-zinc-700">
+                          {sheet.mainVehicle.map((pt, pIdx) => (
+                            <li key={pIdx} className="flex items-start gap-1.5">
+                              <span className="text-[#c69a53] font-bold mt-0.5">•</span>
+                              <span className="leading-snug">{pt}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Box 2: Vehicle Realism & Finishes */}
+                      <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-200 space-y-2">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-900 uppercase tracking-wider">
+                          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>Vehicle Realism & Finishes</span>
+                        </div>
+                        <ul className="space-y-1.5 text-xs text-zinc-700">
+                          {sheet.vehicleLook.map((pt, pIdx) => (
+                            <li key={pIdx} className="flex items-start gap-1.5">
+                              <span className="text-emerald-600 font-bold mt-0.5">•</span>
+                              <span className="leading-snug">{pt}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Box 3: Production Props */}
+                      <div className="bg-zinc-50 rounded-xl p-4 border border-zinc-200 space-y-2">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-zinc-900 uppercase tracking-wider">
+                          <Package className="w-3.5 h-3.5 text-amber-700" />
+                          <span>Production & Narrative Props</span>
+                        </div>
+                        <ul className="space-y-1.5 text-xs text-zinc-700">
+                          {sheet.props.map((pt, pIdx) => (
+                            <li key={pIdx} className="flex items-start gap-1.5">
+                              <span className="text-amber-700 font-bold mt-0.5">•</span>
+                              <span className="leading-snug">{pt}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Box 4: Art Department Directive */}
+                      <div className="bg-amber-50/70 rounded-xl p-4 border border-amber-200 space-y-2 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900 uppercase tracking-wider">
+                            <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                            <span>Art Department Directive</span>
+                          </div>
+                          <p className="text-xs text-amber-950 font-medium leading-relaxed mt-2">
+                            {sheet.artDirective}
+                          </p>
+                        </div>
+                        <div className="pt-2 border-t border-amber-200/60 flex items-center justify-between text-[11px] text-amber-800">
+                          <span>Status: Approved Grid</span>
+                          <span className="font-mono font-bold">2026 Production Window</span>
+                        </div>
+                      </div>
+
+                    </div>
+
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
         </div>
@@ -1741,23 +2242,36 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
               <div className="grid grid-cols-1 lg:grid-cols-12">
                 
                 {/* Left Visual Preview */}
-                <div className="lg:col-span-5 relative bg-zinc-950 min-h-[260px] flex items-center justify-center overflow-hidden">
+                <div 
+                  onClick={() => {
+                    const gIdx = chapter.galleryImages?.findIndex(g => g.url === locationsList[activeLocationIndex].refImage);
+                    if (gIdx !== -1 && gIdx !== undefined) onImageClick(gIdx);
+                  }}
+                  className="lg:col-span-5 relative bg-zinc-950 min-h-[260px] flex items-center justify-center overflow-hidden cursor-pointer group/loc"
+                >
                   <img
                     src={locationsList[activeLocationIndex].refImage}
                     alt={locationsList[activeLocationIndex].title}
-                    className="w-full h-full object-cover min-h-[260px] opacity-85"
+                    className="w-full h-full object-cover min-h-[260px] opacity-90 group-hover/loc:scale-105 transition-transform duration-500"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex flex-col justify-end p-5 text-white">
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-[#c69a53]">
-                      Location Dossier 0{activeLocationIndex + 1}
-                    </span>
-                    <h4 className="text-lg font-bold text-white">
-                      {locationsList[activeLocationIndex].title}
-                    </h4>
-                    <span className="text-xs text-zinc-300 flex items-center gap-1.5 mt-1">
-                      <MapPin className="w-3.5 h-3.5 text-[#c69a53]" />
-                      {locationsList[activeLocationIndex].city}
-                    </span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-between p-5 text-white">
+                    <div className="flex justify-end">
+                      <span className="px-2.5 py-1 bg-black/70 rounded-lg text-[10px] font-bold text-white flex items-center gap-1 border border-white/20 backdrop-blur-xs opacity-0 group-hover/loc:opacity-100 transition-opacity">
+                        <ZoomIn className="w-3 h-3 text-[#c69a53]" /> Inspect 4K Scout Photo
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#c69a53]">
+                        Location Dossier 0{activeLocationIndex + 1}
+                      </span>
+                      <h4 className="text-lg font-bold text-white">
+                        {locationsList[activeLocationIndex].title}
+                      </h4>
+                      <span className="text-xs text-zinc-300 flex items-center gap-1.5 mt-1">
+                        <MapPin className="w-3.5 h-3.5 text-[#c69a53]" />
+                        {locationsList[activeLocationIndex].city}
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -1906,20 +2420,33 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
                 key={item.id}
                 className="group flex flex-col bg-white rounded-2xl border border-zinc-200 shadow-sm hover:shadow-xl hover:border-zinc-300 transition-all duration-300 overflow-hidden"
               >
-                <div className="relative aspect-[16/10] bg-zinc-900 overflow-hidden">
+                <div 
+                  onClick={() => {
+                    const gIdx = chapter.galleryImages?.findIndex(g => g.url === item.refImage);
+                    if (gIdx !== -1 && gIdx !== undefined) onImageClick(gIdx);
+                  }}
+                  className="relative aspect-[16/10] bg-zinc-900 overflow-hidden cursor-pointer group/card"
+                >
                   <img
                     src={item.refImage}
                     alt={item.title}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex flex-col justify-end p-4 text-white">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#c69a53]">
-                      Ref 0{idx + 1} • {item.city}
-                    </span>
-                    <h5 className="text-sm font-bold text-white">
-                      {item.title.split('/')[0]}
-                    </h5>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/20 to-transparent flex flex-col justify-between p-4 text-white">
+                    <div className="flex justify-end">
+                      <span className="px-2 py-0.5 bg-black/70 rounded-md text-[9px] font-bold text-white flex items-center gap-1 border border-white/20 opacity-0 group-hover/card:opacity-100 transition-opacity">
+                        <ZoomIn className="w-2.5 h-2.5 text-[#c69a53]" /> Inspect 4K
+                      </span>
+                    </div>
+                    <div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#c69a53]">
+                        Ref 0{idx + 1} • {item.city}
+                      </span>
+                      <h5 className="text-sm font-bold text-white">
+                        {item.title.split('/')[0]}
+                      </h5>
+                    </div>
                   </div>
                 </div>
 

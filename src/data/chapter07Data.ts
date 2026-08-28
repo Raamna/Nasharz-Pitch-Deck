@@ -552,6 +552,240 @@ Name: _______________________________________________
 CNIC No.: ____________________________________________
 Signature: ___________________________________________`;
 
+export const PROPS_AND_VEHICLES_MASTER_TEXT = `PRODUCTION DESIGN PACKAGE: VEHICLES & PROPS DESIGN GRIDS
+ALASKA BATTERIES — 5 NARRATIVE SEQUENCES & UNIFIED MOBILE LABORATORY
+
+00. UNIFIED BATTERY PEHLWAN BRANDED MOBILE LABORATORY VAN
+(Unified master emergency vehicle deployed throughout all 5 commercial films)
+
+MAIN VEHICLE & DIAGNOSTIC LAB:
+• High-tech Alaska-branded Mobile Laboratory Emergency Response Van
+• Aerodynamic high-roof commercial vehicle with custom yellow-and-white Alaska livery
+• Roof-mounted high-intensity strobe beacon array and technical diagnostic antennas
+• Full front three-quarter view, side profile, rear deployable equipment ramp, and interior cutaway
+• Slide-out diagnostic racks holding Alaska Graphite batteries, high-voltage oscilloscopes, and rapid-clamp diagnostic cables
+• Integrated external digital status telemetry screens and LED battery testing meters
+
+VEHICLE LOOK:
+• Pristine, futuristic yet practical Pakistani emergency-response mobile laboratory
+• High-gloss Alaska Yellow (#F59E0B) and Arctic White dual-tone body styling
+• Prominent Alaska Batteries branding and "BATTERY PEHLWAN EMERGENCY UNIT" insignia
+• Professional, razor-sharp finish creating instant comedic contrast against real-world breakdown environments
+
+________________________________________
+
+01. CAR SEQUENCE — VEHICLE & PROPS GRID
+
+MAIN VEHICLE:
+• Full front three-quarter view of a modern luxury sedan
+• Full side profile
+• Front view
+• Rear three-quarter view
+• Bonnet-open view
+• Detailed engine-bay view with the battery compartment visible
+• Close-up of battery terminals and cables
+• Wheel and headlight detail
+
+VEHICLE LOOK:
+• New, premium, expensive Pakistani luxury sedan
+• Sophisticated contemporary design
+• Dark metallic grey, black or deep navy body
+• Clean and well-maintained
+• No visible brand logos
+• No text or decals
+• Number plate can be generic and unreadable
+
+PROPS:
+• Luxury car key
+• Open bonnet
+• Battery terminal cables
+• Basic roadside emergency toolkit
+• Warning triangle
+• Small hand tools
+• Police traffic baton
+• Police whistle
+• Traffic cones
+
+PRESENTATION STYLE:
+Clean square composition, pure white background, isolated objects and vehicle views, evenly spaced premium grid layout, realistic automotive concept rendering, soft studio lighting, subtle shadows, crisp details, high-end advertising production-design sheet.
+No people, no driver, no police character, no traffic background, no text labels, no logos.
+
+________________________________________
+
+02. TRUCK — FISHING PORT VEHICLE & PROPS GRID
+
+MAIN VEHICLE:
+• Large refrigerated cargo truck, front three-quarter view
+• Full side profile
+• Front view
+• Rear three-quarter view
+• Bonnet-open view
+• Engine-bay detail
+• Heavy-duty truck battery compartment
+• Refrigeration unit detail above the truck cabin
+• Wheel and tyre detail
+
+TRUCK LOOK:
+• Authentic Pakistani refrigerated delivery truck
+• Large commercial vehicle
+• Practical working condition
+• Light white or off-white body
+• Refrigerated cargo box
+• Slightly weathered but well-maintained
+• No visible company branding
+• No decorative truck-art overload
+• No readable text
+• Generic number plate
+
+FISHING PORT PROPS:
+• Stacked plastic fish crates
+• Large crates filled with fresh fish
+• Fishing nets
+• Coiled marine rope
+• Metal hooks
+• Ice boxes
+• Crushed ice
+• Fish baskets
+• Wooden dock crates
+• Large insulated fish containers
+
+PRESENTATION STYLE:
+Premium square production-design asset sheet, clean white background, all items isolated and evenly spaced, realistic commercial vehicle concept render, detailed fishing-port props, soft studio lighting, subtle drop shadows, high-end film art department presentation.
+No people, no boats in the background, no fishing-port environment, no text labels, no logos.
+
+________________________________________
+
+03. TRACTOR — BARAAT IN THE FIELD — VEHICLE & PROPS GRID
+
+MAIN VEHICLE:
+• Punjabi agricultural tractor, front three-quarter view
+• Full side profile
+• Front view
+• Rear three-quarter view
+• Bonnet-open view
+• Engine and battery compartment detail
+• Tractor wheel close-up
+• Front grille detail
+• Battery terminal detail
+
+TRACTOR LOOK:
+• Authentic modern Pakistani farm tractor
+• Powerful but realistic working vehicle
+• Clean enough for a commercial production
+• Slightly dusty from agricultural use
+• No visible manufacturer logos
+• No text decals
+• No unnecessary modifications
+
+FARM PROPS:
+• Traditional farming tools
+• Metal spanner
+• Tractor battery
+• Open bonnet hardware
+• Coiled rope
+• Small wooden crate
+• Agricultural water pipe
+• Wheat or crop bundles
+
+BARAAT PROPS:
+• Punjabi dhol
+• Dhol sticks
+• Colourful wedding safa/turban
+• Decorative wedding umbrella
+• Floral garlands
+• Traditional khussa footwear
+• Wedding flower petals
+
+PRESENTATION STYLE:
+Premium film vehicle and props development sheet, square composition, clean white background, isolated objects, evenly spaced layout, realistic agricultural vehicle rendering, rich material details, subtle studio shadows, sophisticated advertising production-design presentation.
+No people, no wedding guests, no field background, no laboratory caravan, no Battery Pehlwan vehicle, no text labels, no logos.
+
+________________________________________
+
+04. MOTORCYCLE — INTERVIEW SEQUENCE — VEHICLE & PROPS GRID
+
+MAIN VEHICLE:
+• Practical Pakistani commuter motorcycle, front three-quarter view
+• Full side profile
+• Front view
+• Rear three-quarter view
+• Detailed engine view
+• Motorcycle battery compartment
+• Battery removed from motorcycle
+• Open side panel showing battery access
+• Wheel and tyre detail
+• Handlebar and mirrors detail
+
+MOTORCYCLE LOOK:
+• Authentic everyday Pakistani commuter motorcycle
+• Practical and slightly used
+• Reliable working condition
+• No racing modifications
+• No sports-bike styling
+• No delivery-box setup
+• No visible manufacturer branding
+• No text decals
+• Generic number plate
+
+PROPS:
+• Motorcycle helmet
+• Job interview file folder
+• Printed CV papers
+• Interview appointment letter
+• Wristwatch
+• Smartphone showing a generic map interface
+• Motorcycle kick-start lever detail
+• Basic roadside tool kit
+• Battery cables
+
+PRESENTATION STYLE:
+Clean premium square production-design sheet, isolated motorcycle and props on pure white background, professional automotive presentation, realistic materials, subtle studio shadows, evenly spaced layout, high-end advertising art department quality.
+No people, no rider, no Battery Pehlwan, no laboratory setup, no background scenery, no text labels, no logos.
+
+________________________________________
+
+05. UPS / WEDDING HOME — PROPS & ELECTRICAL EQUIPMENT GRID
+
+ELECTRICAL EQUIPMENT:
+• Modern household UPS / inverter unit
+• Deep-cycle battery, separate hero product-style view
+• Battery cable and terminal details
+• Inverter connection cables
+• Electrical switchboard
+• Extension board
+• Power plugs
+
+WEDDING MORNING APPLIANCES:
+• Electric kettle
+• Blender
+• Clothes iron
+• Hair dryer
+• Pedestal fan
+• Ceiling fan component
+• Table lamp
+• Decorative string lights
+• Multiple household light bulbs
+
+WEDDING PREPARATION PROPS:
+• Open suitcase with groom's clothes neatly arranged
+• Folded wedding kurta
+• Waistcoat
+• Traditional khussa
+• Groom's safa/turban
+• Ironing board
+• Folded clothes
+• Tea cups
+• Serving tray
+• Wedding flower garlands
+
+IMPORTANT PROP:
+• A large humorous household carton filled with ordinary household dinner plates, stacked separately as a visual prop for the final comedy scene
+
+PRESENTATION STYLE:
+Clean premium square production-design asset sheet, pure white background, isolated objects floating in a neat editorial grid, realistic product and appliance rendering, subtle studio lighting, crisp shadows, high-end advertising production-design presentation.
+Keep the UPS and battery realistic and visually premium.
+No people, no home interior, no kitchen background, no text labels, no logos.`;
+
 export const chapter07Data: Chapter = {
   id: 'art-talent',
   number: '07',
@@ -560,11 +794,11 @@ export const chapter07Data: Chapter = {
   visualImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/ITrobot_qwhvys.png',
   visualImagePosition: 'center center',
   overlayHeadline: 'Battery Expert Production Design & Celebrity Talent.',
-  summary: 'Official production design master sheet, character transformations of Iftikhar Thakur, 12 wardrobe & costume sheets by sequence, technical expert team styling, props, multi-city shooting locations, and signed Talent Agreement.',
+  summary: 'Production design master sheet, Lead & Support wardrobe sheets, vehicle & prop design grids, Battery Pehlwan Van, Shooting locations, and 2-Year Talent Agreement.',
   lastUpdated: 'Aug/26',
-  fullText: `${MASTER_PRODUCTION_DESIGN_TEXT}\n\n_____________________________________________________________________________________\n\n${SHOOTING_LOCATIONS_TEXT}\n\n_____________________________________________________________________________________\n\n${TALENT_CONTRACT_RAW}`,
+  fullText: `${MASTER_PRODUCTION_DESIGN_TEXT}\n\n_____________________________________________________________________________________\n\n${PROPS_AND_VEHICLES_MASTER_TEXT}\n\n_____________________________________________________________________________________\n\n${SHOOTING_LOCATIONS_TEXT}\n\n_____________________________________________________________________________________\n\n${TALENT_CONTRACT_RAW}`,
   
-  // High-Definition Costume & Character Sheets ordered strictly by sequence
+  // High-Definition Costume, Character & Vehicle/Prop Sheets ordered strictly by sequence
   galleryImages: [
     {
       title: 'Main Wardrobe 01: Battery Expert — Master Look (Iftikhar Thakur)',
@@ -574,6 +808,21 @@ export const chapter07Data: Chapter = {
     {
       title: 'Main Wardrobe 02: The Alaska Battery Expert Team (Modern Tech Specialists)',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Medical_Team_Sheet_v07k88.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Unified Master Vehicle: Battery Pehlwan Branded Mobile Laboratory Van (Option 1 — Master Livery)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op1_esdu3i.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Unified Master Vehicle: Battery Pehlwan Branded Mobile Laboratory Van (Option 2 — Aero Graphic Livery)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op2_s09h1o.png',
+      objectPosition: 'center 20%'
+    },
+    {
+      title: 'Unified Master Vehicle: Battery Pehlwan Branded Mobile Laboratory Van (Option 3 — Heavy Utility Livery)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op3_g0tgpa.png',
       objectPosition: 'center 20%'
     },
     {
@@ -592,6 +841,11 @@ export const chapter07Data: Chapter = {
       objectPosition: 'center 20%'
     },
     {
+      title: 'Car Seq 04: Car Sequence — Vehicle & Props Design Grid',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Car_Seq_uj7m0o.png',
+      objectPosition: 'center center'
+    },
+    {
       title: 'Bike Seq 01: Character Thakur — Office Executive in Safari Suit',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Office_Executive_Sheet_k7dybx.png',
       objectPosition: 'center 20%'
@@ -607,6 +861,11 @@ export const chapter07Data: Chapter = {
       objectPosition: 'center 20%'
     },
     {
+      title: 'Bike Seq 04: Bike Sequence — Vehicle & Interview Props Design Grid',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Bike_cuffkf.png',
+      objectPosition: 'center center'
+    },
+    {
       title: 'Truck Seq 01: Character Thakur — Fisherman & Logistics Captain',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Pathan_Thakur_Sheet_d2i9er.png',
       objectPosition: 'center 20%'
@@ -615,6 +874,11 @@ export const chapter07Data: Chapter = {
       title: 'Truck Seq 02: Truck Driver & Port Cargo Transport Crew',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Truck_Driver_Sheet_kbbtsv.png',
       objectPosition: 'center 20%'
+    },
+    {
+      title: 'Truck Seq 03: Truck Sequence — Vehicle & Fishing Port Props Design Grid',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Truck_Seq_wdek71.png',
+      objectPosition: 'center center'
     },
     {
       title: 'Tractor Seq 01: Character Thakur — Chaudhary Sb (Option A: Red Polka Turban)',
@@ -630,6 +894,11 @@ export const chapter07Data: Chapter = {
       title: 'Tractor Seq 03: Farmer & Agricultural Harvester Crew',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Farmer_Sheet_dpryzu.png',
       objectPosition: 'center 20%'
+    },
+    {
+      title: 'Tractor Seq 04: Tractor Sequence — Vehicle & Baraat Props Design Grid',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Tractor_Seq_jd8v1u.png',
+      objectPosition: 'center center'
     },
     {
       title: 'UPS Seq 01: Character Thakur — Festive Wedding Guest',
@@ -650,6 +919,41 @@ export const chapter07Data: Chapter = {
       title: 'UPS Seq 04: Mother of the Groom / Household Matriarch',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Mother_Sheet_trglgq.png',
       objectPosition: 'center 20%'
+    },
+    {
+      title: 'UPS Seq 05: UPS Sequence — Electrical & Wedding Home Props Design Grid',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Wedding_zgf47s.png',
+      objectPosition: 'center center'
+    },
+    {
+      title: 'Location 01: Car Sequence — Food Street / Badshahi Masjid Area (Lahore)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/car_seq_location_daydas.png',
+      objectPosition: 'center center'
+    },
+    {
+      title: 'Location 02: Truck Sequence — Ibrahim Hyderi Fishing Port & Jetty (Karachi)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Truck_location_en8hv0.png',
+      objectPosition: 'center center'
+    },
+    {
+      title: 'Location 03: Tractor Sequence — Agri Farmland Fields & Harvest Horizon (Lahore Suburbs)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Tractor_seq_1_kqpwwa.png',
+      objectPosition: 'center center'
+    },
+    {
+      title: 'Location 04: Bike Sequence — Packages Mall Outdoor Promenade & Glass Plaza (Lahore)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Bike_Seq_Loc_qgltqe.png',
+      objectPosition: 'center center'
+    },
+    {
+      title: 'Location 05: UPS Sequence — Fakir Khana Haveli Heritage Residence (Old Lahore)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/UPS_Location_ldzp72.png',
+      objectPosition: 'center center'
+    },
+    {
+      title: 'Location 06: Studio Sequence — Evernew Studios Soundstage & Technical Laboratory (Multan Road, Lahore)',
+      url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Studio_Seq_gsrnsm.png',
+      objectPosition: 'center center'
     }
   ],
 
@@ -657,9 +961,16 @@ export const chapter07Data: Chapter = {
     {
       id: 'wardrobe',
       name: 'Wardrobe & Casting',
-      badge: '16 Character Sheets',
+      badge: '17 Character Sheets',
       summary: 'Complete wardrobe, styling guidelines, and character costume sheets for all roles ordered strictly across Main Wardrobe, Car Seq, Bike Seq, Truck Seq, Tractor Seq, and UPS Seq.',
       content: `${MASTER_PRODUCTION_DESIGN_TEXT}`
+    },
+    {
+      id: 'vehicle-props',
+      name: 'Vehicle & Prop Grids',
+      badge: '6 Production Grids',
+      summary: 'Complete vehicle and props design package parallel to wardrobe: Unified Battery Pehlwan Mobile Emergency Van, Luxury Car, Cargo Truck, Agri Tractor, Commuter Bike, and UPS Electrical Grids.',
+      content: `${PROPS_AND_VEHICLES_MASTER_TEXT}`
     },
     {
       id: 'films',
@@ -673,7 +984,7 @@ export const chapter07Data: Chapter = {
       name: 'Sets, Props & Specs',
       badge: 'Props & Sets',
       summary: 'Set construction, hero Alaska graphite battery prop specs, mobile laboratory rigs, vehicle fleet, and cinematic lighting palettes.',
-      content: `${MASTER_PRODUCTION_DESIGN_TEXT}`
+      content: `${MASTER_PRODUCTION_DESIGN_TEXT}\n\n${PROPS_AND_VEHICLES_MASTER_TEXT}`
     },
     {
       id: 'locations-map',
@@ -687,30 +998,31 @@ export const chapter07Data: Chapter = {
       name: 'Visual Moodboard',
       badge: 'Cinematic Refs',
       summary: 'Cinematic visual references, lighting direction, texture palettes, and environmental tone references for all 5 commercial worlds.',
-      content: `${MASTER_PRODUCTION_DESIGN_TEXT}\n\n${SHOOTING_LOCATIONS_TEXT}`
+      content: `${MASTER_PRODUCTION_DESIGN_TEXT}\n\n${PROPS_AND_VEHICLES_MASTER_TEXT}\n\n${SHOOTING_LOCATIONS_TEXT}`
     },
     {
       id: 'talent-contract',
       name: 'Talent Agreement',
-      badge: 'Signed Legal Contract',
-      summary: 'Official Modeling, Talent & Exclusive Digital Likeness Agreement for Mr. Iftikhar Ahmad Sheikh (Iftikhar Thakur).',
+      badge: '2-Year Legal Contract',
+      summary: 'Official Modeling, Talent & Exclusive Digital Likeness Agreement for Mr. Iftikhar Ahmad Sheikh (Iftikhar Thakur) for a two (2) year term (2026–2028).',
       content: `${TALENT_CONTRACT_RAW}`
     }
   ],
 
   keyPoints: [
     'Celebrity Ambassador: Mr. Iftikhar Ahmad Sheikh (Iftikhar Thakur)',
-    '16 Character & Wardrobe Breakdown Sheets ordered across Main Wardrobe, Car Seq, Bike Seq, Truck Seq, Tractor Seq, and UPS Seq',
+    '17 Character & Wardrobe Breakdown Sheets across Main Wardrobe, Car Seq, Bike Seq, Truck Seq, Tractor Seq, and UPS Seq',
+    '6 Vehicle & Props Design Grids: Unified Battery Pehlwan Van across all 5 ads, Sedan, Refrigerated Cargo Truck, Agri Tractor, Taxi Motorcycle, and Wedding UPS Electrical Grid',
     'Includes Policeman Uniform Color Options & Insignia Palette and detailed specifications for Car Owner, Taxi Bike Rider, Interview Candidate, UPS Groom, and Mother',
     'Production Locations: Food Street/Badshahi Masjid (Car), Ibrahim Hyderi Karachi (Truck), Kareem Block Agri Fields (Tractor), Packages Mall Promenade (Bike), Fakir Khana Haveli (UPS)',
     'Core Rule: Battery Expert always in clean white lab coat with neutral shalwar qameez; absolutely no cap, turban, or headwear',
     'Exclusive 2-Year Contract (2026–2028), 5 Shoot Days, Worldwide Commercial Usage & AI/Likeness Exclusivity'
   ],
 
-  pageCount: 16,
+  pageCount: 22,
   attachedFiles: [
-    { name: 'Celebrity Talent Contract Copy (Iftikhar Thakur)', url: '#contract', size: 'Full Legal Agreement' },
-    { name: 'Alaska_Production_Design_Master_Lookbook.pdf', url: '#', size: '14.2 MB' },
+    { name: 'Celebrity Talent Contract Copy (Iftikhar Thakur — 2 Years)', url: '#contract', size: 'Full Legal Agreement' },
+    { name: 'Alaska_Production_Design_and_Props_Lookbook.pdf', url: '#', size: '18.4 MB' },
     { name: 'Shooting_Locations_and_Permits_Dossier.pdf', url: '#', size: '6.8 MB' }
   ]
 };

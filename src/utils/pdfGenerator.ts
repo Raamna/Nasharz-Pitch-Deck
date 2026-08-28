@@ -1395,12 +1395,355 @@ export async function generateChapterPDF(
       }
     ];
 
+    // Parallel Production Design Suite: Vehicle & Props Design Grids across all sequences
+    const vehicleSections = [
+      {
+        sectionTitle: 'UNIFIED MOBILE LABORATORY • MASTER VEHICLE OPTIONS (FLEET)',
+        sectionSubtitle: 'Unified high-tech emergency response van fleet options deployed across all 5 commercial films',
+        badge: 'Master Laboratory Fleet',
+        items: [
+          {
+            sheetNum: 'Van Opt 1',
+            title: 'Unified Battery Pehlwan Mobile Lab Van (Option 1 — Master Livery)',
+            badge: 'Master Livery Option 1',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op1_esdu3i.png',
+            mainVehicle: [
+              'Aerodynamic high-roof commercial vehicle with custom yellow-and-white Alaska livery',
+              'Roof-mounted high-intensity strobe beacon array and technical diagnostic antennas',
+              'Full front 3/4 view, side profile, rear deployable ramp, and slide-out diagnostic racks',
+              'Holds Alaska Graphite batteries, high-voltage oscilloscopes, and LED status meters'
+            ],
+            vehicleLook: [
+              'Pristine, futuristic yet practical Pakistani emergency-response mobile laboratory',
+              'High-gloss Alaska Yellow (#F59E0B) and Arctic White dual-tone body styling',
+              'Prominent Alaska Batteries branding and "BATTERY PEHLWAN EMERGENCY UNIT" insignia',
+              'Sharp professional finish creating comedic contrast against real-world breakdown environments'
+            ],
+            props: [
+              'Hero Alaska Graphite Battery with 1:1 cutaway casing & 9-Month Replacement Warranty seal',
+              'High-speed digital oscilloscope and diagnostic telemetry tablet',
+              'Heavy-duty insulated jumper clamps and spark-arrestor cables',
+              'Brushed aluminum mobile diagnostic flight cases and emergency LED work-lights'
+            ],
+            rule: 'ONE UNIFIED VEHICLE (OPTION 1): The Battery Pehlwan branded mobile van is the consistent high-tech heroic enabler appearing across all 5 campaign films.'
+          },
+          {
+            sheetNum: 'Van Opt 2',
+            title: 'Unified Battery Pehlwan Mobile Lab Van (Option 2 — Aero Graphic Livery)',
+            badge: 'Aero Livery Option 2',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op2_s09h1o.png',
+            mainVehicle: [
+              'Sport-aero commercial high-roof van configuration with extended rear cargo bay',
+              'Full side-profile livery featuring dynamic speed-chevron Alaska brand graphics',
+              'Rapid-access side gullwing doors exposing high-speed battery replacement charging bay',
+              'Equipped with quick-crank mobile booster packs and graphite plate telemetry screens'
+            ],
+            vehicleLook: [
+              'Dynamic high-contrast Alaska Solar Gold & Ultra-Gloss Black accent scheme',
+              'Bold typographic Alaska logo across flank with reflective safety micro-prisms',
+              'Matte graphite alloy wheels with all-terrain emergency response tires',
+              'Crisp aerodynamic presence calibrated for rapid highway & city interventions'
+            ],
+            props: [
+              'Ultra-fast rapid-charge diagnostic dock with dual 12V/24V outputs',
+              'Titanium-finish battery carrier handles and magnetic terminal alignment probes',
+              'Wireless Bluetooth battery health analysis wand connected to mobile tablet',
+              'Emergency roadside traffic warning beacon pillars and Alaska floor mats'
+            ],
+            rule: 'AERO LIVERY OPTION 2: Sleeker, motorsport-inspired rapid response aesthetic for high-speed urban transit commercial sequences.'
+          },
+          {
+            sheetNum: 'Van Opt 3',
+            title: 'Unified Battery Pehlwan Mobile Lab Van (Option 3 — Heavy Utility Livery)',
+            badge: 'Heavy Utility Option 3',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op3_g0tgpa.png',
+            mainVehicle: [
+              'Reinforced heavy-duty commercial chassis with integrated front recovery winch & bull-bar',
+              'Dual rear barn-doors with heavy slide-out steel tray holding commercial & tractor batteries',
+              'Overhead LED floodlight illumination bar for night & storm emergencies',
+              'Built-in 220V inverter generator powering heavy field oscilloscopes and load testers'
+            ],
+            vehicleLook: [
+              'Industrial-grade high-durability finish with high-visibility reflective hazard striping',
+              'Solid Arctic White base with bold Alaska Gold power-wave accents along the wheelbase',
+              'Textured non-slip aluminum side-steps and heavy-duty roof rack for extra spare cells',
+              'Maximum authority and rugged reliability for tough rural and industrial deployments'
+            ],
+            props: [
+              'Heavy-duty industrial carbon-pile battery load tester and digital impedance analyzer',
+              'Heavy tractor & truck commercial battery lifting harness and safety clamps',
+              'Protective technician utility gloves, safety glasses, and heavy torque wrenches',
+              'Portable high-output emergency floodlight tripod with Alaska branding'
+            ],
+            rule: 'HEAVY UTILITY OPTION 3: Maximum rugged durability and high-capacity rescue capability suited for agricultural and commercial freight breakdown scenarios.'
+          }
+        ]
+      },
+      {
+        sectionTitle: 'FILM 01: CAR SEQUENCE • VEHICLE & PROPS GRID',
+        sectionSubtitle: 'Luxury sedan breakdown and urban roadside emergency equipment',
+        badge: 'Film 01 — Car',
+        items: [
+          {
+            sheetNum: 'Grid 02',
+            title: 'Car Sequence: Luxury Sedan & Traffic Breakdown Props Grid',
+            badge: 'Film 01 — Car',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Car_Seq_uj7m0o.png',
+            mainVehicle: [
+              'Full front three-quarter view, side profile, front view, and rear three-quarter view',
+              'Bonnet-open view with detailed engine-bay and battery compartment visible',
+              'Close-up of battery terminals, connection cables, wheel and headlight detail'
+            ],
+            vehicleLook: [
+              'New, premium, expensive Pakistani luxury sedan',
+              'Dark metallic grey, black or deep navy body; clean and well-maintained',
+              'No visible brand logos, no text decals, generic unreadable number plate'
+            ],
+            props: [
+              'Luxury car key & remote fob, open bonnet hardware, battery terminal cables',
+              'Basic roadside emergency toolkit & small hand tools',
+              'Reflective warning triangle, traffic cones, police traffic baton & whistle'
+            ],
+            rule: 'Clean square composition, pure white background, isolated objects and vehicle views, realistic automotive rendering.'
+          }
+        ]
+      },
+      {
+        sectionTitle: 'FILM 02: TRUCK SEQUENCE • VEHICLE & FISHING PORT PROPS GRID',
+        sectionSubtitle: 'Commercial refrigerated cargo truck and maritime port equipment',
+        badge: 'Film 02 — Truck',
+        items: [
+          {
+            sheetNum: 'Grid 03',
+            title: 'Truck Sequence: Refrigerated Cargo Truck & Port Logistics Props Grid',
+            badge: 'Film 02 — Truck',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Truck_Seq_wdek71.png',
+            mainVehicle: [
+              'Large refrigerated cargo delivery truck (Front 3/4, side profile, front, rear 3/4)',
+              'Bonnet-open view, heavy-duty engine-bay, and commercial truck battery compartment',
+              'Refrigeration unit mounted above cabin, heavy commercial wheel & tyre detail'
+            ],
+            vehicleLook: [
+              'Authentic Pakistani refrigerated delivery truck in practical working condition',
+              'Light white/off-white body with refrigerated cargo box',
+              'Slightly weathered but well-maintained, no decorative truck-art overload'
+            ],
+            props: [
+              'Stacked plastic fish crates, large crates with fresh catch, fishing nets, coiled rope',
+              'Heavy metal cargo hooks, insulated ice boxes, crushed ice, fish baskets',
+              'Wooden dock crates and large insulated seafood containers'
+            ],
+            rule: 'Premium square asset sheet on clean white background, isolated & evenly spaced items, realistic commercial vehicle concept render.'
+          }
+        ]
+      },
+      {
+        sectionTitle: 'FILM 03: TRACTOR SEQUENCE • VEHICLE & BARAAT PROPS GRID',
+        sectionSubtitle: 'Agricultural tractor and festive rural Punjabi baraat props',
+        badge: 'Film 03 — Tractor',
+        items: [
+          {
+            sheetNum: 'Grid 04',
+            title: 'Tractor Sequence: Agricultural Tractor & Baraat Props Grid',
+            badge: 'Film 03 — Tractor',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Tractor_Seq_jd8v1u.png',
+            mainVehicle: [
+              'Punjabi agricultural tractor (Front 3/4, side profile, front view, rear 3/4)',
+              'Bonnet-open view, engine and battery compartment detail, agricultural wheels',
+              'Front grille detail and heavy-duty battery terminal connections'
+            ],
+            vehicleLook: [
+              'Authentic modern Pakistani farm tractor, powerful working vehicle',
+              'Clean enough for commercial shoot, slightly dusty from agricultural use',
+              'No visible manufacturer logos, text decals, or unnecessary modifications'
+            ],
+            props: [
+              'Farm: Traditional farming tools, metal spanner, tractor battery, coiled rope, wooden crate, wheat bundles',
+              'Baraat: Punjabi dhol & sticks, colourful wedding safa/turban, decorative umbrella, floral garlands, traditional khussa footwear, flower petals'
+            ],
+            rule: 'Premium film vehicle and props development sheet, square composition, clean white background, rich material details.'
+          }
+        ]
+      },
+      {
+        sectionTitle: 'FILM 04: BIKE SEQUENCE • VEHICLE & INTERVIEW PROPS GRID',
+        sectionSubtitle: 'Commuter motorcycle taxi and high-stakes job interview candidate props',
+        badge: 'Film 04 — Bike',
+        items: [
+          {
+            sheetNum: 'Grid 05',
+            title: 'Motorcycle Sequence: Commuter Motorcycle & Interview Props Grid',
+            badge: 'Film 04 — Bike',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Bike_cuffkf.png',
+            mainVehicle: [
+              'Practical Pakistani commuter motorcycle (Front 3/4, side profile, front, rear 3/4)',
+              'Detailed engine view, motorcycle battery compartment, battery removed, open side panel',
+              'Wheel and tyre detail, handlebar and rearview mirrors detail'
+            ],
+            vehicleLook: [
+              'Authentic everyday Pakistani commuter motorcycle, practical and slightly used',
+              'Reliable working condition, no racing modifications, no sports-bike styling',
+              'No visible manufacturer branding or text decals, generic number plate'
+            ],
+            props: [
+              'Motorcycle safety helmet, job interview file folder, printed CV resume papers',
+              'Official interview appointment letter, wristwatch, smartphone showing generic map',
+              'Motorcycle kick-start lever detail, basic roadside tool kit, battery cables'
+            ],
+            rule: 'Clean premium square production-design sheet, isolated motorcycle and props on pure white background, professional automotive presentation.'
+          }
+        ]
+      },
+      {
+        sectionTitle: 'FILM 05: UPS SEQUENCE • ELECTRICAL & WEDDING PROPS GRID',
+        sectionSubtitle: 'Household inverter, deep-cycle battery, wedding appliances & comedy props',
+        badge: 'Film 05 — UPS',
+        items: [
+          {
+            sheetNum: 'Grid 06',
+            title: 'UPS / Wedding Home: Electrical & Wedding Home Props Grid',
+            badge: 'Film 05 — UPS',
+            url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Wedding_zgf47s.png',
+            mainVehicle: [
+              'Modern household UPS / inverter unit and deep-cycle battery (hero product view)',
+              'Battery cable and terminal details, inverter connection cables',
+              'Electrical switchboard, extension board, and heavy-duty power plugs'
+            ],
+            vehicleLook: [
+              'Pristine modern domestic power backup system with thick heavy plates construction',
+              'Clean commercial household finish suitable for heritage Lahore home'
+            ],
+            props: [
+              'Wedding Appliances: Electric kettle, blender, clothes iron, hair dryer, pedestal fan, ceiling fan, table lamp, string lights, light bulbs',
+              'Wedding Preparation: Suitcase with groom clothes, folded kurta, waistcoat, traditional khussa, safa, ironing board, tea cups, garlands',
+              'KEY COMEDY PROP: Large humorous household carton filled with ordinary household dinner plates for the final comedy scene'
+            ],
+            rule: 'Clean premium square production-design asset sheet, pure white background, isolated objects floating in neat editorial grid.'
+          }
+        ]
+      }
+    ];
+
+    // Location Concept & Scouting Reference Sheets for all 5 sequences
+    const locationSheets = [
+      {
+        sheetNum: 'Loc 01',
+        title: 'Food Street / Badshahi Masjid Area — Major Traffic Gridlock',
+        badge: 'Film 01 — Car',
+        city: 'Old Lahore, Punjab',
+        coordinates: '31.5881° N, 74.3106° E',
+        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/car_seq_location_daydas.png',
+        permits: 'WCLA & City Traffic Police Lahore (CTPL)',
+        lightingWindow: '06:00 AM – 11:30 AM (Morning Golden Sun & Heat Shimmer)',
+        productionDesign: [
+          'Dense multi-lane bumper-to-bumper traffic congestion with heat shimmer',
+          'Luxury executive car stalled with bonnet open causing roadblock',
+          'Multiple commuter vehicles, motorcycles, yellow cabs, and auto-rickshaws',
+          'Badshahi Mosque historic archway and minarets visible in cinematic background'
+        ],
+        visualGoal: 'Major Pakistani landmark combined with an everyday battery emergency. Busy, Chaotic, Premium, Cinematic.'
+      },
+      {
+        sheetNum: 'Loc 02',
+        title: 'Ibrahim Hyderi Fishing Port & Marine Wooden Jetty',
+        badge: 'Film 02 — Truck',
+        city: 'Karachi Coastal District, Sindh',
+        coordinates: '24.7933° N, 67.1352° E',
+        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Truck_location_en8hv0.png',
+        permits: 'Karachi Port Trust (KPT), Fishermen Cooperative & Coastal Admin',
+        lightingWindow: '05:30 AM – 10:30 AM (Dawn Sea Mist & High Tide)',
+        productionDesign: [
+          'Hundreds of traditional carved wooden fishing boats docked along harbor',
+          'Weathered wooden piers, hanging fishing nets, ice boxes & fresh fish crates',
+          'Active dock workers carrying seafood trays and heavy cargo blocks',
+          'Refrigerated seafood transport truck with dead battery alongside charpai tea setup'
+        ],
+        visualGoal: 'High contrast between traditional fishing port and massive Alaska mobile laboratory truck creates instant comedy.'
+      },
+      {
+        sheetNum: 'Loc 03',
+        title: 'Agricultural Farmland Fields & Harvest Horizon',
+        badge: 'Film 03 — Tractor',
+        city: 'Lahore Suburbs (Kareem Block / Wahdat Road Farmland)',
+        coordinates: '31.5085° N, 74.2882° E',
+        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Tractor_seq_1_kqpwwa.png',
+        permits: 'Local Landowners Agreement & District Administration Lahore',
+        lightingWindow: '07:00 AM – 05:30 PM (Full Daylight, Magic Hour & Golden Sunset)',
+        productionDesign: [
+          'Large open agricultural space with long panoramic golden horizon line',
+          'Working agricultural tractor access with deep soil furrows and wheat bundles',
+          'Clear defined pathway for dynamic Baraat procession movement & live Dhol players',
+          'Expansive open field for high-angle crane and drone celebratory wide shot'
+        ],
+        visualGoal: 'Baraat in the distance stops due to tractor breakdown, transforming into a festive musical chorus upon Pehlwan arrival.'
+      },
+      {
+        sheetNum: 'Loc 04',
+        title: 'Packages Mall Outdoor Promenade & Contemporary Glass Plaza',
+        badge: 'Film 04 — Bike',
+        city: 'Lahore Central (Walton Road Commercial Zone)',
+        coordinates: '31.4745° N, 74.3562° E',
+        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Bike_Seq_Loc_qgltqe.png',
+        permits: 'Packages Mall Management & Security Operations Directorate',
+        lightingWindow: '07:30 AM – 12:30 PM (Crisp Morning Metropolitan Daylight)',
+        productionDesign: [
+          'Modern urban promenade with clean contemporary architectural glass lines',
+          'Flow of smartly dressed young corporate professionals and office commuters',
+          'Designated motorcycle transition roadway and pedestrian promenade lane',
+          'Stressed job candidate in formal business suit desperately pushing commuter motorcycle'
+        ],
+        visualGoal: 'Clean, modern commercial promenade amplifies the comical high-speed pit-crew arrival of Battery Pehlwan.'
+      },
+      {
+        sheetNum: 'Loc 05',
+        title: 'Fakir Khana Museum Haveli & Historic Courtyard',
+        badge: 'Film 05 — UPS / Home',
+        city: 'Bhati Gate, Old Walled City Lahore',
+        coordinates: '31.5839° N, 74.3168° E',
+        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/UPS_Location_ldzp72.png',
+        permits: 'Fakir Khana Trust & Heritage Directorate Agreement',
+        lightingWindow: '03:00 PM – 11:30 PM (Dusk Warm Ambience to Dramatic Night Blackout)',
+        productionDesign: [
+          'Lively heritage household alive with frenetic wedding preparations and guests',
+          'High-power appliances running: electric iron, blenders, hair dryers, ceiling fans',
+          'Thousands of decorative fairy lights & vibrant marigold floral garlands (Haar)',
+          'Central heavy-duty UPS / Inverter setup connected to main residential power board'
+        ],
+        visualGoal: 'Total blackout freezes household in comic mid-action shock; Alaska battery instantly restores radiant illumination.'
+      },
+      {
+        sheetNum: 'Loc 06',
+        title: 'Evernew Studios — Studio Soundstage & Macro Lab Set',
+        badge: 'Technical & CGI Sequence',
+        city: 'Multan Road, Lahore, Punjab',
+        coordinates: '31.5204° N, 74.2968° E',
+        url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Studio_Seq_gsrnsm.png',
+        permits: 'Evernew Studios Management Lease Agreement & Technical Soundstage Booking',
+        lightingWindow: 'Full 24-Hour Controlled High-Speed Studio Lighting (Dedo & Aputure High-CRI Rigs)',
+        productionDesign: [
+          'High-precision studio soundstage setup with acoustic sound-proofing & matte black seamless cyclorama',
+          'Controlled high-speed phantom flex camera motion rig for ultra-slow motion macro sparking',
+          '1:1 acrylic cross-section hero cutaway battery showcasing Alaska internal graphite plate lattice',
+          'High-voltage diagnostic oscilloscope workbenches, spark arrestor cables, and digital LED voltmeters'
+        ],
+        visualGoal: 'Hyper-stylized, razor-sharp technical diagnostic world showcasing internal graphite engineering, instant cranking power, and 9-Month Replacement Warranty.'
+      }
+    ];
+
     // Preload ALL images in parallel to Base64 data URLs with full dimension metadata
     const allImageUrls: string[] = [];
     sections.forEach(sec => {
       sec.items.forEach(it => {
         if (it.url) allImageUrls.push(it.url);
       });
+    });
+    vehicleSections.forEach(sec => {
+      sec.items.forEach(it => {
+        if (it.url) allImageUrls.push(it.url);
+      });
+    });
+    locationSheets.forEach(it => {
+      if (it.url) allImageUrls.push(it.url);
     });
     if (branding.sealStamp) allImageUrls.push(branding.sealStamp);
 
@@ -1519,7 +1862,7 @@ export async function generateChapterPDF(
           finalH = Math.round(maxCardImgW / aspect);
         }
 
-        card.innerHTML = `
+          card.innerHTML = `
           <!-- Card Header Bar -->
           <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center; gap: 8px;">
@@ -1573,6 +1916,136 @@ export async function generateChapterPDF(
                 <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px; padding: 5px 8px;">
                   <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 2px;">Performance & Character Note</div>
                   <div style="font-size: 8.5px; color: #334155; line-height: 1.3;">${item.performance}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        appendElementWithPagination(card);
+      });
+    });
+
+    // -------------------------------------------------------------
+    // VEHICLE & PROPS DESIGN GRIDS (Parallel Production Design Package)
+    // -------------------------------------------------------------
+    vehicleSections.forEach((sec) => {
+      const secHeader = document.createElement('div');
+      secHeader.style.marginBottom = '10px';
+      secHeader.style.marginTop = '12px';
+      secHeader.style.backgroundColor = '#18181b';
+      secHeader.style.borderRadius = '8px';
+      secHeader.style.padding = '8px 14px';
+      secHeader.style.borderLeft = '4px solid #c69a53';
+      secHeader.style.display = 'flex';
+      secHeader.style.justifyContent = 'space-between';
+      secHeader.style.alignItems = 'center';
+      secHeader.innerHTML = `
+        <div>
+          <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
+            PRODUCTION DESIGN • VEHICLE & PROPS PACKAGE
+          </div>
+          <div style="font-size: 12.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
+            ${sec.sectionTitle}
+          </div>
+          <div style="font-size: 8.5px; color: #d4d4d8; margin-top: 1px;">
+            ${sec.sectionSubtitle}
+          </div>
+        </div>
+        <div style="font-size: 8.5px; color: #18181b; background: #c69a53; font-weight: 800; padding: 3px 8px; border-radius: 9999px;">
+          ${sec.badge}
+        </div>
+      `;
+      appendElementWithPagination(secHeader, true);
+
+      sec.items.forEach((item) => {
+        const card = document.createElement('div');
+        card.style.marginBottom = '12px';
+        card.style.border = '1px solid #cbd5e1';
+        card.style.borderRadius = '8px';
+        card.style.backgroundColor = '#ffffff';
+        card.style.overflow = 'hidden';
+        card.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.04)';
+
+        const meta = imageMetaMap.get(item.url);
+        const imgSrc = meta?.dataUrl || item.url;
+        const aspect = meta?.aspect && !isNaN(meta.aspect) && meta.aspect > 0.1 ? meta.aspect : 1;
+
+        // Calculate un-squeezed pixel width and height respecting natural aspect ratio (usually square 1:1 or 4:3)
+        const maxCardImgW = 676;
+        const maxCardImgH = 260;
+
+        let finalW = maxCardImgW;
+        let finalH = Math.round(maxCardImgW / aspect);
+        if (finalH > maxCardImgH) {
+          finalH = maxCardImgH;
+          finalW = Math.round(maxCardImgH * aspect);
+        }
+        if (finalW > maxCardImgW) {
+          finalW = maxCardImgW;
+          finalH = Math.round(maxCardImgW / aspect);
+        }
+
+        card.innerHTML = `
+          <!-- Card Header Bar -->
+          <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 9px; font-weight: 800; color: #b8860b; background: #fefce8; border: 1px solid #fef08a; padding: 1px 6px; border-radius: 4px;">
+                ${item.sheetNum}
+              </span>
+              <span style="font-size: 11.5px; font-weight: 800; color: #0f172a;">
+                ${item.title}
+              </span>
+            </div>
+            <span style="font-size: 8.5px; font-weight: 700; color: #475569; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 7px; border-radius: 9999px;">
+              ${item.badge}
+            </span>
+          </div>
+
+          <!-- Card Content Body -->
+          <div style="padding: 10px 12px 10px 12px; background: #ffffff;">
+            <!-- Vehicle & Prop Sheet Showcase -->
+            <div style="background-color: #0c0a09; border: 1px solid #1c1917; border-radius: 6px; padding: 6px; display: flex; align-items: center; justify-content: center; min-height: ${finalH + 12}px; margin-bottom: 8px;">
+              <img 
+                src="${imgSrc}" 
+                width="${finalW}" 
+                height="${finalH}" 
+                style="width: ${finalW}px; height: ${finalH}px; max-width: 100%; display: block; margin: 0 auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);" 
+                alt="${item.title}" 
+                crossorigin="anonymous" 
+              />
+            </div>
+
+            <!-- Details & Specifications Grid -->
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start;">
+              <!-- Left Column: Main Vehicle & Vehicle Look -->
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 6px 8px;">
+                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 2px;">Main Vehicle & Diagnostic Hardware</div>
+                  <ul style="margin: 0; padding-left: 12px; font-size: 8.5px; line-height: 1.35; color: #334155;">
+                    ${item.mainVehicle.map((p: string) => `<li style="margin-bottom: 1.5px;">${p}</li>`).join('')}
+                  </ul>
+                </div>
+
+                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px; padding: 6px 8px;">
+                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 2px;">Vehicle Realism & Finishes</div>
+                  <ul style="margin: 0; padding-left: 12px; font-size: 8.5px; line-height: 1.35; color: #334155;">
+                    ${item.vehicleLook.map((p: string) => `<li style="margin-bottom: 1.5px;">${p}</li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Right Column: Props & Production Directives -->
+              <div style="display: flex; flex-direction: column; gap: 6px;">
+                <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 6px 8px;">
+                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #b8860b; letter-spacing: 0.05em; margin-bottom: 2px;">Production & Narrative Props</div>
+                  <ul style="margin: 0; padding-left: 12px; font-size: 8.5px; line-height: 1.35; color: #334155;">
+                    ${item.props.map((p: string) => `<li style="margin-bottom: 1.5px;">${p}</li>`).join('')}
+                  </ul>
+                </div>
+
+                <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 5px; padding: 6px 8px;">
+                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #854d0e; letter-spacing: 0.05em; margin-bottom: 2px;">Art Department Directive</div>
+                  <div style="font-size: 8.5px; color: #713f12; line-height: 1.3; font-weight: 600;">${item.rule}</div>
                 </div>
               </div>
             </div>
@@ -1657,17 +2130,113 @@ export async function generateChapterPDF(
     locationsHeader.innerHTML = `
       <div>
         <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
-          SECTION 08 • SHOOTING LOCATIONS MATRIX
+          SECTION 08 • SHOOTING LOCATIONS & PRODUCTION TERRITORY
         </div>
         <div style="font-size: 12.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
-          Multi-City Production Matrix (Lahore, Karachi & Studio Stages)
+          Location Concept Grids & Multi-City Scouting Dossiers
+        </div>
+        <div style="font-size: 8.5px; color: #d4d4d8; margin-top: 1px;">
+          5 Verified Commercial Film Locations (Lahore & Karachi) • Turnkey Permissions Matrix
         </div>
       </div>
-      <div style="font-size: 8.5px; color: #a1a1aa; font-weight: 600;">
-        6 Prime Locations • GPS Verified
+      <div style="font-size: 8.5px; color: #18181b; background: #c69a53; font-weight: 800; padding: 3px 8px; border-radius: 9999px;">
+        5 Location Grids
       </div>
     `;
     appendElementWithPagination(locationsHeader, true);
+
+    // Render each Location Concept Sheet Card with un-squeezed photo and full production data
+    locationSheets.forEach((loc) => {
+      const locCard = document.createElement('div');
+      locCard.style.marginBottom = '12px';
+      locCard.style.border = '1px solid #cbd5e1';
+      locCard.style.borderRadius = '8px';
+      locCard.style.backgroundColor = '#ffffff';
+      locCard.style.overflow = 'hidden';
+      locCard.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.04)';
+
+      const meta = imageMetaMap.get(loc.url);
+      const imgSrc = meta?.dataUrl || loc.url;
+      const aspect = meta?.aspect && !isNaN(meta.aspect) && meta.aspect > 0.1 ? meta.aspect : 1;
+
+      const maxCardImgW = 676;
+      const maxCardImgH = 260;
+
+      let finalW = maxCardImgW;
+      let finalH = Math.round(maxCardImgW / aspect);
+      if (finalH > maxCardImgH) {
+        finalH = maxCardImgH;
+        finalW = Math.round(maxCardImgH * aspect);
+      }
+      if (finalW > maxCardImgW) {
+        finalW = maxCardImgW;
+        finalH = Math.round(maxCardImgW / aspect);
+      }
+
+      locCard.innerHTML = `
+        <!-- Location Header Bar -->
+        <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span style="font-size: 9px; font-weight: 800; color: #b8860b; background: #fefce8; border: 1px solid #fef08a; padding: 1px 6px; border-radius: 4px;">
+              ${loc.sheetNum}
+            </span>
+            <span style="font-size: 11.5px; font-weight: 800; color: #0f172a;">
+              ${loc.title}
+            </span>
+          </div>
+          <span style="font-size: 8.5px; font-weight: 700; color: #475569; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 7px; border-radius: 9999px;">
+            ${loc.badge}
+          </span>
+        </div>
+
+        <!-- Location Content Body -->
+        <div style="padding: 10px 12px; background: #ffffff;">
+          <!-- Location Concept Photo Showcase -->
+          <div style="background-color: #0c0a09; border: 1px solid #1c1917; border-radius: 6px; padding: 6px; display: flex; align-items: center; justify-content: center; min-height: ${finalH + 12}px; margin-bottom: 8px;">
+            <img 
+              src="${imgSrc}" 
+              width="${finalW}" 
+              height="${finalH}" 
+              style="width: ${finalW}px; height: ${finalH}px; max-width: 100%; display: block; margin: 0 auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);" 
+              alt="${loc.title}" 
+              crossorigin="anonymous" 
+            />
+          </div>
+
+          <!-- Location Details & Specifications Grid -->
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start;">
+            <!-- Left: Location Logistics & Permissions -->
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 6px 8px;">
+                <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 3px;">Territory, City & GPS Coordinates</div>
+                <div style="font-size: 8.5px; color: #0f172a; font-weight: 700; margin-bottom: 2px;">${loc.city}</div>
+                <div style="font-size: 8px; color: #64748b; font-family: monospace;">GPS: ${loc.coordinates}</div>
+                <div style="font-size: 8px; color: #854d0e; margin-top: 3px; font-weight: 600;">Permits: ${loc.permits}</div>
+              </div>
+              <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 5px; padding: 5px 8px;">
+                <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #854d0e; letter-spacing: 0.05em; margin-bottom: 2px;">Optimal Lighting & Sun Window</div>
+                <div style="font-size: 8.5px; color: #713f12; line-height: 1.35; font-weight: 600;">${loc.lightingWindow}</div>
+              </div>
+            </div>
+
+            <!-- Right: Production Design Highlights & Visual Goal -->
+            <div style="display: flex; flex-direction: column; gap: 4px;">
+              <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 6px 8px;">
+                <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 3px;">Set Dressing & Production Design Highlights</div>
+                <ul style="margin: 0; padding-left: 12px; font-size: 8.5px; line-height: 1.35; color: #334155;">
+                  ${loc.productionDesign.map(p => `<li style="margin-bottom: 1.5px;">${p}</li>`).join('')}
+                </ul>
+              </div>
+              <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px; padding: 5px 8px;">
+                <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 2px;">Cinematic Tone & Narrative Goal</div>
+                <div style="font-size: 8.5px; color: #334155; line-height: 1.35; font-weight: 500;">${loc.visualGoal}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+      appendElementWithPagination(locCard);
+    });
 
     const locationsBlock = document.createElement('div');
     locationsBlock.style.marginBottom = '10px';
@@ -1676,45 +2245,61 @@ export async function generateChapterPDF(
     locationsBlock.style.padding = '10px 12px';
     locationsBlock.style.backgroundColor = '#ffffff';
     locationsBlock.innerHTML = `
+      <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #0f172a; letter-spacing: 0.05em; margin-bottom: 6px;">
+        Production Logistics & Permissions Summary Matrix
+      </div>
       <table style="width: 100%; border-collapse: collapse; font-size: 8.5px; color: #334155;">
         <thead>
           <tr style="background-color: #f1f5f9; text-align: left; color: #0f172a; font-weight: 800; font-size: 8px; text-transform: uppercase;">
             <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">Film Sequence</th>
             <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">Selected Location</th>
             <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">City / Area</th>
+            <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">Permit Authority & Staging Bay</th>
             <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">Key Art & Production Highlights</th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 01 — Car</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Food Street / Ring Road Bypass</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Food Street / Badshahi Area</td>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lahore Walled City</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">WCLA & CTPL • Hazuri Bagh Staging</td>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">High-density traffic gridlock with Badshahi Mosque archway backdrop.</td>
           </tr>
           <tr style="background-color: #fafafa;">
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 02 — Truck</td>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Ibrahim Hyderi Fish Harbor</td>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Karachi Port Jetty</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Active maritime cargo wharf, ice crates, heavy Bedford truck fleet.</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">KPT & Fishermen Coop • Marine Bay</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Active maritime cargo wharf, ice crates, heavy commercial truck fleet.</td>
           </tr>
           <tr>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 03 — Tractor</td>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Kareem Block Agricultural Fields</td>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lahore Suburbs</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Landowners & District Admin</td>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lush golden wheat harvest corridor, decorated baraat tractor trolleys.</td>
           </tr>
           <tr style="background-color: #fafafa;">
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 04 — Bike</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Packages Mall Promenade / Gulberg</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Packages Mall Promenade / Walton</td>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lahore Central</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Morning corporate rush hour boulevard, dense bike taxi traffic.</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Mall Security & Operations Directorate</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Morning corporate rush hour boulevard, contemporary architectural glass facade.</td>
           </tr>
           <tr>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 05 — UPS / Home</td>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Fakir Khana Museum Haveli</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Old Lahore</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Old Lahore (Bhati Gate)</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Fakir Khana Trust & Heritage Directorate</td>
             <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Historic courtyard decorated for wedding, sudden blackout to full illumination.</td>
+          </tr>
+          <tr style="background-color: #fafafa;">
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">CGI / Technical Lab</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Evernew Studios Soundstage</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Multan Road, Lahore</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Evernew Studios Management Lease</td>
+            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Controlled soundstage cyclorama, high-speed Phantom macro spark and graphite battery cutaway rig.</td>
           </tr>
         </tbody>
       </table>
@@ -1769,7 +2354,7 @@ export async function generateChapterPDF(
           <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #b8860b; margin-bottom: 4px;">Production Scope & Media Rights</div>
           <div style="font-size: 8.5px; line-height: 1.4; color: #334155;">
             <strong>Shooting Schedule:</strong> 5 Commercial Films + Stills + BTS Digital Assets<br/>
-            <strong>Media Term:</strong> 1 Year All-Media Pakistan & GCC Broadcast Rights<br/>
+            <strong>Media Term:</strong> 2 Years (2026–2028) All-Media Pakistan & GCC Commercial Rights<br/>
             <strong>Status:</strong> Executed & Confirmed for March 2026 Production Window.
           </div>
         </div>
@@ -1818,14 +2403,14 @@ export async function generateChapterPDF(
       for (let i = 0; i < pages.length; i++) {
         const pageEl = pages[i].pageEl;
         const canvas = await html2canvas(pageEl, {
-          scale: 2,
+          scale: 1.5,
           useCORS: true,
           allowTaint: true,
           backgroundColor: '#ffffff',
           logging: false
         });
         if (i > 0) pdf.addPage('a4', 'portrait');
-        pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, 0, 210, 297);
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, 210, 297);
       }
 
       pdf.save(`Nasharz_Alaska_Chapter07_Art_and_Talent.pdf`);
