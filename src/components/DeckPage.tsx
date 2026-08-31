@@ -49,7 +49,6 @@ export const DeckPage: React.FC<DeckPageProps> = ({
   const [showEstimateModal, setShowEstimateModal] = useState(false);
   const [showMediaHub, setShowMediaHub] = useState(false);
   const [showUpdatesModal, setShowUpdatesModal] = useState(false);
-  const [showUpdatesBanner, setShowUpdatesBanner] = useState(true);
   const [isGenerating, setIsGenerating] = useState(false);
 
   const currentChapter = data.chapters.find((c) => c.id === activeChapterId) || data.chapters[0];
@@ -95,10 +94,10 @@ export const DeckPage: React.FC<DeckPageProps> = ({
           <button
             onClick={() => setShowUpdatesModal(true)}
             className="flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full bg-amber-500/15 hover:bg-amber-500/25 text-amber-950 border border-amber-500/40 text-xs font-bold transition-all active:scale-95 cursor-pointer shadow-2xs"
-            title="View Recent Deck Updates & Changelog"
+            title="View Campaign Updates, Wardrobe, Vehicles & Locations"
           >
             <span className="w-2 h-2 rounded-full bg-amber-600 animate-ping" />
-            <span className="hidden xs:inline">Updates</span>
+            <span className="hidden xs:inline">What's New</span>
             <span className="bg-amber-500 text-black text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">
               NEW
             </span>
@@ -241,41 +240,6 @@ export const DeckPage: React.FC<DeckPageProps> = ({
           </div>
         </div>
       </header>
-
-      {/* Prominent Updates Notification Alert Banner */}
-      {showUpdatesBanner && (
-        <div className="bg-gradient-to-r from-zinc-950 via-zinc-900 to-zinc-950 text-white px-4 sm:px-12 py-2.5 border-b border-amber-500/40 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-md">
-          <div className="flex items-center gap-2.5 flex-wrap">
-            <span className="inline-flex items-center gap-1 bg-amber-500 text-black font-black text-[10px] uppercase px-2.5 py-0.5 rounded-full shadow-2xs">
-              <Sparkles className="w-3 h-3 animate-pulse" /> RECENT UPDATES
-            </span>
-            <span className="text-zinc-200 font-medium">
-              New <strong>"Battery Phelwan"</strong> TVC Master Suite (5 Films, Punjabi Jingles & Dialogues) & Complete Storyboards updated.
-            </span>
-          </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto justify-end shrink-0">
-            <button
-              onClick={() => handleNavigateChapter('concepts', 'final-concepts')}
-              className="px-3 py-1 bg-gradient-to-r from-amber-400 to-amber-300 text-black hover:from-amber-300 hover:to-amber-200 font-black rounded-lg text-[11px] transition-all cursor-pointer shadow-xs"
-            >
-              View Master Concepts
-            </button>
-            <button
-              onClick={() => handleNavigateChapter('storyboards')}
-              className="px-3 py-1 bg-zinc-800 text-amber-300 hover:bg-zinc-700 font-bold rounded-lg text-[11px] transition-all cursor-pointer border border-zinc-700"
-            >
-              View Storyboards
-            </button>
-            <button
-              onClick={() => setShowUpdatesBanner(false)}
-              className="p-1 text-zinc-400 hover:text-white rounded-md transition-colors cursor-pointer"
-              title="Dismiss notification"
-            >
-              <X className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-      )}
 
       {/* 2. MAIN PRESENTATION CONTAINER */}
       <main className="max-w-7xl w-full mx-auto px-4 sm:px-8 lg:px-12 py-6 sm:py-8 flex-1 flex flex-col gap-6">

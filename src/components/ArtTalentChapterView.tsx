@@ -35,25 +35,50 @@ import {
 interface ArtTalentChapterViewProps {
   chapter: Chapter;
   branding: BrandingConfig;
-  onImageClick: (index: number) => void;
-  onDownloadPdf: () => void;
+  initialTab?: string;
+  onImageClick: (index: number, customUrl?: string) => void;
+  onDownloadPdf: (section?: string) => void;
   isGeneratingPdf: boolean;
 }
 
 export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
   chapter,
   branding,
+  initialTab,
   onImageClick,
   onDownloadPdf,
   isGeneratingPdf,
 }) => {
-  const [activeTab, setActiveTab] = useState<'wardrobe' | 'vehicles-props' | 'films' | 'mobile-labs' | 'color-priorities' | 'locations' | 'moodboard' | 'contract'>('wardrobe');
+  const getInitialTab = (tab?: string): 'wardrobe' | 'vehicles-props' | 'films' | 'mobile-labs' | 'color-priorities' | 'locations' | 'moodboard' | 'contract' => {
+    if (!tab) return 'wardrobe';
+    if (tab === 'vehicle-props' || tab === 'vehicles' || tab === 'props' || tab === 'vehicles-props') return 'vehicles-props';
+    if (tab === 'locations-map' || tab === 'location' || tab === 'locations') return 'locations';
+    if (tab === 'talent-contract' || tab === 'contract' || tab === 'talent' || tab === 'agreement') return 'contract';
+    if (tab === 'mobile-labs' || tab === 'mobile-lab' || tab === 'vans') return 'mobile-labs';
+    if (tab === 'color-priorities' || tab === 'palette') return 'color-priorities';
+    if (tab === 'moodboard') return 'moodboard';
+    if (tab === 'films') return 'films';
+    return 'wardrobe';
+  };
+
+  const [activeTab, setActiveTab] = useState<'wardrobe' | 'vehicles-props' | 'films' | 'mobile-labs' | 'color-priorities' | 'locations' | 'moodboard' | 'contract'>(() => getInitialTab(initialTab));
+
+  React.useEffect(() => {
+    if (initialTab) {
+      setActiveTab(getInitialTab(initialTab));
+    }
+  }, [initialTab]);
   const [characterFilter, setCharacterFilter] = useState<'all' | 'master' | 'car' | 'truck' | 'tractor' | 'bike' | 'ups'>('all');
   const [vehicleFilter, setVehicleFilter] = useState<'all' | 'master' | 'car' | 'truck' | 'tractor' | 'bike' | 'ups'>('all');
   const [copiedContract, setCopiedContract] = useState(false);
   const [activeLocationIndex, setActiveLocationIndex] = useState<number>(0);
+  const [cardViewMap, setCardViewMap] = useState<Record<string, 'art' | 'storyboard'>>({});
 
-  // Official Character Sheets ordered strictly by sequence
+  const toggleCardView = (cardKey: string, mode: 'art' | 'storyboard') => {
+    setCardViewMap(prev => ({ ...prev, [cardKey]: mode }));
+  };
+
+  // Official Character Sheets ordered strictly by sequence with corresponding Storyboard Frames
   const characterSheets = [
     // -------------------------------------------------------------
     // MAIN WARDROBE
@@ -62,17 +87,33 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       id: 0,
       filmKey: 'master',
       filmLabel: 'Main Wardrobe • Master Look',
-      title: 'A. Battery Expert — Master Look',
+      title: '01. Pehlwan Thakur (Master Look)',
       actor: 'Iftikhar Thakur',
       role: 'Lead Energy Expert & Technical Authority',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Sheet_w2wp4c.png',
+      storyboard: {
+        sceneTitle: 'Master TVC • Van Arrival & Entrance',
+        shotTag: 'MSB Scene 01 • Frame 04',
+        url: 'https://lh3.googleusercontent.com/d/1lxlow_AiObvWLeMoGlrRizLxwfYO9Duk',
+        sceneContext: 'Battery Expert steps out of the Mobile Diagnostic Lab in pristine white coat & rubber gloves to lead the response unit.'
+      },
       wardrobePoints: [
-        'Clean white laboratory coat (crisp, practical, contemporary)',
-        'White or very light neutral shalwar qameez underneath',
-        'Minimal styling, no tie, no medical costume clichés',
-        'No gloves unless required for a technical action'
+        'Clean premium white laboratory coat',
+        'Sharp, well-tailored fit',
+        'Full-length lab coat, slightly structured and masculine',
+        'Crisp shirt and nice tie underneath',
+        'Formal pants',
+        'Formal shoes',
+        'No traditional Pakistani shalwar qameez',
+        'No stethoscope',
+        'No doctor costume clichés',
+        'Rubber gloves',
+        'No medical equipment',
+        'Absolutely no cap',
+        'Absolutely no turban',
+        'Absolutely no headwear'
       ],
-      headRule: 'CRITICAL: Absolutely no cap, no turban and no headwear.',
+      headRule: 'CRITICAL: Absolutely no cap, absolutely no turban and absolutely no headwear.',
       performance: 'Combination of senior surgeon, technical scientist, and emergency-response expert — unmistakably Iftikhar Thakur.',
       visualRule: 'The Battery Expert should always feel cleaner, sharper and more premium than the character version of Thakur.'
     },
@@ -80,15 +121,28 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       id: 1,
       filmKey: 'master',
       filmLabel: 'Main Wardrobe • Technical Team',
-      title: 'The Alaska Battery Expert Team',
+      title: '02. Diagnostic team.',
       actor: 'Technical Specialists Ensemble',
       role: 'Mobile Technology Response Unit',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Medical_Team_Sheet_v07k88.png',
+      storyboard: {
+        sceneTitle: 'Master TVC • Tech Pit-Crew Rapid Deployment',
+        shotTag: 'MSB Scene 02 • Frame 02',
+        url: 'https://lh3.googleusercontent.com/d/1LQPtR0cbnOduuuRpdga1n_W-qyYhENDV',
+        sceneContext: 'Technical crew rapidly deploys heavy testing oscilloscopes, insulated jumper leads, and mobile status screens.'
+      },
       wardrobePoints: [
-        'Contemporary technical uniforms with clean silhouettes',
-        'Practical jackets or utility-style clothing',
-        'Subtle Alaska branding insignia',
-        'Functional equipment belts and technical diagnostic cases'
+        'Scrubs worn underneath white lab coats',
+        'Clean premium white laboratory coats',
+        'Contemporary technical silhouettes',
+        'Traditional Pakistani styling subtly integrated',
+        'Neutral base clothing',
+        'No branding',
+        'Practical utility trousers',
+        'Premium technical footwear',
+        'Equipment belts where appropriate',
+        'Small technical pouches',
+        'Protective work accessories only where practical'
       ],
       headRule: 'Modern technical specialists — DO NOT look like doctors in a hospital.',
       performance: 'High-speed, disciplined, synchronized mobile technology pit-crew.',
@@ -106,6 +160,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       actor: 'Iftikhar Thakur',
       role: 'Gridlock Traffic Policeman',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Traf_Policeman_Sheet_bmo9yi.png',
+      storyboard: {
+        sceneTitle: 'Film 01 Car • Gridlock Intersection Breakdown',
+        shotTag: 'Car SB Scene 01 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1Hv7Vu1IgLujmqJCuXoROTZQI8T81H6Fe',
+        sceneContext: 'Traffic Policeman Thakur frantically directs backed-up cars around stalled sedan in sweltering city heatwave.'
+      },
       wardrobePoints: [
         'Authentic Pakistani traffic police uniform (shirt & trousers)',
         'Official Police cap and duty belt',
@@ -124,6 +184,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       actor: 'Wardrobe Department Reference',
       role: 'Provincial Uniform Color Palette & Insignia Variations',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Traf_Policeman_Color_Options_yhw9p8.png',
+      storyboard: {
+        sceneTitle: 'Film 01 Car • High-Visibility Warden Stance',
+        shotTag: 'Car SB Scene 01 • Frame 03',
+        url: 'https://lh3.googleusercontent.com/d/1Hv7Vu1IgLujmqJCuXoROTZQI8T81H6Fe',
+        sceneContext: 'Official warden duty gear and peaked cap contrasting against city asphalt.'
+      },
       wardrobePoints: [
         'Authentic Pakistani provincial traffic police color variations (Blue-grey, khaki, navy, and white trim)',
         'Official high-visibility chest badges and reflective shoulder epaulettes',
@@ -142,6 +208,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       actor: 'Supporting Cast',
       role: 'Affluent Urban Professional',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Car_Owner_Sheet_y7jdpt.png',
+      storyboard: {
+        sceneTitle: 'Film 01 Car • Stressed Executive Ignition Fail',
+        shotTag: 'Car SB Scene 01 • Frame 02',
+        url: 'https://lh3.googleusercontent.com/d/1Hv7Vu1IgLujmqJCuXoROTZQI8T81H6Fe',
+        sceneContext: 'Corporate car owner frantically cranking key as dashboard lights flicker and battery dies in traffic.'
+      },
       wardrobePoints: [
         'Well-groomed Pakistani man, late 30s to mid-40s, affluent urban professional',
         'He should look successful, sophisticated and slightly impatient, but still believable and relatable',
@@ -160,15 +232,21 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       id: 5,
       filmKey: 'bike',
       filmLabel: 'Film 04 — Bike Sequence',
-      title: 'Character Thakur: Office Executive in Safari Suit',
+      title: '03. Senior executive in bike seq',
       actor: 'Iftikhar Thakur',
       role: 'Senior Executive Commuter',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Office_Executive_Sheet_k7dybx.png',
+      storyboard: {
+        sceneTitle: 'Film 04 Bike • Morning Rush Hour Breakdown',
+        shotTag: 'Bike SB Scene 01 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1V34IZzvcW8e1Hi1P891n4N0DXmqh8698',
+        sceneContext: 'Senior executive in tailored safari suit frantically checks his watch as motorcycle stalls in morning alley.'
+      },
       wardrobePoints: [
         'Senior office executive commuting during morning rush hour (formerly morning man)',
-        'Classic tailored safari suit (beige/khaki or grey-blue)',
+        'Classic tailored safari suit (out door colors must not blue)',
         'Epaulettes, flap chest pockets, belted or structured jacket silhouette',
-        'Polished leather shoes, frantic commuter watch-checking in morning traffic'
+        'Polished leather shoes, frantic commuter watch-checking in morning'
       ],
       headRule: 'No headwear (natural groomed executive morning hair).',
       performance: 'Stressed senior executive desperate to beat the morning gridlock.',
@@ -182,6 +260,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       actor: 'Supporting Cast',
       role: 'Hardworking Urban Motorcycle Taxi Operator',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Taxi_Biker_Sheet_hwhgny.png',
+      storyboard: {
+        sceneTitle: 'Film 04 Bike • Frantic Kickstart Sequence',
+        shotTag: 'Bike SB Scene 01 • Frame 02',
+        url: 'https://lh3.googleusercontent.com/d/1V34IZzvcW8e1Hi1P891n4N0DXmqh8698',
+        sceneContext: 'Hardworking motorcycle rider sweating under helmet repeatedly kicking the starter pedal with no response.'
+      },
       wardrobePoints: [
         'Practical Pakistani taxi motorcycle rider, urban, hardworking and realistic',
         'He should look like an authentic everyday bike rider, not a fashion model, delivery rider or generic construction worker',
@@ -200,6 +284,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       actor: 'Supporting Cast',
       role: 'Anxious Job Interview Candidate',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Interview_Candidate_Sheet_r01msw.png',
+      storyboard: {
+        sceneTitle: 'Film 04 Bike • Anxious Passenger Commute',
+        shotTag: 'Bike SB Scene 01 • Frame 04',
+        url: 'https://lh3.googleusercontent.com/d/1V34IZzvcW8e1Hi1P891n4N0DXmqh8698',
+        sceneContext: 'Candidate clutching CV resume folder on back of stalled bike as minutes tick down toward interview deadline.'
+      },
       wardrobePoints: [
         'Tailored modern corporate blazer, crisp ironed pastel blue/white shirt, silk tie, dark trousers',
         'Commuter leather backpack or clear CV portfolio folder',
@@ -218,15 +308,25 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       id: 8,
       filmKey: 'truck',
       filmLabel: 'Film 02 — Truck Sequence',
-      title: 'Character Thakur: Fisherman & Port Logistics Captain',
+      title: '04. Fish Logistics seq thakur',
       actor: 'Iftikhar Thakur',
       role: 'Fish Harbor Logistics Captain',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Pathan_Thakur_Sheet_d2i9er.png',
+      storyboard: {
+        sceneTitle: 'Film 02 Truck • Karachi Fish Harbor Crisis',
+        shotTag: 'Truck SB Scene 01 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1LscTDgYe3ojAE2oSiVsDEPdFMKIXeTXy',
+        sceneContext: 'Pathan Fisherman Thakur in white cap panics as commercial refrigerated truck fails to start while ice melts.'
+      },
       wardrobePoints: [
-        'Simple traditional shalwar qameez in earthy, practical fabric',
-        'Embroidered velvet waistcoat details',
-        'Weathered working look with brass ring keys',
-        'Comfortable sandals / traditional footwear'
+        'Simple traditional Pakistani shalwar qameez',
+        'Slightly loose and practical fit',
+        'Light or earthy neutral fabric',
+        'White traditional Pathan cap',
+        'Traditional practical footwear',
+        'Slightly weathered working-man appearance',
+        'A simple ring on one finger',
+        'No embroidery on the waistcoat'
       ],
       headRule: 'KEY MANDATORY RULE: Truck Driver / Fisherman Thakur MUST always wear the white Pathan cap.',
       performance: 'Brave, resilient, protective of his fresh seafood cargo at Karachi fish harbor.',
@@ -236,15 +336,18 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       id: 9,
       filmKey: 'truck',
       filmLabel: 'Film 02 — Truck Sequence',
-      title: 'Truck Driver & Port Cargo Crew',
+      title: '05. Truck driver',
       actor: 'Supporting Ensemble',
       role: 'Fish Port Cargo Workers & Truck Helpers',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Truck_Driver_Sheet_kbbtsv.png',
+      storyboard: {
+        sceneTitle: 'Film 02 Truck • Harbor Cargo Push & Ice Shoveling',
+        shotTag: 'Truck SB Scene 01 • Frame 03',
+        url: 'https://lh3.googleusercontent.com/d/1LscTDgYe3ojAE2oSiVsDEPdFMKIXeTXy',
+        sceneContext: 'Harbor dock workers desperately shoveling crushed ice around fresh catch crates while attempting to jump truck.'
+      },
       wardrobePoints: [
-        'Practical port cargo crew and heavy commercial transport helpers',
-        'Weathered utility workwear, rolled-up sleeves, waterproof rubber boots',
-        'Heavy ice crates, wet fish containers, sea-spray salt patina',
-        'Grounded Karachi fish harbor maritime atmosphere'
+        'Weathered utility workwear, Chappal or worn out leather shoes or waterproof rubber boots'
       ],
       headRule: 'Practical cotton patkas or bareheaded harbor workwear.',
       performance: 'Hardworking, bustling dock workers racing against melting ice and spoiling cargo.',
@@ -258,15 +361,22 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       id: 10,
       filmKey: 'tractor',
       filmLabel: 'Film 03 — Tractor Sequence (Option A)',
-      title: 'Character Thakur: Chaudhary Sb (Option A: Red Polka Turban)',
+      title: '06. In tractor seq Chaudhary thakur wears',
       actor: 'Iftikhar Thakur',
       role: 'Baraat Patriarch & Farm Landlord',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Chaudharsb_1_Sheet_zbnlik.png',
+      storyboard: {
+        sceneTitle: 'Film 03 Tractor • Punjabi Farm Baraat Stall',
+        shotTag: 'Tractor SB Scene 01 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1NTtmKqHWwF6ZCNw_9LuLxjRLFVkDt0uJ',
+        sceneContext: 'Chaudhary Thakur in red polka turban waves oversized spanner in distress as decorated tractor dies in wheatfield.'
+      },
       wardrobePoints: [
-        'Vibrant red turban / safa with golden-yellow polka-dot pattern',
-        'Traditional fan-style front knot (Turra / Shamla)',
-        'Mustard-yellow kurta with matching dhoti or lacha',
-        'Red floral-print stole, traditional tilla khussa'
+        'Mustard-yellow kurta',
+        'Matching dhoti or lacha or shalwar',
+        'Red floral-print stole or sash',
+        'Matching Red waistcoat',
+        'Traditional khussa'
       ],
       headRule: 'Vibrant red polka turban (Battery Expert wears NO turban, NO headwear).',
       performance: 'Bushy handlebar moustache, thick eyebrows, rustic Punjabi Chaudhary charisma.',
@@ -276,15 +386,22 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       id: 11,
       filmKey: 'tractor',
       filmLabel: 'Film 03 — Tractor Sequence (Option B)',
-      title: 'Character Thakur: Chaudhary Sb (Option B: Traditional Boski Elder)',
+      title: '07. TRACTOR THAKUR  OP2:',
       actor: 'Iftikhar Thakur',
       role: 'Traditional Rural Grandfather',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_ch_sb_Sheet_hi8350.png',
+      storyboard: {
+        sceneTitle: 'Film 03 Tractor • Village Elder Arrival',
+        shotTag: 'Tractor SB Scene 01 • Frame 02',
+        url: 'https://lh3.googleusercontent.com/d/1NTtmKqHWwF6ZCNw_9LuLxjRLFVkDt0uJ',
+        sceneContext: 'Respected landlord variant directing farm machinery operators during peak harvest schedule.'
+      },
       wardrobePoints: [
-        'Starched pristine white Cotton Boski Kurta Pajama',
-        'Traditional starched white/cream turban',
-        'Authentic handmade Tilla Khussa & carved cane',
-        'Pristine village patriarch aesthetic'
+        'Starched pristine white cotton Boski kurta shalwar',
+        'Traditional starched white turban',
+        'Authentic handmade tilla khussa or black shoes',
+        'Carved cane',
+        'Practical workwear details'
       ],
       headRule: 'Traditional starched turban.',
       performance: 'Wise, prestigious, authoritative village elder.',
@@ -298,6 +415,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       actor: 'Supporting Ensemble',
       role: 'Agricultural Harvesters',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Farmer_Sheet_dpryzu.png',
+      storyboard: {
+        sceneTitle: 'Film 03 Tractor • Harvester Field Gathering',
+        shotTag: 'Tractor SB Scene 01 • Frame 04',
+        url: 'https://lh3.googleusercontent.com/d/1NTtmKqHWwF6ZCNw_9LuLxjRLFVkDt0uJ',
+        sceneContext: 'Field harvesters gather around tractor engine bay before celebration when Alaska restarts the engine.'
+      },
       wardrobePoints: [
         'Earthy Khaki/Olive breathable cotton kurta',
         'Traditional Punjabi Tehband (Lungi)',
@@ -320,6 +443,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       actor: 'Iftikhar Thakur & Ensemble',
       role: 'Festive Wedding Guests (Baraat)',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Wedding_Guest_Sheet_yij1ox.png',
+      storyboard: {
+        sceneTitle: 'Film 05 UPS • Haveli Wedding Blackout Shock',
+        shotTag: 'UPS SB Scene 01 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1Q3j1LeNDLNw4X7OplZON3tXbmag2eTSG',
+        sceneContext: 'Wedding guest Thakur in festive celebratory waistcoat gasps as entire haveli lights and fans abruptly shut off.'
+      },
       wardrobePoints: [
         'Thakur Look: Traditional formal Pakistani wedding outfit with tasteful waistcoat, elegant light festive styling',
         'Family Ensembles: Festive velvet, banarsi silk, and chiffon in jewel tones (crimson, emerald, marigold, royal purple)',
@@ -338,6 +467,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       actor: 'Lead Supporting Cast',
       role: 'Stressed Groom Managing Wedding Morning (Kurta & Casual Options)',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Guy_1_Sheet_irwm7w.png',
+      storyboard: {
+        sceneTitle: 'Film 05 UPS • Chaotic Wedding Morning Preparations',
+        shotTag: 'UPS SB Scene 01 • Frame 02',
+        url: 'https://lh3.googleusercontent.com/d/1Q3j1LeNDLNw4X7OplZON3tXbmag2eTSG',
+        sceneContext: 'Groom managing wedding preparations on phone when total home blackout hits the bridal floor.'
+      },
       wardrobePoints: [
         'Young Pakistani groom, approximately mid-20s to mid-30s',
         'Two distinct wardrobe options: Traditional festive embroidered kurta pajama vs contemporary semi-formal casual shirt & trousers',
@@ -356,6 +491,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       actor: 'Lead Supporting Cast',
       role: 'Stressed Groom Managing Wedding Morning (Master Styling)',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Guy_Sheet_ilqhb2.png',
+      storyboard: {
+        sceneTitle: 'Film 05 UPS • Groom Inverter Closet Emergency',
+        shotTag: 'UPS SB Scene 01 • Frame 03',
+        url: 'https://lh3.googleusercontent.com/d/1Q3j1LeNDLNw4X7OplZON3tXbmag2eTSG',
+        sceneContext: 'Stressed groom checking dead household inverter system with phone flashlight.'
+      },
       wardrobePoints: [
         'Young Pakistani groom, approximately mid-20s to mid-30s',
         'He is energetic, busy and slightly stressed because he is personally managing the wedding arrangements',
@@ -374,6 +515,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       actor: 'Supporting Cast',
       role: 'Commanding & Practical Pakistani Mother',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_UPS_Mother_Sheet_trglgq.png',
+      storyboard: {
+        sceneTitle: 'Film 05 UPS • Matriarch Directing Preparations',
+        shotTag: 'UPS SB Scene 01 • Frame 04',
+        url: 'https://lh3.googleusercontent.com/d/1Q3j1LeNDLNw4X7OplZON3tXbmag2eTSG',
+        sceneContext: 'Household matriarch managing tea, clothes pressing, and relatives in candlelit courtyard.'
+      },
       wardrobePoints: [
         'Pakistani mother, approximately late 40s to late 50s',
         'Warm, commanding, practical and expressive',
@@ -402,6 +549,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op1_esdu3i.png',
       altOptionUrl: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_jog7cv.png',
       badge: 'Master Livery Option 1',
+      storyboard: {
+        sceneTitle: 'Master Storyboard • Mobile Response Unit Deployment',
+        shotTag: 'MSB Scene 01 • Frame 03',
+        url: 'https://lh3.googleusercontent.com/d/1lxlow_AiObvWLeMoGlrRizLxwfYO9Duk',
+        sceneContext: 'Battery Pehlwan branded high-roof van arrives on location with roof beacon flashing and deployable diagnostic racks.'
+      },
       mainVehicle: [
         'Aerodynamic high-roof commercial vehicle with custom yellow-and-white Alaska livery',
         'Roof-mounted high-intensity strobe beacon array and technical diagnostic antennas',
@@ -431,6 +584,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_jog7cv.png',
       altOptionUrl: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op3_g0tgpa.png',
       badge: 'Aero Livery Option 2',
+      storyboard: {
+        sceneTitle: 'Master Storyboard • Aero Livery Rapid Transit',
+        shotTag: 'MSB Scene 01 • Frame 02',
+        url: 'https://lh3.googleusercontent.com/d/1lxlow_AiObvWLeMoGlrRizLxwfYO9Duk',
+        sceneContext: 'Streamlined response vehicle maneuvering through urban traffic toward the breakdown site.'
+      },
       mainVehicle: [
         'Sport-aero commercial high-roof van configuration with extended rear cargo bay',
         'Full side-profile livery featuring dynamic speed-chevron Alaska brand graphics',
@@ -460,6 +619,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op3_g0tgpa.png',
       altOptionUrl: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Branded_Veh_op1_esdu3i.png',
       badge: 'Heavy Utility Option 3',
+      storyboard: {
+        sceneTitle: 'Master Storyboard • Heavy Utility Field Action',
+        shotTag: 'MSB Scene 02 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1LQPtR0cbnOduuuRpdga1n_W-qyYhENDV',
+        sceneContext: 'Heavy-duty recovery unit equipped with high-output generator and heavy commercial diagnostic tools.'
+      },
       mainVehicle: [
         'Reinforced heavy-duty commercial chassis with integrated front recovery winch & bull-bar',
         'Dual rear barn-doors with heavy slide-out steel tray holding commercial & tractor batteries',
@@ -488,6 +653,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       subtitle: 'Modern executive vehicle breakdown & roadside emergency toolkit grid',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Car_Seq_uj7m0o.png',
       badge: 'Film 01 — Car',
+      storyboard: {
+        sceneTitle: 'Film 01 Car Storyboard • Bonnet-Open Engine Inspection',
+        shotTag: 'Car SB Scene 01 • Frame 02',
+        url: 'https://lh3.googleusercontent.com/d/1Hv7Vu1IgLujmqJCuXoROTZQI8T81H6Fe',
+        sceneContext: 'Luxury sedan bonnet raised with warning triangle placed as traffic gridlock builds around the car.'
+      },
       mainVehicle: [
         'Full front three-quarter view, side profile, front view, and rear three-quarter view',
         'Bonnet-open view with detailed engine-bay and battery compartment visible',
@@ -513,6 +684,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       subtitle: 'Heavy-duty marine seafood logistics & port cold-chain breakdown props',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Truck_Seq_wdek71.png',
       badge: 'Film 02 — Truck',
+      storyboard: {
+        sceneTitle: 'Film 02 Truck Storyboard • Seafood Cold-Chain Breakdown',
+        shotTag: 'Truck SB Scene 01 • Frame 02',
+        url: 'https://lh3.googleusercontent.com/d/1LscTDgYe3ojAE2oSiVsDEPdFMKIXeTXy',
+        sceneContext: 'Refrigerated truck stranded on the pier with melting ice boxes and fresh catch crates surrounding the vehicle.'
+      },
       mainVehicle: [
         'Large refrigerated cargo delivery truck (Front 3/4, side profile, front, rear 3/4)',
         'Bonnet-open view, heavy-duty engine-bay, and commercial truck battery compartment',
@@ -538,6 +715,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       subtitle: 'Field tractor, farming tools & festive Punjabi wedding celebration props',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Tractor_Seq_jd8v1u.png',
       badge: 'Film 03 — Tractor',
+      storyboard: {
+        sceneTitle: 'Film 03 Tractor Storyboard • Field Baraat Halt',
+        shotTag: 'Tractor SB Scene 01 • Frame 03',
+        url: 'https://lh3.googleusercontent.com/d/1NTtmKqHWwF6ZCNw_9LuLxjRLFVkDt0uJ',
+        sceneContext: 'Decorated tractor stalled in wheatfield with baraat guests and dhol players gathered in anticipation.'
+      },
       mainVehicle: [
         'Punjabi agricultural tractor (Front 3/4, side profile, front view, rear 3/4)',
         'Bonnet-open view, engine and battery compartment detail, agricultural wheels',
@@ -562,6 +745,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       subtitle: 'Everyday urban motorcycle & high-stakes job interview candidate essentials',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Bike_cuffkf.png',
       badge: 'Film 04 — Bike',
+      storyboard: {
+        sceneTitle: 'Film 04 Bike Storyboard • Street Kickstart Failure',
+        shotTag: 'Bike SB Scene 01 • Frame 03',
+        url: 'https://lh3.googleusercontent.com/d/1V34IZzvcW8e1Hi1P891n4N0DXmqh8698',
+        sceneContext: 'Motorcycle side panel opened with candidate and driver inspecting the dead battery unit.'
+      },
       mainVehicle: [
         'Practical Pakistani commuter motorcycle (Front 3/4, side profile, front, rear 3/4)',
         'Detailed engine view, motorcycle battery compartment, battery removed, open side panel',
@@ -587,6 +776,12 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       subtitle: 'Inverter unit, deep-cycle battery, wedding morning appliances & comedy plate box',
       url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Wedding_zgf47s.png',
       badge: 'Film 05 — UPS',
+      storyboard: {
+        sceneTitle: 'Film 05 UPS Storyboard • Wedding Home Blackout & Inverter Room',
+        shotTag: 'UPS SB Scene 01 • Frame 03',
+        url: 'https://lh3.googleusercontent.com/d/1Q3j1LeNDLNw4X7OplZON3tXbmag2eTSG',
+        sceneContext: 'Darkened haveli room illuminated by phone torch as wedding guests inspect the silent inverter setup.'
+      },
       mainVehicle: [
         'Modern household UPS / inverter unit and deep-cycle battery (hero product view)',
         'Battery cable and terminal details, inverter connection cables',
@@ -621,6 +816,11 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       permits: 'Walled City of Lahore Authority (WCLA) & City Traffic Police Lahore (CTPL)',
       baseCamp: 'Hazuri Bagh / Fort Road Staging Bay',
       lightingWindow: '06:00 AM – 11:30 AM (Morning Golden Sun & Heat Shimmer)',
+      storyboard: {
+        sceneTitle: 'Film 01 Car • Historic Perimeter Traffic Jam',
+        shotTag: 'Car SB Scene 01 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1Hv7Vu1IgLujmqJCuXoROTZQI8T81H6Fe'
+      },
       productionDesign: [
         'Major traffic congestion with bumper-to-bumper gridlock',
         'Luxury executive car stalled with bonnet open and heat shimmer',
@@ -643,6 +843,11 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       permits: 'Karachi Port Trust (KPT), Fishermen Cooperative & Coastal District Admin',
       baseCamp: 'Ibrahim Hyderi Marine Compound Staging Area',
       lightingWindow: '05:30 AM – 10:30 AM (Dawn Sea Mist & High Tide)',
+      storyboard: {
+        sceneTitle: 'Film 02 Truck • Marine Harbor Seafood Crisis',
+        shotTag: 'Truck SB Scene 01 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1LscTDgYe3ojAE2oSiVsDEPdFMKIXeTXy'
+      },
       productionDesign: [
         'Hundreds of traditional carved wooden fishing boats docked',
         'Weathered wooden piers, hanging fishing nets & fish crates',
@@ -665,6 +870,11 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       permits: 'Local Landowners Agreement & District Administration Lahore',
       baseCamp: 'Kareem Block Perimeter Agronomy Center',
       lightingWindow: '07:00 AM – 05:30 PM (Full Daylight, Magic Hour & Sunset)',
+      storyboard: {
+        sceneTitle: 'Film 03 Tractor • Golden Harvest Field & Procession',
+        shotTag: 'Tractor SB Scene 01 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1NTtmKqHWwF6ZCNw_9LuLxjRLFVkDt0uJ'
+      },
       productionDesign: [
         'Large open agricultural space with long panoramic horizon line',
         'Working agricultural tractor access with soil furrows',
@@ -687,6 +897,11 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       permits: 'Packages Mall Management & Security Operations Directorate',
       baseCamp: 'Packages Mall North Logistics & Staging Concourse',
       lightingWindow: '07:30 AM – 12:30 PM (Crisp Morning Metropolitan Daylight)',
+      storyboard: {
+        sceneTitle: 'Film 04 Bike • Corporate Promenade Transit',
+        shotTag: 'Bike SB Scene 01 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1V34IZzvcW8e1Hi1P891n4N0DXmqh8698'
+      },
       productionDesign: [
         'Modern urban promenade with clean contemporary architectural lines',
         'Flow of smartly dressed young corporate professionals',
@@ -709,6 +924,11 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       permits: 'Fakir Khana Trust & Heritage Directorate Agreement',
       baseCamp: 'Bhati Gate Courtyard & Technical Power Compound',
       lightingWindow: '03:00 PM – 11:30 PM (Dusk Warm Ambience to Dramatic Night Blackout)',
+      storyboard: {
+        sceneTitle: 'Film 05 UPS • Heritage Haveli Wedding Blackout',
+        shotTag: 'UPS SB Scene 01 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1Q3j1LeNDLNw4X7OplZON3tXbmag2eTSG'
+      },
       productionDesign: [
         'The house must feel completely alive with frenetic wedding preparations',
         'Kitchen activity: brewing steaming tea, blenders roaring, food prep',
@@ -732,6 +952,11 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
       permits: 'Evernew Studios Operations & Booking Management',
       baseCamp: 'Evernew Studios Soundstage Facility & Dressing Rooms',
       lightingWindow: '24/7 Controlled Studio Grid (5600K Clean Diagnostic Daylight)',
+      storyboard: {
+        sceneTitle: 'Master Storyboard • Technical Laboratory Diagnostics',
+        shotTag: 'MSB Scene 03 • Frame 01',
+        url: 'https://lh3.googleusercontent.com/d/1qjrhTiRs9D5WNf10lsYAKG7cDiNyiJi6'
+      },
       productionDesign: [
         'Precision soundproof studio stage with motorized overhead lighting grid',
         'High-speed Phantom Flex 4K camera rig for 1000 FPS macro liquid & spark shots',
@@ -756,12 +981,74 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
     <div className="space-y-8 font-sans">
       
       {/* 1. TOP DOCKET / TAB NAVIGATION BAR */}
-      <div className="bg-zinc-900 text-white p-2 sm:p-2.5 rounded-2xl border border-zinc-800 shadow-md">
+      <div className="bg-zinc-900 text-white p-2.5 sm:p-3 rounded-2xl border border-zinc-800 shadow-md space-y-3">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800/80 pb-2.5">
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#c69a53] bg-amber-500/15 border border-amber-500/30 px-2 py-0.5 rounded-md font-mono">
+                Chapter 07
+              </span>
+              <h2 className="text-base sm:text-lg font-black text-white tracking-tight">
+                Art & Talent
+              </h2>
+            </div>
+            <p className="text-[11px] text-zinc-400 mt-0.5">
+              Production design, wardrobe design, vehicle & prop, locations and Talent Agreement.
+            </p>
+          </div>
+
+          {/* Download Action Buttons */}
+          <div className="flex items-center gap-2">
+            {/* Context-aware section-specific download */}
+            <button
+              onClick={() => {
+                if (activeTab === 'wardrobe') onDownloadPdf('wardrobe');
+                else if (activeTab === 'vehicles-props') onDownloadPdf('vehicles');
+                else if (activeTab === 'locations' || activeTab === 'moodboard') onDownloadPdf('locations');
+                else if (activeTab === 'contract') onDownloadPdf('talent');
+                else onDownloadPdf('all');
+              }}
+              disabled={isGeneratingPdf}
+              className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-sm ${
+                isGeneratingPdf
+                  ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
+                  : 'bg-zinc-800 hover:bg-zinc-700 text-amber-300 border border-amber-500/40 hover:border-amber-500 active:scale-95'
+              }`}
+              title="Download only this active section as PDF"
+            >
+              <Download className="w-3.5 h-3.5 text-[#c69a53]" />
+              <span>
+                {activeTab === 'wardrobe' && 'Download Wardrobe PDF'}
+                {activeTab === 'vehicles-props' && 'Download Vehicles & Props PDF'}
+                {(activeTab === 'locations' || activeTab === 'moodboard') && 'Download Locations PDF'}
+                {activeTab === 'contract' && 'Download Talent Agreement PDF'}
+                {['films', 'mobile-labs', 'color-priorities'].includes(activeTab) && 'Download Section PDF'}
+              </span>
+            </button>
+
+            {/* Complete Grand Chapter PDF */}
+            <button
+              onClick={() => onDownloadPdf('all')}
+              disabled={isGeneratingPdf}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-xs font-extrabold transition-all cursor-pointer shadow-md ${
+                isGeneratingPdf
+                  ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-amber-500 via-amber-400 to-amber-500 hover:from-amber-400 hover:to-amber-300 text-black active:scale-95 shadow-amber-500/20'
+              }`}
+              title="Download Complete Art, Vehicles, Locations & Talent Lookbook PDF (All Sections Combined)"
+            >
+              <Download className={`w-3.5 h-3.5 ${isGeneratingPdf ? 'animate-bounce' : ''}`} />
+              <span>{isGeneratingPdf ? 'Generating PDF...' : 'Download Full Chapter PDF'}</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Tab Navigation Strip */}
         <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           
           <button
             onClick={() => setActiveTab('wardrobe')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'wardrobe'
                 ? 'bg-[#c69a53] text-black shadow-md font-extrabold'
                 : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
@@ -778,7 +1065,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
 
           <button
             onClick={() => setActiveTab('vehicles-props')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'vehicles-props'
                 ? 'bg-[#c69a53] text-black shadow-md font-extrabold'
                 : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
@@ -795,7 +1082,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
 
           <button
             onClick={() => setActiveTab('films')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'films'
                 ? 'bg-[#c69a53] text-black shadow-md font-extrabold'
                 : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
@@ -807,7 +1094,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
 
           <button
             onClick={() => setActiveTab('mobile-labs')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'mobile-labs'
                 ? 'bg-[#c69a53] text-black shadow-md font-extrabold'
                 : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
@@ -819,7 +1106,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
 
           <button
             onClick={() => setActiveTab('color-priorities')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'color-priorities'
                 ? 'bg-[#c69a53] text-black shadow-md font-extrabold'
                 : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
@@ -834,7 +1121,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
 
           <button
             onClick={() => setActiveTab('locations')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'locations'
                 ? 'bg-[#c69a53] text-black shadow-md font-extrabold'
                 : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
@@ -851,7 +1138,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
 
           <button
             onClick={() => setActiveTab('moodboard')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'moodboard'
                 ? 'bg-[#c69a53] text-black shadow-md font-extrabold'
                 : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
@@ -863,7 +1150,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
 
           <button
             onClick={() => setActiveTab('contract')}
-            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'contract'
                 ? 'bg-[#c69a53] text-black shadow-md font-extrabold'
                 : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
@@ -875,22 +1162,6 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
               Legal
             </span>
           </button>
-
-          <div className="ml-auto">
-            <button
-              onClick={onDownloadPdf}
-              disabled={isGeneratingPdf}
-              className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-md ${
-                isGeneratingPdf
-                  ? 'bg-zinc-700 text-zinc-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-black font-extrabold hover:shadow-lg active:scale-98'
-              }`}
-              title="Download Complete Art, Vehicles, Locations & Talent Lookbook PDF"
-            >
-              <Download className={`w-4 h-4 ${isGeneratingPdf ? 'animate-bounce' : ''}`} />
-              <span>{isGeneratingPdf ? 'Generating PDF...' : 'Download Full PDF'}</span>
-            </button>
-          </div>
 
         </div>
       </div>
@@ -952,7 +1223,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
                   02. Central Visual Device & Separation Rule
                 </span>
                 <p className="text-zinc-300 leading-relaxed">
-                  Iftikhar Thakur appears as different characters in each film, while the <strong className="text-white">Battery Expert look remains visually consistent</strong>: Clean white lab coat, neutral shalwar qameez underneath, and <span className="text-amber-400 font-bold">ABSOLUTELY NO HEADWEAR</span>.
+                  Iftikhar Thakur appears as different characters in each film, while the <strong className="text-white">Battery Expert look remains visually consistent</strong>: Clean premium white lab coat, crisp shirt with tie, formal pants and shoes underneath, rubber gloves, and <span className="text-amber-400 font-bold">ABSOLUTELY NO HEADWEAR</span>.
                 </p>
               </div>
             </div>
@@ -960,116 +1231,186 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
 
           {/* 16 Character Sheets Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredCharacters.map((char) => (
-              <div
-                key={char.id}
-                onClick={() => {
-                  if (char.url) onImageClick(char.id);
-                }}
-                className={`group flex flex-col bg-white rounded-2xl border border-zinc-200 shadow-sm hover:shadow-xl hover:border-[#c69a53]/80 transition-all duration-300 overflow-hidden ${
-                  char.url ? 'cursor-pointer' : 'cursor-default'
-                }`}
-              >
-                {/* Header Strip */}
-                <div className="px-5 py-3.5 bg-zinc-50 border-b border-zinc-100 flex items-center justify-between">
-                  <div>
-                    <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#b8860b] block font-mono">
-                      Sheet {char.id < 9 ? `0${char.id + 1}` : `${char.id + 1}`} • {char.filmLabel}
-                    </span>
-                    <h4 className="text-sm sm:text-base font-bold text-zinc-900 group-hover:text-[#b8860b] transition-colors">
-                      {char.title}
-                    </h4>
-                  </div>
-                  {char.url ? (
-                    <span className="text-[11px] font-semibold text-zinc-500 bg-white border border-zinc-200 px-2.5 py-1 rounded-full flex items-center gap-1.5 group-hover:border-[#c69a53] group-hover:text-[#b8860b] transition-all shadow-2xs">
-                      <ZoomIn className="w-3.5 h-3.5" /> Enlarge
-                    </span>
-                  ) : (
-                    <span className="text-[10px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-full flex items-center gap-1">
-                      Spec Sheet Ready
-                    </span>
-                  )}
-                </div>
+            {filteredCharacters.map((char) => {
+              const cardKey = `char-${char.id}`;
+              const currentView = cardViewMap[cardKey] || 'art';
+              const isStoryboard = currentView === 'storyboard' && !!char.storyboard?.url;
+              const displayUrl = isStoryboard ? char.storyboard.url : char.url;
 
-                {/* Character Sheet Visual Image Frame */}
-                <div className="relative w-full aspect-[4/3] bg-zinc-950 flex items-center justify-center p-2 sm:p-3 overflow-hidden">
-                  {char.url ? (
-                    <>
-                      <img
-                        src={char.url}
-                        alt={char.title}
-                        className="w-full h-full object-contain rounded-lg transition-transform duration-500 ease-out group-hover:scale-[1.03]"
-                        loading="lazy"
-                      />
-                      {/* Subtle Hover Overlay */}
-                      <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
-                        <span className="px-4 py-2 bg-zinc-900/90 text-white rounded-full text-xs font-semibold tracking-wide shadow-xl backdrop-blur-md flex items-center gap-2">
-                          <ZoomIn className="w-4 h-4 text-[#c69a53]" />
-                          <span>Click to Enlarge Sheet & Inspect</span>
+              return (
+                <div
+                  key={char.id}
+                  className={`group flex flex-col bg-white rounded-2xl border ${
+                    isStoryboard ? 'border-amber-400 ring-2 ring-amber-400/20' : 'border-zinc-200'
+                  } shadow-sm hover:shadow-xl hover:border-[#c69a53]/80 transition-all duration-300 overflow-hidden`}
+                >
+                  {/* Header Strip with View Switcher */}
+                  <div className="px-5 py-3.5 bg-zinc-50 border-b border-zinc-100 flex flex-wrap items-center justify-between gap-2">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#b8860b] block font-mono">
+                        Sheet {char.id < 9 ? `0${char.id + 1}` : `${char.id + 1}`} • {char.filmLabel}
+                      </span>
+                      <h4 className="text-sm sm:text-base font-bold text-zinc-900 group-hover:text-[#b8860b] transition-colors">
+                        {char.title}
+                      </h4>
+                    </div>
+
+                    {/* View Switcher Buttons (Art Look vs Storyboard Frame) */}
+                    <div className="flex items-center gap-1 bg-zinc-200/80 p-1 rounded-xl">
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          toggleCardView(cardKey, 'art');
+                        }}
+                        className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                          !isStoryboard
+                            ? 'bg-white text-zinc-900 shadow-2xs font-extrabold'
+                            : 'text-zinc-500 hover:text-zinc-900'
+                        }`}
+                      >
+                        <Sparkles className="w-3 h-3 text-[#c69a53]" />
+                        <span>Art Look</span>
+                      </button>
+
+                      {char.storyboard?.url && (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleCardView(cardKey, 'storyboard');
+                          }}
+                          className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                            isStoryboard
+                              ? 'bg-amber-500 text-black shadow-2xs font-extrabold'
+                              : 'text-zinc-600 hover:text-zinc-900'
+                          }`}
+                        >
+                          <Film className="w-3 h-3" />
+                          <span>Storyboard</span>
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Visual Image Frame */}
+                  <div
+                    onClick={() => {
+                      if (displayUrl) {
+                        const idx = chapter.galleryImages?.findIndex(g => g.url === displayUrl);
+                        if (idx !== -1 && idx !== undefined) onImageClick(idx);
+                        else onImageClick(char.id);
+                      }
+                    }}
+                    className="relative w-full aspect-[4/3] bg-zinc-950 flex items-center justify-center p-2 sm:p-3 overflow-hidden cursor-pointer"
+                  >
+                    {displayUrl ? (
+                      <>
+                        <img
+                          src={displayUrl}
+                          alt={isStoryboard ? `${char.title} - Storyboard Frame` : char.title}
+                          className="w-full h-full object-contain rounded-lg transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                          loading="lazy"
+                        />
+
+                        {/* Storyboard or Art Badge */}
+                        <div className="absolute top-3 left-3 pointer-events-none">
+                          {isStoryboard ? (
+                            <span className="px-2.5 py-1 bg-amber-500 text-black text-[10px] font-black uppercase tracking-wider rounded-lg shadow-lg flex items-center gap-1">
+                              <Film className="w-3 h-3" /> Storyboard: {char.storyboard?.shotTag || 'Shot Frame'}
+                            </span>
+                          ) : (
+                            <span className="px-2.5 py-1 bg-black/70 backdrop-blur-xs text-white text-[10px] font-bold uppercase tracking-wider rounded-lg border border-white/20">
+                              Art Lookbook Sheet
+                            </span>
+                          )}
+                        </div>
+
+                        {/* Subtle Hover Overlay */}
+                        <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+                          <span className="px-4 py-2 bg-zinc-900/90 text-white rounded-full text-xs font-semibold tracking-wide shadow-xl backdrop-blur-md flex items-center gap-2">
+                            <ZoomIn className="w-4 h-4 text-[#c69a53]" />
+                            <span>Click to Enlarge & Inspect</span>
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <div className="flex flex-col items-center justify-center text-center p-6 space-y-3 bg-zinc-900/90 w-full h-full rounded-lg border border-zinc-800">
+                        <div className="w-14 h-14 rounded-2xl bg-zinc-800/80 border border-[#c69a53]/40 flex items-center justify-center text-[#c69a53]">
+                          <Camera className="w-7 h-7" />
+                        </div>
+                        <div>
+                          <span className="text-xs font-bold text-white block">Visual Reference Sheet</span>
+                          <span className="text-[11px] text-zinc-400 block mt-0.5">Image link to be linked shortly • Specifications approved below</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Context Callout if in Storyboard Mode */}
+                  {isStoryboard && char.storyboard && (
+                    <div className="bg-amber-50 border-y border-amber-200 px-4 py-2.5 flex items-start gap-2.5 text-xs text-amber-950">
+                      <Film className="w-4 h-4 text-amber-700 shrink-0 mt-0.5" />
+                      <div>
+                        <span className="font-extrabold text-amber-900 block">
+                          Storyboard Scene: {char.storyboard.sceneTitle} ({char.storyboard.shotTag})
+                        </span>
+                        <p className="text-[11px] text-amber-800 leading-snug mt-0.5">
+                          {char.storyboard.sceneContext}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Character Details & Specs */}
+                  <div className="p-4 sm:p-5 bg-white space-y-3.5 flex-1 flex flex-col justify-between">
+                    <div className="space-y-2.5">
+                      
+                      {/* Role & Actor Bar */}
+                      <div className="flex items-center justify-between text-xs">
+                        <span className="font-bold text-zinc-800">{char.actor}</span>
+                        <span className="font-semibold text-amber-900 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200 text-[11px]">
+                          {char.role}
                         </span>
                       </div>
-                    </>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center text-center p-6 space-y-3 bg-zinc-900/90 w-full h-full rounded-lg border border-zinc-800">
-                      <div className="w-14 h-14 rounded-2xl bg-zinc-800/80 border border-[#c69a53]/40 flex items-center justify-center text-[#c69a53]">
-                        <Camera className="w-7 h-7" />
-                      </div>
-                      <div>
-                        <span className="text-xs font-bold text-white block">Visual Reference Sheet</span>
-                        <span className="text-[11px] text-zinc-400 block mt-0.5">Image link to be linked shortly • Specifications approved below</span>
-                      </div>
-                    </div>
-                  )}
-                </div>
 
-                {/* Character Details & Specs */}
-                <div className="p-4 sm:p-5 bg-white space-y-3.5 flex-1 flex flex-col justify-between">
-                  <div className="space-y-2.5">
-                    
-                    {/* Role & Actor Bar */}
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="font-bold text-zinc-800">{char.actor}</span>
-                      <span className="font-semibold text-amber-900 bg-amber-50 px-2.5 py-0.5 rounded-full border border-amber-200 text-[11px]">
-                        {char.role}
+                      {/* Wardrobe Breakdown Bullet Points */}
+                      <div className="bg-zinc-50 p-3 rounded-xl border border-zinc-100 space-y-1.5">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 block">
+                          Wardrobe Specifications:
+                        </span>
+                        <ul className="space-y-1 text-xs text-zinc-700">
+                          {char.wardrobePoints.map((pt, idx) => (
+                            <li key={idx} className="flex items-start gap-1.5">
+                              <span className="text-[#c69a53] font-bold">•</span>
+                              <span>{pt}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      {/* Headwear & Visual Rule Highlights */}
+                      <div className="space-y-1 text-xs">
+                        <div className="p-2 bg-amber-50/80 border border-amber-200/80 rounded-lg text-amber-900 text-[11px]">
+                          <strong>Headwear Rule: </strong>{char.headRule}
+                        </div>
+                        <p className="text-[11px] text-zinc-500 pt-1 leading-snug">
+                          <strong>Performance Tone: </strong>{char.performance}
+                        </p>
+                      </div>
+
+                    </div>
+
+                    <div className="pt-2.5 border-t border-zinc-100 flex items-center justify-between text-[11px] text-zinc-400">
+                      <span>Key Rule: {char.visualRule.split('.')[0]}</span>
+                      <span className="font-mono text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                        Approved Sheet
                       </span>
                     </div>
-
-                    {/* Wardrobe Breakdown Bullet Points */}
-                    <div className="bg-zinc-50 p-3 rounded-xl border border-zinc-100 space-y-1.5">
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 block">
-                        Wardrobe Specifications:
-                      </span>
-                      <ul className="space-y-1 text-xs text-zinc-700">
-                        {char.wardrobePoints.map((pt, idx) => (
-                          <li key={idx} className="flex items-start gap-1.5">
-                            <span className="text-[#c69a53] font-bold">•</span>
-                            <span>{pt}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    {/* Headwear & Visual Rule Highlights */}
-                    <div className="space-y-1 text-xs">
-                      <div className="p-2 bg-amber-50/80 border border-amber-200/80 rounded-lg text-amber-900 text-[11px]">
-                        <strong>Headwear Rule: </strong>{char.headRule}
-                      </div>
-                      <p className="text-[11px] text-zinc-500 pt-1 leading-snug">
-                        <strong>Performance Tone: </strong>{char.performance}
-                      </p>
-                    </div>
-
-                  </div>
-
-                  <div className="pt-2.5 border-t border-zinc-100 flex items-center justify-between text-[11px] text-zinc-400">
-                    <span>Key Rule: {char.visualRule.split('.')[0]}</span>
-                    <span className="font-mono text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                      Approved Sheet
-                    </span>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
         </div>
@@ -1182,15 +1523,21 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
           {/* Grid of Vehicle & Prop Sheets */}
           <div className="grid grid-cols-1 gap-6">
             {filteredVehicleProps.map((sheet) => {
-              const galleryIdx = chapter.galleryImages?.findIndex(g => g.url === sheet.url);
+              const cardKey = `veh-${sheet.id}`;
+              const currentView = cardViewMap[cardKey] || 'art';
+              const isStoryboard = currentView === 'storyboard' && !!sheet.storyboard?.url;
+              const displayUrl = isStoryboard ? sheet.storyboard.url : sheet.url;
+              const galleryIdx = chapter.galleryImages?.findIndex(g => g.url === displayUrl);
               const activeIndex = galleryIdx !== -1 && galleryIdx !== undefined ? galleryIdx : 0;
 
               return (
                 <div
                   key={sheet.id}
-                  className="bg-white rounded-2xl border border-zinc-200 shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-all group"
+                  className={`bg-white rounded-2xl border ${
+                    isStoryboard ? 'border-amber-400 ring-2 ring-amber-400/20' : 'border-zinc-200'
+                  } shadow-sm overflow-hidden flex flex-col hover:shadow-md transition-all group`}
                 >
-                  {/* Sheet Header */}
+                  {/* Sheet Header with View Switcher */}
                   <div className="bg-zinc-900 text-white px-5 py-3.5 flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800">
                     <div className="flex items-center gap-3">
                       <span className="text-[11px] font-mono font-bold bg-[#c69a53] text-black px-2.5 py-0.5 rounded-md">
@@ -1200,9 +1547,43 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
                         {sheet.title}
                       </h4>
                     </div>
-                    <span className="text-[11px] font-semibold text-zinc-300 bg-zinc-800 px-3 py-1 rounded-full border border-zinc-700">
-                      {sheet.badge}
-                    </span>
+
+                    <div className="flex items-center gap-2">
+                      {/* View Switcher */}
+                      <div className="flex items-center gap-1 bg-zinc-800 p-1 rounded-xl border border-zinc-700">
+                        <button
+                          type="button"
+                          onClick={() => toggleCardView(cardKey, 'art')}
+                          className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                            !isStoryboard
+                              ? 'bg-[#c69a53] text-black shadow-xs font-extrabold'
+                              : 'text-zinc-400 hover:text-white'
+                          }`}
+                        >
+                          <Boxes className="w-3 h-3" />
+                          <span>Vehicle Grid</span>
+                        </button>
+
+                        {sheet.storyboard?.url && (
+                          <button
+                            type="button"
+                            onClick={() => toggleCardView(cardKey, 'storyboard')}
+                            className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                              isStoryboard
+                                ? 'bg-amber-500 text-black shadow-xs font-extrabold'
+                                : 'text-zinc-400 hover:text-white'
+                            }`}
+                          >
+                            <Film className="w-3 h-3" />
+                            <span>Storyboard</span>
+                          </button>
+                        )}
+                      </div>
+
+                      <span className="text-[11px] font-semibold text-zinc-300 bg-zinc-800 px-3 py-1 rounded-full border border-zinc-700 hidden sm:inline-block">
+                        {sheet.badge}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Body Content */}
@@ -1215,18 +1596,45 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
                         className="relative w-full aspect-square bg-zinc-950 rounded-xl overflow-hidden cursor-pointer border border-zinc-800 flex items-center justify-center group/img shadow-inner"
                       >
                         <img
-                          src={sheet.url}
-                          alt={sheet.title}
+                          src={displayUrl}
+                          alt={isStoryboard ? `${sheet.title} - Storyboard Frame` : sheet.title}
                           className="w-full h-full object-contain p-2 group-hover/img:scale-102 transition-transform duration-300"
                         />
+                        
+                        {/* Storyboard or Art Badge */}
+                        <div className="absolute top-3 left-3 pointer-events-none">
+                          {isStoryboard ? (
+                            <span className="px-2.5 py-1 bg-amber-500 text-black text-[10px] font-black uppercase tracking-wider rounded-lg shadow-lg flex items-center gap-1">
+                              <Film className="w-3 h-3" /> Storyboard: {sheet.storyboard?.shotTag || 'Shot Frame'}
+                            </span>
+                          ) : (
+                            <span className="px-2.5 py-1 bg-black/70 backdrop-blur-xs text-white text-[10px] font-bold uppercase tracking-wider rounded-lg border border-white/20">
+                              4K Prop Grid
+                            </span>
+                          )}
+                        </div>
+
                         <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center gap-2">
                           <span className="px-3 py-1.5 bg-black/80 text-white text-xs font-bold rounded-lg flex items-center gap-1.5 backdrop-blur-xs border border-white/20">
-                            <ZoomIn className="w-3.5 h-3.5 text-[#c69a53]" /> Click to Inspect 4K Grid
+                            <ZoomIn className="w-3.5 h-3.5 text-[#c69a53]" /> Click to Inspect High-Res
                           </span>
                         </div>
                       </div>
 
-                      {sheet.altOptionUrl && (
+                      {/* Storyboard Context Note */}
+                      {isStoryboard && sheet.storyboard && (
+                        <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs text-amber-950 space-y-1">
+                          <span className="font-extrabold text-amber-900 block flex items-center gap-1.5">
+                            <Film className="w-3.5 h-3.5 text-amber-700" />
+                            {sheet.storyboard.sceneTitle} ({sheet.storyboard.shotTag})
+                          </span>
+                          <p className="text-[11px] text-amber-800 leading-snug">
+                            {sheet.storyboard.sceneContext}
+                          </p>
+                        </div>
+                      )}
+
+                      {!isStoryboard && sheet.altOptionUrl && (
                         <div className="flex items-center justify-between text-xs bg-zinc-50 p-2.5 rounded-xl border border-zinc-200">
                           <span className="text-zinc-600 font-medium">Alternative Livery Concept:</span>
                           <button
@@ -1362,11 +1770,11 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
               <div className="bg-zinc-800/80 p-4 rounded-xl border border-zinc-700 space-y-2">
                 <strong className="text-white block text-sm">Wardrobe Direction:</strong>
                 <ul className="space-y-1 text-zinc-300">
-                  <li>• Clean white laboratory coat</li>
-                  <li>• Crisp, practical and contemporary</li>
-                  <li>• White or very light neutral shalwar qameez underneath</li>
-                  <li>• Minimal styling, no tie, no medical costume clichés</li>
-                  <li>• No gloves unless required for a technical action</li>
+                  <li>• Clean premium white laboratory coat (sharp, structured fit)</li>
+                  <li>• Crisp shirt and nice tie underneath</li>
+                  <li>• Formal pants and formal shoes</li>
+                  <li>• No traditional Pakistani shalwar qameez</li>
+                  <li>• Rubber gloves (no medical equipment / no stethoscope)</li>
                 </ul>
               </div>
 
@@ -1383,7 +1791,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
               <div className="bg-zinc-800/80 p-4 rounded-xl border border-zinc-700 space-y-2">
                 <strong className="text-white block text-sm">Performance & Key Visual Rule:</strong>
                 <p className="text-zinc-300">
-                  He should feel like a combination of senior surgeon, technical scientist, and emergency-response expert — but still unmistakably Iftikhar Thakur.
+                  He should feel like a combination of senior technical scientist, high-tech engineer, and emergency-response expert — but still unmistakably Iftikhar Thakur.
                 </p>
                 <div className="p-2.5 bg-amber-500/15 border border-amber-500/30 rounded-lg text-amber-300 font-bold">
                   Rule: The Battery Expert must always feel cleaner, sharper and more premium than the character version of Thakur.
@@ -1423,7 +1831,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
                 <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-200 space-y-2">
                   <strong className="text-zinc-900 block text-sm">Battery Expert & Visual Separation:</strong>
                   <p className="text-zinc-700">
-                    White laboratory coat, traditional light shalwar qameez underneath, NO police cap, NO headwear.
+                    Clean premium white laboratory coat, crisp shirt, tie, formal pants and formal shoes underneath, rubber gloves, NO police cap, NO headwear.
                   </p>
                   <div className="p-2 bg-amber-50 border border-amber-200 rounded-lg text-amber-900 font-bold">
                     Visual Separation: The Policeman and Battery Expert must never appear visually confused.
@@ -1460,10 +1868,10 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
                 <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-200 space-y-2">
                   <strong className="text-zinc-900 block text-sm">Battery Expert Contrast:</strong>
                   <p className="text-zinc-700">
-                    White laboratory coat, traditional shalwar qameez underneath, NO Pathan cap, NO headwear.
+                    Clean premium white laboratory coat, crisp shirt, tie, formal pants and formal shoes underneath, rubber gloves, NO Pathan cap, NO headwear.
                   </p>
                   <div className="text-zinc-600">
-                    The crisp laboratory coat immediately establishes technical superiority against the rugged port environment.
+                    The crisp laboratory coat and sharp formal styling immediately establish technical superiority against the rugged port environment.
                   </div>
                 </div>
               </div>
@@ -1508,7 +1916,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
                 <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-200 space-y-2">
                   <strong className="text-zinc-900 block text-sm">Battery Expert Contrast:</strong>
                   <p className="text-zinc-700">
-                    White laboratory coat, traditional shalwar qameez, NO turban, NO headwear.
+                    Clean premium white laboratory coat, crisp shirt, tie, formal pants and formal shoes underneath, rubber gloves, NO turban, NO headwear.
                   </p>
                   <div className="p-2 bg-emerald-50 border border-emerald-200 rounded-lg text-emerald-900 font-bold">
                     Clear visual shock when Battery Expert arrives without headwear in the rural field.
@@ -1542,7 +1950,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
                 <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-200 space-y-2">
                   <strong className="text-zinc-900 block text-sm">Battery Expert:</strong>
                   <p className="text-zinc-700">
-                    White laboratory coat, traditional shalwar qameez, NO headwear. Far more polished and authoritative than the ordinary morning character.
+                    Clean premium white laboratory coat, crisp shirt, tie, formal pants and formal shoes underneath, rubber gloves, NO headwear. Far more polished and authoritative than the ordinary morning character.
                   </p>
                 </div>
               </div>
@@ -1573,7 +1981,7 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
                 <div className="bg-zinc-50 p-4 rounded-xl border border-zinc-200 space-y-2">
                   <strong className="text-zinc-900 block text-sm">Battery Expert:</strong>
                   <p className="text-zinc-700">
-                    White laboratory coat, traditional shalwar qameez, NO headwear. Delivers instant power restoration with high-tech poise.
+                    Clean premium white laboratory coat, crisp shirt, tie, formal pants and formal shoes underneath, rubber gloves, NO headwear. Delivers instant power restoration with high-tech poise.
                   </p>
                 </div>
               </div>
@@ -2237,48 +2645,114 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
           </div>
 
           {/* Selected Location Detailed Dossier Card */}
-          {locationsList[activeLocationIndex] && (
-            <div className="bg-white rounded-2xl border border-zinc-200 overflow-hidden shadow-md">
-              <div className="grid grid-cols-1 lg:grid-cols-12">
-                
-                {/* Left Visual Preview */}
-                <div 
-                  onClick={() => {
-                    const gIdx = chapter.galleryImages?.findIndex(g => g.url === locationsList[activeLocationIndex].refImage);
-                    if (gIdx !== -1 && gIdx !== undefined) onImageClick(gIdx);
-                  }}
-                  className="lg:col-span-5 relative bg-zinc-950 min-h-[260px] flex items-center justify-center overflow-hidden cursor-pointer group/loc"
-                >
-                  <img
-                    src={locationsList[activeLocationIndex].refImage}
-                    alt={locationsList[activeLocationIndex].title}
-                    className="w-full h-full object-cover min-h-[260px] opacity-90 group-hover/loc:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-between p-5 text-white">
-                    <div className="flex justify-end">
-                      <span className="px-2.5 py-1 bg-black/70 rounded-lg text-[10px] font-bold text-white flex items-center gap-1 border border-white/20 backdrop-blur-xs opacity-0 group-hover/loc:opacity-100 transition-opacity">
-                        <ZoomIn className="w-3 h-3 text-[#c69a53]" /> Inspect 4K Scout Photo
-                      </span>
-                    </div>
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-[#c69a53]">
-                        Location Dossier 0{activeLocationIndex + 1}
-                      </span>
-                      <h4 className="text-lg font-bold text-white">
-                        {locationsList[activeLocationIndex].title}
-                      </h4>
-                      <span className="text-xs text-zinc-300 flex items-center gap-1.5 mt-1">
-                        <MapPin className="w-3.5 h-3.5 text-[#c69a53]" />
-                        {locationsList[activeLocationIndex].city}
-                      </span>
-                    </div>
+          {locationsList[activeLocationIndex] && (() => {
+            const loc = locationsList[activeLocationIndex];
+            const cardKey = `loc-${loc.id}`;
+            const currentView = cardViewMap[cardKey] || 'art';
+            const isStoryboard = currentView === 'storyboard' && !!loc.storyboard?.url;
+            const displayUrl = isStoryboard ? loc.storyboard.url : loc.refImage;
+
+            return (
+              <div className={`bg-white rounded-2xl border ${
+                isStoryboard ? 'border-amber-400 ring-2 ring-amber-400/20' : 'border-zinc-200'
+              } overflow-hidden shadow-md`}>
+                {/* Header Switcher Bar */}
+                <div className="bg-zinc-900 text-white px-5 py-3 border-b border-zinc-800 flex flex-wrap items-center justify-between gap-2">
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-mono font-bold bg-[#c69a53] text-black px-2 py-0.5 rounded">
+                      0{activeLocationIndex + 1}
+                    </span>
+                    <span className="text-xs font-bold text-white">
+                      {loc.title}
+                    </span>
+                  </div>
+
+                  {/* View Switcher */}
+                  <div className="flex items-center gap-1 bg-zinc-800 p-1 rounded-xl border border-zinc-700">
+                    <button
+                      type="button"
+                      onClick={() => toggleCardView(cardKey, 'art')}
+                      className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                        !isStoryboard
+                          ? 'bg-[#c69a53] text-black shadow-xs font-extrabold'
+                          : 'text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      <MapPin className="w-3 h-3" />
+                      <span>Scout Photo</span>
+                    </button>
+
+                    {loc.storyboard?.url && (
+                      <button
+                        type="button"
+                        onClick={() => toggleCardView(cardKey, 'storyboard')}
+                        className={`flex items-center gap-1 px-2.5 py-1 rounded-lg text-[11px] font-bold transition-all cursor-pointer ${
+                          isStoryboard
+                            ? 'bg-amber-500 text-black shadow-xs font-extrabold'
+                            : 'text-zinc-400 hover:text-white'
+                        }`}
+                      >
+                        <Film className="w-3 h-3" />
+                        <span>Storyboard Frame</span>
+                      </button>
+                    )}
                   </div>
                 </div>
 
-                {/* Right Details & Logistics */}
-                <div className="lg:col-span-7 p-6 space-y-4 flex flex-col justify-between">
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-zinc-100">
+                <div className="grid grid-cols-1 lg:grid-cols-12">
+                  
+                  {/* Left Visual Preview */}
+                  <div 
+                    onClick={() => {
+                      const gIdx = chapter.galleryImages?.findIndex(g => g.url === displayUrl);
+                      if (gIdx !== -1 && gIdx !== undefined) onImageClick(gIdx);
+                    }}
+                    className="lg:col-span-5 relative bg-zinc-950 min-h-[280px] flex items-center justify-center overflow-hidden cursor-pointer group/loc"
+                  >
+                    <img
+                      src={displayUrl}
+                      alt={isStoryboard ? `${loc.title} - Storyboard Frame` : loc.title}
+                      className="w-full h-full object-cover min-h-[280px] opacity-90 group-hover/loc:scale-105 transition-transform duration-500"
+                    />
+
+                    {/* Storyboard or Scout Badge */}
+                    <div className="absolute top-4 left-4 pointer-events-none">
+                      {isStoryboard ? (
+                        <span className="px-2.5 py-1 bg-amber-500 text-black text-[10px] font-black uppercase tracking-wider rounded-lg shadow-lg flex items-center gap-1">
+                          <Film className="w-3 h-3" /> Storyboard: {loc.storyboard?.shotTag || 'Shot Frame'}
+                        </span>
+                      ) : (
+                        <span className="px-2.5 py-1 bg-black/70 backdrop-blur-xs text-white text-[10px] font-bold uppercase tracking-wider rounded-lg border border-white/20">
+                          Scouted Location Photo
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent flex flex-col justify-between p-5 text-white pointer-events-none">
+                      <div className="flex justify-end">
+                        <span className="px-2.5 py-1 bg-black/70 rounded-lg text-[10px] font-bold text-white flex items-center gap-1 border border-white/20 backdrop-blur-xs opacity-0 group-hover/loc:opacity-100 transition-opacity">
+                          <ZoomIn className="w-3 h-3 text-[#c69a53]" /> Inspect High-Res
+                        </span>
+                      </div>
+                      <div>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-[#c69a53]">
+                          Location Dossier 0{activeLocationIndex + 1}
+                        </span>
+                        <h4 className="text-lg font-bold text-white">
+                          {loc.title}
+                        </h4>
+                        <span className="text-xs text-zinc-300 flex items-center gap-1.5 mt-1">
+                          <MapPin className="w-3.5 h-3.5 text-[#c69a53]" />
+                          {loc.city}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Details & Logistics */}
+                  <div className="lg:col-span-7 p-6 space-y-4 flex flex-col justify-between">
+                    <div className="space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-zinc-100">
                       <div>
                         <span className="text-[10px] font-bold uppercase text-zinc-400 block">Assigned Commercial Film:</span>
                         <span className="text-xs font-bold text-amber-900 bg-amber-50 border border-amber-200 px-2.5 py-0.5 rounded-full inline-block mt-0.5">
@@ -2357,7 +2831,8 @@ export const ArtTalentChapterView: React.FC<ArtTalentChapterViewProps> = ({
 
               </div>
             </div>
-          )}
+            );
+          })()}
 
           {/* Pakistan Production Matrix Table */}
           <div className="bg-white rounded-2xl border border-zinc-200 p-5 overflow-x-auto shadow-xs">

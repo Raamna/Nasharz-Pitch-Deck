@@ -1,6 +1,13 @@
 import React from 'react';
 import { Chapter, BrandingConfig } from '../types';
 import { generateChapterPDF } from '../utils/pdfGenerator';
+import {
+  generateWardrobeLookbookPDF,
+  generateVehiclesPropsPDF,
+  generateLocationsDossierPDF,
+  generateTalentAgreementPDF,
+  generateChapter07CompletePDF
+} from '../utils/artTalentPdfGenerator';
 import { BrandLogo } from './BrandLogo';
 import { ArtTalentChapterView } from './ArtTalentChapterView';
 import { 
@@ -362,7 +369,23 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [enlargedIndex, galleryList.length]);
 
+  const handleArtTalentDownload = async (_section?: string) => {
+    setIsGenerating(true);
+    try {
+      // Always generate the complete Master Lookbook PDF including Wardrobe, Vehicles & Props, Mobile Labs, Locations Matrix, and Talent Agreement
+      await generateChapter07CompletePDF(chapter, branding, clientName);
+    } catch (err) {
+      console.error('PDF generation error:', err);
+    } finally {
+      setIsGenerating(false);
+    }
+  };
+
   const handleDownload = async () => {
+    if (chapter.id === 'art-talent') {
+      await handleArtTalentDownload('all');
+      return;
+    }
     setIsGenerating(true);
     // Pass along active gallery images or active concept tab to make sure exported PDF matches the current view
     const isConceptTabActive = chapter.conceptTabs && activeConceptTab && activeConceptTab.id !== 'all';
@@ -640,11 +663,12 @@ export const FullChapterModal: React.FC<FullChapterModalProps> = ({
               <ArtTalentChapterView
                 chapter={chapter}
                 branding={branding}
+                initialTab={initialConceptTab}
                 onImageClick={(index) => {
                   setEnlargedIndex(index);
                   setZoomScale(1);
                 }}
-                onDownloadPdf={handleDownload}
+                onDownloadPdf={handleArtTalentDownload}
                 isGeneratingPdf={isGenerating}
               />
             ) : (chapter.folders && chapter.folders.length > 0) || (chapter.galleryImages && chapter.galleryImages.length > 0) ? (

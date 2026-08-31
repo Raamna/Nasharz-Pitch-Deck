@@ -1,25 +1,19 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 import { Chapter, BrandingConfig, EstimateItem } from '../types';
+import {
+  loadBase64ImageFast,
+  batchPreloadImages,
+  fastPreloadDomImages,
+  createSvgPlaceholder,
+  CachedImageData
+} from './imageLoader';
 
 /**
- * Preload all images inside an element so html2canvas renders them reliably
+ * Preload all images inside an element so html2canvas renders them reliably with decoded bitmaps
  */
 async function preloadImages(element: HTMLElement): Promise<void> {
-  const images = Array.from(element.querySelectorAll('img'));
-  await Promise.all(
-    images.map(
-      img =>
-        new Promise<void>((resolve) => {
-          if (img.complete && img.naturalHeight !== 0) {
-            resolve();
-            return;
-          }
-          img.onload = () => resolve();
-          img.onerror = () => resolve(); // Resolve on error too to prevent blocking
-        })
-    )
-  );
+  await fastPreloadDomImages(element);
 }
 
 /**
@@ -233,6 +227,7 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
       rh.style.marginTop = '12px';
       rh.style.marginBottom = '4px';
       rh.textContent = trimmed;
+      rh.dataset.isHeading = 'true';
       rh.dataset.isRouteHeader = 'true';
       blocks.push(rh);
       continue;
@@ -255,6 +250,7 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
       ch.style.marginTop = '6px';
       ch.style.marginBottom = '8px';
       ch.textContent = trimmed;
+      ch.dataset.isHeading = 'true';
       ch.dataset.isConceptHeading = 'true';
       blocks.push(ch);
       continue;
@@ -294,6 +290,8 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
       h.style.marginTop = '16px';
       h.style.marginBottom = '9px';
       h.textContent = trimmed;
+      h.dataset.isHeading = 'true';
+      h.dataset.isMainHeading = 'true';
       blocks.push(h);
       continue;
     }
@@ -327,6 +325,8 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
 
       sh.appendChild(dot);
       sh.appendChild(textSpan);
+      sh.dataset.isHeading = 'true';
+      sh.dataset.isSceneHeading = 'true';
       blocks.push(sh);
       continue;
     }
@@ -360,6 +360,8 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
       spk.style.textTransform = 'uppercase';
       spk.style.letterSpacing = '0.04em';
       spk.textContent = trimmed;
+      spk.dataset.isHeading = 'true';
+      spk.dataset.isSpeaker = 'true';
       blocks.push(spk);
       continue;
     }
@@ -397,6 +399,8 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
 
       sub.appendChild(bullet);
       sub.appendChild(label);
+      sub.dataset.isHeading = 'true';
+      sub.dataset.isSubhead = 'true';
       blocks.push(sub);
       continue;
     }
@@ -502,8 +506,9 @@ function parseTextToBlocks(rawText: string): HTMLElement[] {
 export async function generateChapterPDF(
   chapter: Chapter,
   branding: BrandingConfig,
-  clientName: string = 'Alaska Batteries Client'
-) {
+  clientName: string = 'Alaska Batteries Client',
+  options?: { returnBlob?: boolean; customFileName?: string; onProgress?: (status: string) => void }
+): Promise<{ blob: Blob; filename: string; folder: string } | void> {
   // Master offscreen container
   const sandbox = document.createElement('div');
   sandbox.style.position = 'fixed';
@@ -652,107 +657,10 @@ export async function generateChapterPDF(
 
   // Helper: Convert any remote image to high quality base64 data URL with multiple fallbacks
   const loadBase64Image = async (
-    rawUrl: string
+    rawUrl: string,
+    fallbackTitle: string = 'Production Visual Asset'
   ): Promise<{ dataUrl: string; width: number; height: number; aspect: number }> => {
-    if (!rawUrl) return { dataUrl: '', width: 1920, height: 1080, aspect: 16 / 9 };
-    // Extract Google Drive file ID if present
-    const driveIdMatch = rawUrl.match(/\/d\/([a-zA-Z0-9_-]+)/) || rawUrl.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-    const driveId = driveIdMatch ? driveIdMatch[1] : null;
-
-    const urlCandidates: string[] = [rawUrl];
-    if (driveId) {
-      urlCandidates.push(`https://lh3.googleusercontent.com/d/${driveId}`);
-      urlCandidates.push(`https://drive.google.com/thumbnail?id=${driveId}&sz=w2560`);
-      urlCandidates.push(`https://lh3.googleusercontent.com/u/0/d/${driveId}=w2560`);
-    }
-
-    // Strategy 1: HTMLImageElement -> Canvas (respects browser cache & CORS)
-    for (const candidate of urlCandidates) {
-      try {
-        const res = await new Promise<{ dataUrl: string; width: number; height: number; aspect: number } | null>(
-          (resolve) => {
-            const img = new Image();
-            img.crossOrigin = 'anonymous';
-            let resolved = false;
-
-            const timer = setTimeout(() => {
-              if (!resolved) {
-                resolved = true;
-                resolve(null);
-              }
-            }, 4000);
-
-            img.onload = () => {
-              if (resolved) return;
-              resolved = true;
-              clearTimeout(timer);
-              try {
-                const w = img.naturalWidth || 1920;
-                const h = img.naturalHeight || 1080;
-                const canvas = document.createElement('canvas');
-                canvas.width = w;
-                canvas.height = h;
-                const ctx = canvas.getContext('2d');
-                if (ctx) {
-                  ctx.fillStyle = '#ffffff';
-                  ctx.fillRect(0, 0, w, h);
-                  ctx.drawImage(img, 0, 0);
-                  const dataUrl = canvas.toDataURL('image/jpeg', 0.95);
-                  resolve({ dataUrl, width: w, height: h, aspect: w / h });
-                  return;
-                }
-              } catch {
-                // Tainted canvas
-              }
-              resolve(null);
-            };
-
-            img.onerror = () => {
-              if (!resolved) {
-                resolved = true;
-                clearTimeout(timer);
-                resolve(null);
-              }
-            };
-
-            img.src = candidate;
-          }
-        );
-        if (res && res.dataUrl) return res;
-      } catch {
-        // continue
-      }
-    }
-
-    // Strategy 2: Fetch Blob -> FileReader
-    for (const candidate of urlCandidates) {
-      try {
-        const resp = await fetch(candidate, { mode: 'cors' });
-        if (resp.ok) {
-          const blob = await resp.blob();
-          const reader = new FileReader();
-          const base64 = await new Promise<string>((res) => {
-            reader.onloadend = () => res(reader.result as string);
-            reader.readAsDataURL(blob);
-          });
-          if (base64 && base64.startsWith('data:image')) {
-            const tempImg = new Image();
-            tempImg.src = base64;
-            await new Promise((res) => {
-              tempImg.onload = () => res(null);
-              tempImg.onerror = () => res(null);
-            });
-            const w = tempImg.naturalWidth || 1920;
-            const h = tempImg.naturalHeight || 1080;
-            return { dataUrl: base64, width: w, height: h, aspect: w / h };
-          }
-        }
-      } catch {
-        // continue
-      }
-    }
-
-    return { dataUrl: rawUrl, width: 1920, height: 1080, aspect: 16 / 9 };
+    return loadBase64ImageFast(rawUrl, fallbackTitle);
   };
 
   if (isStoryboard && chapter.galleryImages && chapter.galleryImages.length > 0) {
@@ -937,18 +845,18 @@ export async function generateChapterPDF(
       </div>
 
       <!-- Official Sign-off & Seal Stamp right after content ends -->
-      <div style="margin-top: 18px; border-top: 1.5px dashed #c8c3b8; padding-top: 14px; display: flex; justify-content: space-between; align-items: flex-start;">
+      <div style="margin-top: 16px; background: #ffffff; border: 1px solid #dcd8d0; border-radius: 8px; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 4px rgba(0,0,0,0.04);">
         <div>
           <div style="font-size: 12px; font-weight: 800; color: #18181b;">Nasharz Films Confidential Presentation</div>
           <div style="font-size: 10.5px; font-weight: 700; color: #b8860b; margin-top: 3px;">
             Prepared By: <span style="color: #18181b;">Aatif Rasheed</span> • Producer / Director
           </div>
-          <div style="font-size: 9.5px; color: #71717a; margin-top: 2px;">Produced by Nasharz Films for Alaska Batteries</div>
-          <div style="font-size: 8.5px; color: #a1a1aa; margin-top: 2px;">Proprietary campaign strategy prepared strictly for Alaska Batteries executive review.</div>
+          <div style="font-size: 9.5px; color: #475569; margin-top: 2px;">Produced by Nasharz Films for Alaska Batteries</div>
+          <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Proprietary campaign strategy prepared strictly for Alaska Batteries executive review.</div>
         </div>
-        <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
+        <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
           <div style="font-size: 8.5px; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b; font-weight: 700; margin-bottom: 3px;">Executive Authorization</div>
-          <img src="${branding.sealStamp}" style="height: 64px; width: auto; object-fit: contain; filter: contrast(1.05);" alt="Official Stamp" />
+          <img src="${branding.sealStamp}" style="height: 60px; width: auto; object-fit: contain; filter: contrast(1.05); background: #ffffff;" alt="Official Stamp" />
         </div>
       </div>
     `;
@@ -994,12 +902,12 @@ export async function generateChapterPDF(
         if (p.type === 'title' || p.type === 'end') {
           if (p.domElement) {
             const canvas = await html2canvas(p.domElement, {
-              scale: 2,
+              scale: 1.5,
               useCORS: true,
               allowTaint: true,
               logging: false
             });
-            const imgData = canvas.toDataURL('image/jpeg', 0.95);
+            const imgData = canvas.toDataURL('image/jpeg', 0.92);
             pdf.addImage(imgData, 'JPEG', 0, 0, pageW, pageH);
           }
         } else if (p.type === 'image') {
@@ -1030,8 +938,13 @@ export async function generateChapterPDF(
         }
       }
 
-      pdf.save(`Nasharz_Alaska_Storyboard_${titleVal.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`);
-      return;
+      const filename = options?.customFileName || `Nasharz_Alaska_Storyboard_${titleVal.replace(/[^a-zA-Z0-9]/g, '_')}.pdf`;
+      if (options?.returnBlob) {
+        return { blob: pdf.output('blob'), filename, folder: `Chapter_${chapter.number || '04'}_Storyboards` };
+      } else {
+        pdf.save(filename);
+        return;
+      }
     } catch (err) {
       console.error('Error generating clean Storyboard PDF:', err);
       window.print();
@@ -1078,33 +991,49 @@ export async function generateChapterPDF(
         items: [
           {
             sheetNum: 'Sheet 01',
-            title: 'Master Look: Battery Expert (Iftikhar Thakur)',
+            title: '01. Pehlwan Thakur (Master Look)',
             badge: 'Lead Technical Authority',
             url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Sheet_w2wp4c.png',
             actor: 'Iftikhar Thakur',
             role: 'Senior Energy Authority & Emergency Response Specialist',
             points: [
-              'Clean white laboratory coat (crisp, practical, contemporary)',
-              'White or very light neutral shalwar qameez underneath',
-              'Minimal styling, no tie, no medical costume clichés',
-              'No gloves unless required for a technical action',
-              'CRITICAL: Absolutely no cap, no turban and no headwear'
+              'Clean premium white laboratory coat',
+              'Sharp, well-tailored fit',
+              'Full-length lab coat, slightly structured and masculine',
+              'Crisp shirt and nice tie underneath',
+              'Formal pants',
+              'Formal shoes',
+              'No traditional Pakistani shalwar qameez',
+              'No stethoscope',
+              'No doctor costume clichés',
+              'Rubber gloves',
+              'No medical equipment',
+              'Absolutely no cap',
+              'Absolutely no turban',
+              'Absolutely no headwear'
             ],
-            headRule: 'CRITICAL: Absolutely no cap, no turban and no headwear.',
+            headRule: 'CRITICAL: Absolutely no cap, absolutely no turban and absolutely no headwear.',
             performance: 'Senior surgeon meets emergency technology specialist, unmistakably Iftikhar Thakur.'
           },
           {
             sheetNum: 'Sheet 02',
-            title: 'The Alaska Battery Expert Team (Technical Specialists)',
+            title: '02. Diagnostic team.',
             badge: 'Mobile Technical Unit',
             url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Medical_Team_Sheet_v07k88.png',
             actor: 'Technical Specialists Ensemble',
             role: 'Mobile Diagnostic & Rapid Response Specialists',
             points: [
-              'Contemporary technical uniforms with clean silhouettes',
-              'Practical jackets or utility-style clothing with subtle Alaska branding',
-              'Functional equipment belts and technical diagnostic flight cases',
-              'Modern technical specialists — DO NOT look like hospital staff'
+              'Scrubs worn underneath white lab coats',
+              'Clean premium white laboratory coats',
+              'Contemporary technical silhouettes',
+              'Traditional Pakistani styling subtly integrated',
+              'Neutral base clothing',
+              'No branding',
+              'Practical utility trousers',
+              'Premium technical footwear',
+              'Equipment belts where appropriate',
+              'Small technical pouches',
+              'Protective work accessories only where practical'
             ],
             headRule: 'Modern technical utility headgear / bareheaded.',
             performance: 'High-speed, disciplined, synchronized mobile technology pit-crew.'
@@ -1176,16 +1105,16 @@ export async function generateChapterPDF(
         items: [
           {
             sheetNum: 'Sheet 06',
-            title: 'Character Thakur: Office Executive in Safari Suit',
+            title: '03. Senior executive in bike seq',
             badge: 'Bike Sequence',
             url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Office_Executive_Sheet_k7dybx.png',
             actor: 'Iftikhar Thakur',
             role: 'Senior Executive Commuter (Formerly Morning Man)',
             points: [
-              'Senior office executive commuting during morning rush hour',
-              'Classic tailored safari suit (beige/khaki or grey-blue)',
+              'Senior office executive commuting during morning rush hour (formerly morning man)',
+              'Classic tailored safari suit (out door colors must not blue)',
               'Epaulettes, flap chest pockets, belted or structured jacket silhouette',
-              'Polished leather shoes, frantic commuter watch-checking'
+              'Polished leather shoes, frantic commuter watch-checking in morning'
             ],
             headRule: 'No headwear (natural groomed executive morning hair).',
             performance: 'Stressed senior executive desperate to beat the morning gridlock.'
@@ -1233,31 +1162,33 @@ export async function generateChapterPDF(
         items: [
           {
             sheetNum: 'Sheet 09',
-            title: 'Character Thakur: Fisherman & Port Logistics Captain',
+            title: '04. Fish Logistics seq thakur',
             badge: 'Truck Sequence',
             url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Pathan_Thakur_Sheet_d2i9er.png',
             actor: 'Iftikhar Thakur',
             role: 'Fish Harbor Logistics Captain',
             points: [
-              'Simple traditional shalwar qameez in earthy, practical fabric',
-              'Embroidered waistcoat details, brass ring keys, weathered working look',
-              'KEY MANDATORY RULE: Truck Driver / Fisherman Thakur MUST always wear the white Pathan cap',
-              'Battery Expert contrasts with white lab coat, NO Pathan cap, and NO headwear'
+              'Simple traditional Pakistani shalwar qameez',
+              'Slightly loose and practical fit',
+              'Light or earthy neutral fabric',
+              'White traditional Pathan cap',
+              'Traditional practical footwear',
+              'Slightly weathered working-man appearance',
+              'A simple ring on one finger',
+              'No embroidery on the waistcoat'
             ],
-            headRule: 'KEY MANDATORY RULE: Truck Driver Thakur must always wear the white Pathan cap.',
+            headRule: 'KEY MANDATORY RULE: Truck Driver / Fisherman Thakur MUST always wear the white Pathan cap.',
             performance: 'Brave, resilient, protective of his fresh seafood cargo at Karachi port.'
           },
           {
             sheetNum: 'Sheet 10',
-            title: 'Truck Driver & Port Cargo Crew',
+            title: '05. Truck driver',
             badge: 'Supporting Ensemble',
             url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Truck_Driver_Sheet_kbbtsv.png',
             actor: 'Supporting Ensemble',
             role: 'Fish Port Cargo Workers & Transport Crew',
             points: [
-              'Weathered utility workwear, rolled-up sleeves, waterproof rubber boots',
-              'Heavy ice crates, wet fish containers, sea-spray salt patina',
-              'Grounded Karachi fish harbor maritime atmosphere'
+              'Weathered utility workwear, Chappal or worn out leather shoes or waterproof rubber boots'
             ],
             headRule: 'Practical cotton patkas or bareheaded harbor workwear.',
             performance: 'Hardworking, bustling dock workers racing against melting ice and spoiling cargo.'
@@ -1273,33 +1204,34 @@ export async function generateChapterPDF(
         items: [
           {
             sheetNum: 'Sheet 11',
-            title: 'Character Thakur: Chaudhary Sb (Option A — Red Polka Turban)',
+            title: '06. In tractor seq Chaudhary thakur wears',
             badge: 'Tractor Sequence',
             url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_Chaudharsb_1_Sheet_zbnlik.png',
             actor: 'Iftikhar Thakur',
             role: 'Baraat Patriarch & Farm Landlord',
             points: [
-              'Vibrant red turban / safa with golden-yellow polka-dot pattern',
-              'Traditional fan-style front knot (Turra / Shamla)',
-              'Mustard-yellow kurta with matching dhoti or lacha',
-              'Red floral-print stole, traditional tilla khussa',
-              'Bushy handlebar moustache, thick eyebrows, rustic Punjabi Chaudhary personality'
+              'Mustard-yellow kurta',
+              'Matching dhoti or lacha or shalwar',
+              'Red floral-print stole or sash',
+              'Matching Red waistcoat',
+              'Traditional khussa'
             ],
             headRule: 'Vibrant red polka turban (Battery Expert wears NO turban, NO headwear).',
             performance: 'Bushy handlebar moustache, thick eyebrows, rustic Punjabi Chaudhary charisma.'
           },
           {
             sheetNum: 'Sheet 12',
-            title: 'Character Thakur: Chaudhary Sb (Option B — Traditional Boski Elder)',
+            title: '07. TRACTOR THAKUR  OP2:',
             badge: 'Tractor Sequence',
             url: 'https://res.cloudinary.com/dawlj9ne4/image/upload/Battery_Pehlwan_ch_sb_Sheet_hi8350.png',
             actor: 'Iftikhar Thakur',
             role: 'Traditional Rural Grandfather',
             points: [
-              'Starched pristine white Cotton Boski Kurta Pajama',
-              'Traditional starched white/cream turban',
-              'Authentic handmade Tilla Khussa & carved cane',
-              'Authoritative village patriarch presence'
+              'Starched pristine white cotton Boski kurta shalwar',
+              'Traditional starched white turban',
+              'Authentic handmade tilla khussa or black shoes',
+              'Carved cane',
+              'Practical workwear details'
             ],
             headRule: 'Traditional starched turban.',
             performance: 'Wise, prestigious, authoritative village elder.'
@@ -1747,37 +1679,52 @@ export async function generateChapterPDF(
     });
     if (branding.sealStamp) allImageUrls.push(branding.sealStamp);
 
-    interface ImageMeta {
-      dataUrl: string;
-      width: number;
-      height: number;
-      aspect: number;
-    }
-    const imageMetaMap = new Map<string, ImageMeta>();
-    await Promise.all(
-      [...new Set(allImageUrls)].map(async (url) => {
-        try {
-          const res = await loadBase64Image(url);
-          if (res && res.dataUrl) {
-            imageMetaMap.set(url, res);
-          }
-        } catch {
-          // fallback to raw URL
-        }
-      })
-    );
+    const titleMap = new Map<string, string>();
+    [
+      ...sections.flatMap(s => s.items),
+      ...vehicleSections.flatMap(s => s.items),
+      ...locationSheets
+    ].forEach(it => {
+      if (it.url) titleMap.set(it.url, it.title || 'Production Visual Asset');
+    });
+    if (branding.sealStamp) titleMap.set(branding.sealStamp, 'Official Seal');
+
+    const imageMetaMap = await batchPreloadImages(allImageUrls, titleMap);
 
     // Setup pagination engine with smart section break management
     let currentPage = createNewPage(0);
     let currentHeight = 0;
     let maxContentHeight = 730; // Page 1 has title & cover metadata
 
-    const appendElementWithPagination = (el: HTMLElement, isSectionHeader = false) => {
-      const h = measureElementHeight(el);
-      // For section headers, guarantee enough space for header + at least one full character card (~370px)
-      const requiredSpace = isSectionHeader ? h + 370 : h;
+    // Smart Append function to ensure section headers are ALWAYS paired with their content (no orphaned headers)
+    const appendSectionWithCards = (headerEl: HTMLElement, cards: HTMLElement[]) => {
+      const headerH = measureElementHeight(headerEl);
+      const firstCardH = cards.length > 0 ? measureElementHeight(cards[0]) : 100;
 
-      if (currentHeight + requiredSpace > maxContentHeight && currentHeight > 0) {
+      // If header + first card cannot fit together on the current page, start a fresh page immediately
+      if (currentHeight + headerH + firstCardH > maxContentHeight && currentHeight > 0) {
+        currentPage = createNewPage(pages.length);
+        currentHeight = 0;
+        maxContentHeight = 920;
+      }
+      currentPage.contentArea.appendChild(headerEl);
+      currentHeight += headerH;
+
+      cards.forEach((card) => {
+        const cardH = measureElementHeight(card);
+        if (currentHeight + cardH > maxContentHeight && currentHeight > 0) {
+          currentPage = createNewPage(pages.length);
+          currentHeight = 0;
+          maxContentHeight = 920;
+        }
+        currentPage.contentArea.appendChild(card);
+        currentHeight += cardH;
+      });
+    };
+
+    const appendElementWithPagination = (el: HTMLElement) => {
+      const h = measureElementHeight(el);
+      if (currentHeight + h > maxContentHeight && currentHeight > 0) {
         currentPage = createNewPage(pages.length);
         currentHeight = 0;
         maxContentHeight = 920;
@@ -1788,19 +1735,19 @@ export async function generateChapterPDF(
 
     // 1. Chapter Title & Visual Principles Overview Block
     const overviewBlock = document.createElement('div');
-    overviewBlock.style.marginBottom = '12px';
+    overviewBlock.style.marginBottom = '10px';
     overviewBlock.style.backgroundColor = '#18181b';
     overviewBlock.style.color = '#ffffff';
-    overviewBlock.style.padding = '12px 16px';
-    overviewBlock.style.borderRadius = '8px';
+    overviewBlock.style.padding = '10px 14px';
+    overviewBlock.style.borderRadius = '6px';
     overviewBlock.style.border = '1px solid #27272a';
     overviewBlock.innerHTML = `
-      <div style="font-size: 9.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #c69a53; margin-bottom: 4px;">
+      <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #c69a53; margin-bottom: 3px;">
         01. Campaign Visual World & Central Separation Rule
       </div>
-      <div style="font-size: 10.5px; line-height: 1.45; color: #d4d4d8;">
+      <div style="font-size: 9.5px; line-height: 1.4; color: #d4d4d8;">
         <strong>Overall Look:</strong> Contemporary Pakistani realism with heightened comic situations. Authentic, Cinematic, Premium, Warm, Lived-in, and Recognizably Pakistani.<br/>
-        <strong>Separation Rule:</strong> Iftikhar Thakur plays different character variants per film, whereas the <strong>Battery Expert</strong> wears a crisp white lab coat, light neutral shalwar qameez underneath, and <strong style="color: #fbbf24;">ABSOLUTELY NO CAP, TURBAN OR HEADWEAR</strong>.
+        <strong>Separation Rule:</strong> Iftikhar Thakur plays different character variants per film, whereas the <strong>Battery Expert (Pehlwan Thakur)</strong> wears a clean premium white lab coat with crisp shirt, tie, formal pants, formal shoes, and rubber gloves underneath (no traditional shalwar qameez), and <strong style="color: #fbbf24;">ABSOLUTELY NO CAP, TURBAN OR HEADWEAR</strong>.
       </div>
     `;
     appendElementWithPagination(overviewBlock);
@@ -1809,36 +1756,36 @@ export async function generateChapterPDF(
     sections.forEach((sec) => {
       // Section Header Element
       const secHeaderEl = document.createElement('div');
-      secHeaderEl.style.marginBottom = '10px';
-      secHeaderEl.style.marginTop = '8px';
+      secHeaderEl.style.marginBottom = '8px';
+      secHeaderEl.style.marginTop = '6px';
       secHeaderEl.style.backgroundColor = '#18181b';
-      secHeaderEl.style.borderRadius = '8px';
-      secHeaderEl.style.padding = '8px 14px';
+      secHeaderEl.style.borderRadius = '6px';
+      secHeaderEl.style.padding = '6px 12px';
       secHeaderEl.style.borderLeft = '4px solid #c69a53';
       secHeaderEl.style.display = 'flex';
       secHeaderEl.style.justifyContent = 'space-between';
       secHeaderEl.style.alignItems = 'center';
       secHeaderEl.innerHTML = `
         <div>
-          <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
+          <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
             ${sec.sectionNum} • ${sec.filmKey.toUpperCase()}
           </div>
-          <div style="font-size: 12.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
+          <div style="font-size: 11.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
             ${sec.sectionTitle}
           </div>
         </div>
-        <div style="font-size: 8.5px; color: #a1a1aa; font-weight: 600; text-align: right;">
+        <div style="font-size: 8px; color: #a1a1aa; font-weight: 600; text-align: right;">
           ${sec.items.length} Character Sheets • ${sec.locationTag}
         </div>
       `;
-      appendElementWithPagination(secHeaderEl, true);
 
       // Character Cards
+      const cardElements: HTMLElement[] = [];
       sec.items.forEach((item) => {
         const card = document.createElement('div');
-        card.style.marginBottom = '12px';
+        card.style.marginBottom = '8px';
         card.style.border = '1px solid #e2e8f0';
-        card.style.borderRadius = '8px';
+        card.style.borderRadius = '6px';
         card.style.backgroundColor = '#ffffff';
         card.style.overflow = 'hidden';
         card.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.04)';
@@ -1847,131 +1794,8 @@ export async function generateChapterPDF(
         const imgSrc = meta?.dataUrl || item.url;
         const aspect = meta?.aspect && !isNaN(meta.aspect) && meta.aspect > 0.1 ? meta.aspect : (16 / 9);
 
-        // Calculate exact un-squeezed pixel width and height respecting natural aspect ratio
-        const maxCardImgW = 676;
-        const maxCardImgH = 220;
-
-        let finalW = maxCardImgW;
-        let finalH = Math.round(maxCardImgW / aspect);
-        if (finalH > maxCardImgH) {
-          finalH = maxCardImgH;
-          finalW = Math.round(maxCardImgH * aspect);
-        }
-        if (finalW > maxCardImgW) {
-          finalW = maxCardImgW;
-          finalH = Math.round(maxCardImgW / aspect);
-        }
-
-          card.innerHTML = `
-          <!-- Card Header Bar -->
-          <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center;">
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 9px; font-weight: 800; color: #b8860b; background: #fefce8; border: 1px solid #fef08a; padding: 1px 6px; border-radius: 4px;">
-                ${item.sheetNum}
-              </span>
-              <span style="font-size: 11.5px; font-weight: 800; color: #0f172a;">
-                ${item.title}
-              </span>
-            </div>
-            <span style="font-size: 8.5px; font-weight: 700; color: #475569; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 7px; border-radius: 9999px;">
-              ${item.badge}
-            </span>
-          </div>
-
-          <!-- Card Content Body -->
-          <div style="padding: 10px 12px 10px 12px; background: #ffffff;">
-            <!-- Character Sheet Showcase (Exact Aspect Ratio, Non-Distorted, Centered) -->
-            <div style="background-color: #0c0a09; border: 1px solid #1c1917; border-radius: 6px; padding: 5px; display: flex; align-items: center; justify-content: center; min-height: ${finalH + 10}px; margin-bottom: 8px;">
-              <img 
-                src="${imgSrc}" 
-                width="${finalW}" 
-                height="${finalH}" 
-                style="width: ${finalW}px; height: ${finalH}px; max-width: 100%; display: block; margin: 0 auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);" 
-                alt="${item.title}" 
-                crossorigin="anonymous" 
-              />
-            </div>
-
-            <!-- Details & Specifications Grid -->
-            <div style="display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 10px; align-items: start;">
-              <!-- Left Column: Actor, Role & Wardrobe Specs -->
-              <div>
-                <div style="font-size: 9.5px; color: #475569; margin-bottom: 4px;">
-                  <strong style="color: #0f172a;">Actor:</strong> ${item.actor} • <strong style="color: #0f172a;">Role:</strong> <span style="color: #b8860b; font-weight: 700;">${item.role}</span>
-                </div>
-                <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 6px 8px;">
-                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 2px;">Wardrobe Specifications</div>
-                  <ul style="margin: 0; padding-left: 12px; font-size: 8.5px; line-height: 1.35; color: #334155;">
-                    ${item.points.map(p => `<li style="margin-bottom: 1.5px;">${p}</li>`).join('')}
-                  </ul>
-                </div>
-              </div>
-
-              <!-- Right Column: Headwear Rule & Performance Directive -->
-              <div style="display: flex; flex-direction: column; gap: 4px;">
-                <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 5px; padding: 5px 8px;">
-                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #854d0e; letter-spacing: 0.05em; margin-bottom: 2px;">Headwear & Styling Directive</div>
-                  <div style="font-size: 8.5px; color: #713f12; line-height: 1.3; font-weight: 600;">${item.headRule}</div>
-                </div>
-                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px; padding: 5px 8px;">
-                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 2px;">Performance & Character Note</div>
-                  <div style="font-size: 8.5px; color: #334155; line-height: 1.3;">${item.performance}</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        `;
-        appendElementWithPagination(card);
-      });
-    });
-
-    // -------------------------------------------------------------
-    // VEHICLE & PROPS DESIGN GRIDS (Parallel Production Design Package)
-    // -------------------------------------------------------------
-    vehicleSections.forEach((sec) => {
-      const secHeader = document.createElement('div');
-      secHeader.style.marginBottom = '10px';
-      secHeader.style.marginTop = '12px';
-      secHeader.style.backgroundColor = '#18181b';
-      secHeader.style.borderRadius = '8px';
-      secHeader.style.padding = '8px 14px';
-      secHeader.style.borderLeft = '4px solid #c69a53';
-      secHeader.style.display = 'flex';
-      secHeader.style.justifyContent = 'space-between';
-      secHeader.style.alignItems = 'center';
-      secHeader.innerHTML = `
-        <div>
-          <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
-            PRODUCTION DESIGN • VEHICLE & PROPS PACKAGE
-          </div>
-          <div style="font-size: 12.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
-            ${sec.sectionTitle}
-          </div>
-          <div style="font-size: 8.5px; color: #d4d4d8; margin-top: 1px;">
-            ${sec.sectionSubtitle}
-          </div>
-        </div>
-        <div style="font-size: 8.5px; color: #18181b; background: #c69a53; font-weight: 800; padding: 3px 8px; border-radius: 9999px;">
-          ${sec.badge}
-        </div>
-      `;
-      appendElementWithPagination(secHeader, true);
-
-      sec.items.forEach((item) => {
-        const card = document.createElement('div');
-        card.style.marginBottom = '12px';
-        card.style.border = '1px solid #cbd5e1';
-        card.style.borderRadius = '8px';
-        card.style.backgroundColor = '#ffffff';
-        card.style.overflow = 'hidden';
-        card.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.04)';
-
-        const meta = imageMetaMap.get(item.url);
-        const imgSrc = meta?.dataUrl || item.url;
-        const aspect = meta?.aspect && !isNaN(meta.aspect) && meta.aspect > 0.1 ? meta.aspect : 1;
-
-        // Calculate un-squeezed pixel width and height respecting natural aspect ratio (usually square 1:1 or 4:3)
-        const maxCardImgW = 676;
+        // Calibrated image dimensions to fill maximum space, reduce empty negative white space, and maintain uncropped aspect ratio
+        const maxCardImgW = 686;
         const maxCardImgH = 260;
 
         let finalW = maxCardImgW;
@@ -1987,170 +1811,297 @@ export async function generateChapterPDF(
 
         card.innerHTML = `
           <!-- Card Header Bar -->
-          <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center;">
+          <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 4px 10px; display: flex; justify-content: space-between; align-items: center;">
             <div style="display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 9px; font-weight: 800; color: #b8860b; background: #fefce8; border: 1px solid #fef08a; padding: 1px 6px; border-radius: 4px;">
+              <span style="font-size: 8.5px; font-weight: 800; color: #b8860b; background: #fefce8; border: 1px solid #fef08a; padding: 1px 5px; border-radius: 3px;">
                 ${item.sheetNum}
               </span>
-              <span style="font-size: 11.5px; font-weight: 800; color: #0f172a;">
+              <span style="font-size: 10.5px; font-weight: 800; color: #0f172a;">
                 ${item.title}
               </span>
             </div>
-            <span style="font-size: 8.5px; font-weight: 700; color: #475569; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 7px; border-radius: 9999px;">
+            <span style="font-size: 8px; font-weight: 700; color: #475569; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 1.5px 6px; border-radius: 9999px;">
               ${item.badge}
             </span>
           </div>
 
           <!-- Card Content Body -->
-          <div style="padding: 10px 12px 10px 12px; background: #ffffff;">
-            <!-- Vehicle & Prop Sheet Showcase -->
-            <div style="background-color: #0c0a09; border: 1px solid #1c1917; border-radius: 6px; padding: 6px; display: flex; align-items: center; justify-content: center; min-height: ${finalH + 12}px; margin-bottom: 8px;">
+          <div style="padding: 6px 10px; background: #ffffff;">
+            <!-- Character Sheet Showcase (Exact Aspect Ratio, Non-Distorted, Centered) -->
+            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
               <img 
                 src="${imgSrc}" 
                 width="${finalW}" 
                 height="${finalH}" 
-                style="width: ${finalW}px; height: ${finalH}px; max-width: 100%; display: block; margin: 0 auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);" 
+                style="width: ${finalW}px; height: ${finalH}px; max-width: 100%; object-fit: contain; display: block; margin: 0 auto; border-radius: 3px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);" 
+                alt="${item.title}" 
+                crossorigin="anonymous" 
+              />
+            </div>
+
+            <!-- Specifications & Directives Grid -->
+            <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 8px; align-items: start;">
+              <!-- Left: Actor & Specifications -->
+              <div>
+                <div style="font-size: 8.5px; color: #475569; margin-bottom: 2px;">
+                  <strong style="color: #0f172a;">Actor:</strong> ${item.actor} • <strong style="color: #0f172a;">Role:</strong> <span style="color: #b8860b; font-weight: 700;">${item.role}</span>
+                </div>
+                <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 4px; padding: 4px 6px;">
+                  <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 1px;">Wardrobe Specifications & Fabrics</div>
+                  <ul style="margin: 0; padding-left: 10px; font-size: 8px; line-height: 1.3; color: #334155;">
+                    ${item.points.map((p: string) => `<li style="margin-bottom: 1px;">${p}</li>`).join('')}
+                  </ul>
+                </div>
+              </div>
+
+              <!-- Right: Headwear Rule & Performance Directive -->
+              <div style="display: flex; flex-direction: column; gap: 3px;">
+                <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 4px; padding: 4px 6px;">
+                  <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; color: #854d0e; letter-spacing: 0.05em; margin-bottom: 1px;">Headwear & Styling Directive</div>
+                  <div style="font-size: 7.5px; color: #713f12; line-height: 1.25; font-weight: 600;">${item.headRule}</div>
+                </div>
+                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 4px 6px;">
+                  <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 1px;">Performance Note</div>
+                  <div style="font-size: 7.5px; color: #334155; line-height: 1.25;">${item.performance}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        cardElements.push(card);
+      });
+
+      appendSectionWithCards(secHeaderEl, cardElements);
+    });
+
+    // -------------------------------------------------------------
+    // VEHICLE & PROPS DESIGN GRIDS (Parallel Production Design Package)
+    // -------------------------------------------------------------
+    vehicleSections.forEach((sec) => {
+      const secHeader = document.createElement('div');
+      secHeader.style.marginBottom = '8px';
+      secHeader.style.marginTop = '6px';
+      secHeader.style.backgroundColor = '#18181b';
+      secHeader.style.borderRadius = '6px';
+      secHeader.style.padding = '6px 12px';
+      secHeader.style.borderLeft = '4px solid #c69a53';
+      secHeader.style.display = 'flex';
+      secHeader.style.justifyContent = 'space-between';
+      secHeader.style.alignItems = 'center';
+      secHeader.innerHTML = `
+        <div>
+          <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
+            PRODUCTION DESIGN • VEHICLE & PROPS PACKAGE
+          </div>
+          <div style="font-size: 11.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
+            ${sec.sectionTitle}
+          </div>
+          <div style="font-size: 8px; color: #d4d4d8; margin-top: 1px;">
+            ${sec.sectionSubtitle}
+          </div>
+        </div>
+        <div style="font-size: 8px; color: #18181b; background: #c69a53; font-weight: 800; padding: 2px 7px; border-radius: 9999px;">
+          ${sec.badge}
+        </div>
+      `;
+
+      const vehicleCards: HTMLElement[] = [];
+      sec.items.forEach((item) => {
+        const card = document.createElement('div');
+        card.style.marginBottom = '8px';
+        card.style.border = '1px solid #cbd5e1';
+        card.style.borderRadius = '6px';
+        card.style.backgroundColor = '#ffffff';
+        card.style.overflow = 'hidden';
+        card.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.04)';
+
+        const meta = imageMetaMap.get(item.url);
+        const imgSrc = meta?.dataUrl || item.url;
+        const aspect = meta?.aspect && !isNaN(meta.aspect) && meta.aspect > 0.1 ? meta.aspect : 1;
+
+        // Calibrated image dimensions to fill maximum space, reduce empty negative white space, and maintain uncropped aspect ratio
+        const maxCardImgW = 686;
+        const maxCardImgH = 260;
+
+        let finalW = maxCardImgW;
+        let finalH = Math.round(maxCardImgW / aspect);
+        if (finalH > maxCardImgH) {
+          finalH = maxCardImgH;
+          finalW = Math.round(maxCardImgH * aspect);
+        }
+        if (finalW > maxCardImgW) {
+          finalW = maxCardImgW;
+          finalH = Math.round(maxCardImgW / aspect);
+        }
+
+        card.innerHTML = `
+          <!-- Card Header Bar -->
+          <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 4px 10px; display: flex; justify-content: space-between; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 8.5px; font-weight: 800; color: #b8860b; background: #fefce8; border: 1px solid #fef08a; padding: 1px 5px; border-radius: 3px;">
+                ${item.sheetNum}
+              </span>
+              <span style="font-size: 10.5px; font-weight: 800; color: #0f172a;">
+                ${item.title}
+              </span>
+            </div>
+            <span style="font-size: 8px; font-weight: 700; color: #475569; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 1.5px 6px; border-radius: 9999px;">
+              ${item.badge}
+            </span>
+          </div>
+
+          <!-- Card Content Body -->
+          <div style="padding: 6px 10px; background: #ffffff;">
+            <!-- Vehicle & Prop Sheet Showcase -->
+            <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+              <img 
+                src="${imgSrc}" 
+                width="${finalW}" 
+                height="${finalH}" 
+                style="width: ${finalW}px; height: ${finalH}px; max-width: 100%; object-fit: contain; display: block; margin: 0 auto; border-radius: 3px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);" 
                 alt="${item.title}" 
                 crossorigin="anonymous" 
               />
             </div>
 
             <!-- Details & Specifications Grid -->
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start;">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: start;">
               <!-- Left Column: Main Vehicle & Vehicle Look -->
-              <div style="display: flex; flex-direction: column; gap: 6px;">
-                <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 6px 8px;">
-                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 2px;">Main Vehicle & Diagnostic Hardware</div>
-                  <ul style="margin: 0; padding-left: 12px; font-size: 8.5px; line-height: 1.35; color: #334155;">
-                    ${item.mainVehicle.map((p: string) => `<li style="margin-bottom: 1.5px;">${p}</li>`).join('')}
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 4px; padding: 4px 6px;">
+                  <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 1px;">Main Vehicle & Hardware</div>
+                  <ul style="margin: 0; padding-left: 10px; font-size: 8px; line-height: 1.3; color: #334155;">
+                    ${item.mainVehicle.map((p: string) => `<li style="margin-bottom: 1px;">${p}</li>`).join('')}
                   </ul>
                 </div>
 
-                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px; padding: 6px 8px;">
-                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 2px;">Vehicle Realism & Finishes</div>
-                  <ul style="margin: 0; padding-left: 12px; font-size: 8.5px; line-height: 1.35; color: #334155;">
-                    ${item.vehicleLook.map((p: string) => `<li style="margin-bottom: 1.5px;">${p}</li>`).join('')}
+                <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 4px 6px;">
+                  <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 1px;">Vehicle Realism & Finishes</div>
+                  <ul style="margin: 0; padding-left: 10px; font-size: 8px; line-height: 1.3; color: #334155;">
+                    ${item.vehicleLook.map((p: string) => `<li style="margin-bottom: 1px;">${p}</li>`).join('')}
                   </ul>
                 </div>
               </div>
 
               <!-- Right Column: Props & Production Directives -->
-              <div style="display: flex; flex-direction: column; gap: 6px;">
-                <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 6px 8px;">
-                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #b8860b; letter-spacing: 0.05em; margin-bottom: 2px;">Production & Narrative Props</div>
-                  <ul style="margin: 0; padding-left: 12px; font-size: 8.5px; line-height: 1.35; color: #334155;">
-                    ${item.props.map((p: string) => `<li style="margin-bottom: 1.5px;">${p}</li>`).join('')}
+              <div style="display: flex; flex-direction: column; gap: 4px;">
+                <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 4px; padding: 4px 6px;">
+                  <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; color: #b8860b; letter-spacing: 0.05em; margin-bottom: 1px;">Production & Narrative Props</div>
+                  <ul style="margin: 0; padding-left: 10px; font-size: 8px; line-height: 1.3; color: #334155;">
+                    ${item.props.map((p: string) => `<li style="margin-bottom: 1px;">${p}</li>`).join('')}
                   </ul>
                 </div>
 
-                <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 5px; padding: 6px 8px;">
-                  <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #854d0e; letter-spacing: 0.05em; margin-bottom: 2px;">Art Department Directive</div>
-                  <div style="font-size: 8.5px; color: #713f12; line-height: 1.3; font-weight: 600;">${item.rule}</div>
+                <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 4px; padding: 4px 6px;">
+                  <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; color: #854d0e; letter-spacing: 0.05em; margin-bottom: 1px;">Art Department Directive</div>
+                  <div style="font-size: 7.5px; color: #713f12; line-height: 1.25; font-weight: 600;">${item.rule}</div>
                 </div>
               </div>
             </div>
           </div>
         `;
-        appendElementWithPagination(card);
+        vehicleCards.push(card);
       });
+
+      appendSectionWithCards(secHeader, vehicleCards);
     });
 
     // -------------------------------------------------------------
     // SECTION 07: PRODUCTION DESIGN & MOBILE LABORATORIES
     // -------------------------------------------------------------
     const prodDesignHeader = document.createElement('div');
-    prodDesignHeader.style.marginBottom = '10px';
-    prodDesignHeader.style.marginTop = '8px';
+    prodDesignHeader.style.marginBottom = '6px';
+    prodDesignHeader.style.marginTop = '6px';
     prodDesignHeader.style.backgroundColor = '#18181b';
-    prodDesignHeader.style.borderRadius = '8px';
-    prodDesignHeader.style.padding = '8px 14px';
+    prodDesignHeader.style.borderRadius = '6px';
+    prodDesignHeader.style.padding = '6px 12px';
     prodDesignHeader.style.borderLeft = '4px solid #c69a53';
     prodDesignHeader.style.display = 'flex';
     prodDesignHeader.style.justifyContent = 'space-between';
     prodDesignHeader.style.alignItems = 'center';
     prodDesignHeader.innerHTML = `
       <div>
-        <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
+        <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
           SECTION 07 • PRODUCTION DESIGN LANGUAGE
         </div>
-        <div style="font-size: 12.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
+        <div style="font-size: 11.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
           Mobile Diagnostic Units & Color Architecture
         </div>
       </div>
-      <div style="font-size: 8.5px; color: #a1a1aa; font-weight: 600;">
+      <div style="font-size: 8px; color: #a1a1aa; font-weight: 600;">
         5 Vehicle Units • 6 Production Priorities • 9 USPs
       </div>
     `;
-    appendElementWithPagination(prodDesignHeader, true);
 
     const mobileLabsBlock = document.createElement('div');
-    mobileLabsBlock.style.marginBottom = '10px';
+    mobileLabsBlock.style.marginBottom = '8px';
     mobileLabsBlock.style.border = '1px solid #e2e8f0';
-    mobileLabsBlock.style.borderRadius = '8px';
-    mobileLabsBlock.style.padding = '10px 12px';
+    mobileLabsBlock.style.borderRadius = '6px';
+    mobileLabsBlock.style.padding = '8px 10px';
     mobileLabsBlock.style.backgroundColor = '#ffffff';
     mobileLabsBlock.innerHTML = `
-      <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b; margin-bottom: 6px;">
+      <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b; margin-bottom: 5px;">
         Mobile Diagnostic Response Units by Sequence
       </div>
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
-        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 7px 9px;">
-          <div style="font-size: 9.5px; font-weight: 800; color: #0f172a;">1. Film 01 (Car): Specialized High-Tech Diagnostic Van</div>
-          <div style="font-size: 8.5px; color: #475569; margin-top: 2px;">Matte metallic finish, motorized slide-out battery tester trays, rapid LED diagnostic scopes.</div>
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 6px;">
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 8px;">
+          <div style="font-size: 8.5px; font-weight: 800; color: #0f172a;">1. Film 01 (Car): Specialized Diagnostic Van</div>
+          <div style="font-size: 8px; color: #475569; margin-top: 1px;">Matte metallic finish, motorized slide-out battery tester trays, rapid LED diagnostic scopes.</div>
         </div>
-        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 7px 9px;">
-          <div style="font-size: 9.5px; font-weight: 800; color: #0f172a;">2. Film 02 (Truck): Heavy Commercial Marine Support Unit</div>
-          <div style="font-size: 8.5px; color: #475569; margin-top: 2px;">Reinforced steel crane arm, heavy-duty marine battery testing harness for wet port logistics.</div>
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 8px;">
+          <div style="font-size: 8.5px; font-weight: 800; color: #0f172a;">2. Film 02 (Truck): Commercial Marine Support Unit</div>
+          <div style="font-size: 8px; color: #475569; margin-top: 1px;">Reinforced steel crane arm, heavy-duty marine battery testing harness for wet port logistics.</div>
         </div>
-        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 7px 9px;">
-          <div style="font-size: 9.5px; font-weight: 800; color: #0f172a;">3. Film 03 (Tractor): All-Terrain Agricultural Mobile Workshop</div>
-          <div style="font-size: 8.5px; color: #475569; margin-top: 2px;">Dust-sealed field unit with high-torque cranking test meters for rural farmlands.</div>
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 8px;">
+          <div style="font-size: 8.5px; font-weight: 800; color: #0f172a;">3. Film 03 (Tractor): Agricultural Mobile Workshop</div>
+          <div style="font-size: 8px; color: #475569; margin-top: 1px;">Dust-sealed field unit with high-torque cranking test meters for rural farmlands.</div>
         </div>
-        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 7px 9px;">
-          <div style="font-size: 9.5px; font-weight: 800; color: #0f172a;">4. Film 04 (Bike): Rapid Motorcycle Emergency Unit</div>
-          <div style="font-size: 8.5px; color: #475569; margin-top: 2px;">High-speed agile city scooter with rapid battery swap racks and diagnostic pods.</div>
+        <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 6px 8px;">
+          <div style="font-size: 8.5px; font-weight: 800; color: #0f172a;">4. Film 04 (Bike): Rapid Motorcycle Emergency Unit</div>
+          <div style="font-size: 8px; color: #475569; margin-top: 1px;">High-speed agile city scooter with rapid battery swap racks and diagnostic pods.</div>
         </div>
       </div>
     `;
-    appendElementWithPagination(mobileLabsBlock);
+
+    appendSectionWithCards(prodDesignHeader, [mobileLabsBlock]);
 
     // -------------------------------------------------------------
     // SECTION 08: SHOOTING LOCATIONS MATRIX
     // -------------------------------------------------------------
     const locationsHeader = document.createElement('div');
-    locationsHeader.style.marginBottom = '10px';
-    locationsHeader.style.marginTop = '8px';
+    locationsHeader.style.marginBottom = '8px';
+    locationsHeader.style.marginTop = '6px';
     locationsHeader.style.backgroundColor = '#18181b';
-    locationsHeader.style.borderRadius = '8px';
-    locationsHeader.style.padding = '8px 14px';
+    locationsHeader.style.borderRadius = '6px';
+    locationsHeader.style.padding = '6px 12px';
     locationsHeader.style.borderLeft = '4px solid #c69a53';
     locationsHeader.style.display = 'flex';
     locationsHeader.style.justifyContent = 'space-between';
     locationsHeader.style.alignItems = 'center';
     locationsHeader.innerHTML = `
       <div>
-        <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
+        <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
           SECTION 08 • SHOOTING LOCATIONS & PRODUCTION TERRITORY
         </div>
-        <div style="font-size: 12.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
+        <div style="font-size: 11.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
           Location Concept Grids & Multi-City Scouting Dossiers
         </div>
-        <div style="font-size: 8.5px; color: #d4d4d8; margin-top: 1px;">
+        <div style="font-size: 8px; color: #d4d4d8; margin-top: 1px;">
           5 Verified Commercial Film Locations (Lahore & Karachi) • Turnkey Permissions Matrix
         </div>
       </div>
-      <div style="font-size: 8.5px; color: #18181b; background: #c69a53; font-weight: 800; padding: 3px 8px; border-radius: 9999px;">
+      <div style="font-size: 8px; color: #18181b; background: #c69a53; font-weight: 800; padding: 2px 7px; border-radius: 9999px;">
         5 Location Grids
       </div>
     `;
-    appendElementWithPagination(locationsHeader, true);
 
-    // Render each Location Concept Sheet Card with un-squeezed photo and full production data
+    // Render each Location Concept Sheet Card with calibrated height
+    const locCards: HTMLElement[] = [];
     locationSheets.forEach((loc) => {
       const locCard = document.createElement('div');
-      locCard.style.marginBottom = '12px';
+      locCard.style.marginBottom = '8px';
       locCard.style.border = '1px solid #cbd5e1';
-      locCard.style.borderRadius = '8px';
+      locCard.style.borderRadius = '6px';
       locCard.style.backgroundColor = '#ffffff';
       locCard.style.overflow = 'hidden';
       locCard.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.04)';
@@ -2159,7 +2110,8 @@ export async function generateChapterPDF(
       const imgSrc = meta?.dataUrl || loc.url;
       const aspect = meta?.aspect && !isNaN(meta.aspect) && meta.aspect > 0.1 ? meta.aspect : 1;
 
-      const maxCardImgW = 676;
+      // Calibrated image dimensions to fill maximum space, reduce empty negative white space, and maintain uncropped aspect ratio
+      const maxCardImgW = 686;
       const maxCardImgH = 260;
 
       let finalW = maxCardImgW;
@@ -2175,131 +2127,133 @@ export async function generateChapterPDF(
 
       locCard.innerHTML = `
         <!-- Location Header Bar -->
-        <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 6px 12px; display: flex; justify-content: space-between; align-items: center;">
+        <div style="background-color: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 4px 10px; display: flex; justify-content: space-between; align-items: center;">
           <div style="display: flex; align-items: center; gap: 8px;">
-            <span style="font-size: 9px; font-weight: 800; color: #b8860b; background: #fefce8; border: 1px solid #fef08a; padding: 1px 6px; border-radius: 4px;">
+            <span style="font-size: 8.5px; font-weight: 800; color: #b8860b; background: #fefce8; border: 1px solid #fef08a; padding: 1px 5px; border-radius: 3px;">
               ${loc.sheetNum}
             </span>
-            <span style="font-size: 11.5px; font-weight: 800; color: #0f172a;">
+            <span style="font-size: 10.5px; font-weight: 800; color: #0f172a;">
               ${loc.title}
             </span>
           </div>
-          <span style="font-size: 8.5px; font-weight: 700; color: #475569; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 7px; border-radius: 9999px;">
+          <span style="font-size: 8px; font-weight: 700; color: #475569; background: #f1f5f9; border: 1px solid #cbd5e1; padding: 1.5px 6px; border-radius: 9999px;">
             ${loc.badge}
           </span>
         </div>
 
         <!-- Location Content Body -->
-        <div style="padding: 10px 12px; background: #ffffff;">
+        <div style="padding: 6px 10px; background: #ffffff;">
           <!-- Location Concept Photo Showcase -->
-          <div style="background-color: #0c0a09; border: 1px solid #1c1917; border-radius: 6px; padding: 6px; display: flex; align-items: center; justify-content: center; min-height: ${finalH + 12}px; margin-bottom: 8px;">
+          <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 4px; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
             <img 
               src="${imgSrc}" 
               width="${finalW}" 
               height="${finalH}" 
-              style="width: ${finalW}px; height: ${finalH}px; max-width: 100%; display: block; margin: 0 auto; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.4);" 
+              style="width: ${finalW}px; height: ${finalH}px; max-width: 100%; object-fit: contain; display: block; margin: 0 auto; border-radius: 3px; box-shadow: 0 2px 6px rgba(0,0,0,0.08);" 
               alt="${loc.title}" 
               crossorigin="anonymous" 
             />
           </div>
 
           <!-- Location Details & Specifications Grid -->
-          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; align-items: start;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: start;">
             <!-- Left: Location Logistics & Permissions -->
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-              <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 6px 8px;">
-                <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 3px;">Territory, City & GPS Coordinates</div>
-                <div style="font-size: 8.5px; color: #0f172a; font-weight: 700; margin-bottom: 2px;">${loc.city}</div>
-                <div style="font-size: 8px; color: #64748b; font-family: monospace;">GPS: ${loc.coordinates}</div>
-                <div style="font-size: 8px; color: #854d0e; margin-top: 3px; font-weight: 600;">Permits: ${loc.permits}</div>
+            <div style="display: flex; flex-direction: column; gap: 3px;">
+              <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 4px; padding: 4px 6px;">
+                <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 2px;">Territory & GPS</div>
+                <div style="font-size: 8px; color: #0f172a; font-weight: 700;">${loc.city}</div>
+                <div style="font-size: 7.5px; color: #64748b; font-family: monospace;">GPS: ${loc.coordinates}</div>
+                <div style="font-size: 7.5px; color: #854d0e; margin-top: 1px; font-weight: 600;">Permits: ${loc.permits}</div>
               </div>
-              <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 5px; padding: 5px 8px;">
-                <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #854d0e; letter-spacing: 0.05em; margin-bottom: 2px;">Optimal Lighting & Sun Window</div>
-                <div style="font-size: 8.5px; color: #713f12; line-height: 1.35; font-weight: 600;">${loc.lightingWindow}</div>
+              <div style="background-color: #fefce8; border: 1px solid #fef08a; border-radius: 4px; padding: 4px 6px;">
+                <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; color: #854d0e; letter-spacing: 0.05em; margin-bottom: 1px;">Sun & Lighting Window</div>
+                <div style="font-size: 7.5px; color: #713f12; line-height: 1.25; font-weight: 600;">${loc.lightingWindow}</div>
               </div>
             </div>
 
             <!-- Right: Production Design Highlights & Visual Goal -->
-            <div style="display: flex; flex-direction: column; gap: 4px;">
-              <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 5px; padding: 6px 8px;">
-                <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 3px;">Set Dressing & Production Design Highlights</div>
-                <ul style="margin: 0; padding-left: 12px; font-size: 8.5px; line-height: 1.35; color: #334155;">
-                  ${loc.productionDesign.map(p => `<li style="margin-bottom: 1.5px;">${p}</li>`).join('')}
+            <div style="display: flex; flex-direction: column; gap: 3px;">
+              <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 4px; padding: 4px 6px;">
+                <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; color: #78716c; letter-spacing: 0.05em; margin-bottom: 1px;">Set Dressing Highlights</div>
+                <ul style="margin: 0; padding-left: 10px; font-size: 8px; line-height: 1.3; color: #334155;">
+                  ${loc.productionDesign.map(p => `<li style="margin-bottom: 1px;">${p}</li>`).join('')}
                 </ul>
               </div>
-              <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 5px; padding: 5px 8px;">
-                <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 2px;">Cinematic Tone & Narrative Goal</div>
-                <div style="font-size: 8.5px; color: #334155; line-height: 1.35; font-weight: 500;">${loc.visualGoal}</div>
+              <div style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 4px; padding: 4px 6px;">
+                <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.05em; margin-bottom: 1px;">Cinematic Tone</div>
+                <div style="font-size: 7.5px; color: #334155; line-height: 1.25;">${loc.visualGoal}</div>
               </div>
             </div>
           </div>
         </div>
       `;
-      appendElementWithPagination(locCard);
+      locCards.push(locCard);
     });
 
+    appendSectionWithCards(locationsHeader, locCards);
+
     const locationsBlock = document.createElement('div');
-    locationsBlock.style.marginBottom = '10px';
+    locationsBlock.style.marginBottom = '8px';
     locationsBlock.style.border = '1px solid #e2e8f0';
-    locationsBlock.style.borderRadius = '8px';
-    locationsBlock.style.padding = '10px 12px';
+    locationsBlock.style.borderRadius = '6px';
+    locationsBlock.style.padding = '8px 10px';
     locationsBlock.style.backgroundColor = '#ffffff';
     locationsBlock.innerHTML = `
-      <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #0f172a; letter-spacing: 0.05em; margin-bottom: 6px;">
+      <div style="font-size: 8.5px; font-weight: 800; text-transform: uppercase; color: #0f172a; letter-spacing: 0.05em; margin-bottom: 4px;">
         Production Logistics & Permissions Summary Matrix
       </div>
-      <table style="width: 100%; border-collapse: collapse; font-size: 8.5px; color: #334155;">
+      <table style="width: 100%; border-collapse: collapse; font-size: 8px; color: #334155;">
         <thead>
-          <tr style="background-color: #f1f5f9; text-align: left; color: #0f172a; font-weight: 800; font-size: 8px; text-transform: uppercase;">
-            <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">Film Sequence</th>
-            <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">Selected Location</th>
-            <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">City / Area</th>
-            <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">Permit Authority & Staging Bay</th>
-            <th style="padding: 5px 8px; border: 1px solid #cbd5e1;">Key Art & Production Highlights</th>
+          <tr style="background-color: #f1f5f9; text-align: left; color: #0f172a; font-weight: 800; font-size: 7.5px; text-transform: uppercase;">
+            <th style="padding: 4px 6px; border: 1px solid #cbd5e1;">Film Sequence</th>
+            <th style="padding: 4px 6px; border: 1px solid #cbd5e1;">Selected Location</th>
+            <th style="padding: 4px 6px; border: 1px solid #cbd5e1;">City / Area</th>
+            <th style="padding: 4px 6px; border: 1px solid #cbd5e1;">Permit Authority</th>
+            <th style="padding: 4px 6px; border: 1px solid #cbd5e1;">Key Art Highlights</th>
           </tr>
         </thead>
         <tbody>
           <tr>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 01 — Car</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Food Street / Badshahi Area</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lahore Walled City</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">WCLA & CTPL • Hazuri Bagh Staging</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">High-density traffic gridlock with Badshahi Mosque archway backdrop.</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 01 — Car</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Food Street / Badshahi Area</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Lahore Walled City</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">WCLA & CTPL • Hazuri Bagh</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">High-density traffic gridlock with Badshahi Mosque archway.</td>
           </tr>
           <tr style="background-color: #fafafa;">
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 02 — Truck</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Ibrahim Hyderi Fish Harbor</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Karachi Port Jetty</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">KPT & Fishermen Coop • Marine Bay</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Active maritime cargo wharf, ice crates, heavy commercial truck fleet.</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 02 — Truck</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Ibrahim Hyderi Fish Harbor</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Karachi Port Jetty</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">KPT & Fishermen Coop</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Active maritime cargo wharf, ice crates, heavy commercial truck fleet.</td>
           </tr>
           <tr>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 03 — Tractor</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Kareem Block Agricultural Fields</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lahore Suburbs</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Landowners & District Admin</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lush golden wheat harvest corridor, decorated baraat tractor trolleys.</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 03 — Tractor</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Kareem Block Fields</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Lahore Suburbs</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Landowners & Admin</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Lush golden wheat harvest corridor, decorated baraat tractor trolleys.</td>
           </tr>
           <tr style="background-color: #fafafa;">
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 04 — Bike</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Packages Mall Promenade / Walton</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Lahore Central</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Mall Security & Operations Directorate</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Morning corporate rush hour boulevard, contemporary architectural glass facade.</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 04 — Bike</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Packages Mall Promenade</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Lahore Central</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Mall Security Directorate</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Morning corporate rush hour boulevard, contemporary architectural facade.</td>
           </tr>
           <tr>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 05 — UPS / Home</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Fakir Khana Museum Haveli</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Old Lahore (Bhati Gate)</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Fakir Khana Trust & Heritage Directorate</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Historic courtyard decorated for wedding, sudden blackout to full illumination.</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">Film 05 — UPS / Home</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Fakir Khana Museum Haveli</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Old Lahore (Bhati Gate)</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Fakir Khana Trust</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Historic courtyard decorated for wedding, sudden blackout to illumination.</td>
           </tr>
           <tr style="background-color: #fafafa;">
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">CGI / Technical Lab</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Evernew Studios Soundstage</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Multan Road, Lahore</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Evernew Studios Management Lease</td>
-            <td style="padding: 5px 8px; border: 1px solid #e2e8f0;">Controlled soundstage cyclorama, high-speed Phantom macro spark and graphite battery cutaway rig.</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0; font-weight: 700; color: #0f172a;">CGI / Technical Lab</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Evernew Studios Soundstage</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Multan Road, Lahore</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Evernew Management</td>
+            <td style="padding: 3.5px 6px; border: 1px solid #e2e8f0;">Controlled soundstage cyclorama, high-speed Phantom macro spark rig.</td>
           </tr>
         </tbody>
       </table>
@@ -2310,49 +2264,48 @@ export async function generateChapterPDF(
     // SECTION 09: CELEBRITY TALENT AGREEMENT & SIGN-OFF
     // -------------------------------------------------------------
     const talentHeader = document.createElement('div');
-    talentHeader.style.marginBottom = '10px';
-    talentHeader.style.marginTop = '8px';
+    talentHeader.style.marginBottom = '6px';
+    talentHeader.style.marginTop = '6px';
     talentHeader.style.backgroundColor = '#18181b';
-    talentHeader.style.borderRadius = '8px';
-    talentHeader.style.padding = '8px 14px';
+    talentHeader.style.borderRadius = '6px';
+    talentHeader.style.padding = '6px 12px';
     talentHeader.style.borderLeft = '4px solid #c69a53';
     talentHeader.style.display = 'flex';
     talentHeader.style.justifyContent = 'space-between';
     talentHeader.style.alignItems = 'center';
     talentHeader.innerHTML = `
       <div>
-        <div style="font-size: 8px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
+        <div style="font-size: 7.5px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #c69a53;">
           SECTION 09 • CELEBRITY TALENT & LIKENESS AGREEMENT
         </div>
-        <div style="font-size: 12.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
+        <div style="font-size: 11.5px; font-weight: 800; color: #ffffff; letter-spacing: -0.01em; margin-top: 1px;">
           Executed Agreement & Executive Authorization
         </div>
       </div>
-      <div style="font-size: 8.5px; color: #a1a1aa; font-weight: 600;">
+      <div style="font-size: 8px; color: #a1a1aa; font-weight: 600;">
         Iftikhar Thakur • Category Exclusivity Secured
       </div>
     `;
-    appendElementWithPagination(talentHeader, true);
 
     const contractBlock = document.createElement('div');
-    contractBlock.style.marginBottom = '10px';
+    contractBlock.style.marginBottom = '8px';
     contractBlock.style.border = '1px solid #e2e8f0';
-    contractBlock.style.borderRadius = '8px';
-    contractBlock.style.padding = '10px 12px';
+    contractBlock.style.borderRadius = '6px';
+    contractBlock.style.padding = '8px 10px';
     contractBlock.style.backgroundColor = '#ffffff';
     contractBlock.innerHTML = `
-      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
-        <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 6px; padding: 8px;">
-          <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #b8860b; margin-bottom: 4px;">Principal Artist Representation</div>
-          <div style="font-size: 8.5px; line-height: 1.4; color: #334155;">
+      <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px;">
+        <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 4px; padding: 6px 8px;">
+          <div style="font-size: 8.5px; font-weight: 800; text-transform: uppercase; color: #b8860b; margin-bottom: 3px;">Principal Artist Representation</div>
+          <div style="font-size: 8px; line-height: 1.35; color: #334155;">
             <strong>Artist Name:</strong> Mr. Iftikhar Ahmad Sheikh (p/k/a Iftikhar Thakur)<br/>
             <strong>Campaign Role:</strong> Brand Ambassador & Character Variants<br/>
             <strong>Exclusivity:</strong> Exclusive to Alaska Batteries across all battery categories for Pakistan & GCC territories.
           </div>
         </div>
-        <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 6px; padding: 8px;">
-          <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #b8860b; margin-bottom: 4px;">Production Scope & Media Rights</div>
-          <div style="font-size: 8.5px; line-height: 1.4; color: #334155;">
+        <div style="background-color: #faf8f5; border: 1px solid #f1ece4; border-radius: 4px; padding: 6px 8px;">
+          <div style="font-size: 8.5px; font-weight: 800; text-transform: uppercase; color: #b8860b; margin-bottom: 3px;">Production Scope & Media Rights</div>
+          <div style="font-size: 8px; line-height: 1.35; color: #334155;">
             <strong>Shooting Schedule:</strong> 5 Commercial Films + Stills + BTS Digital Assets<br/>
             <strong>Media Term:</strong> 2 Years (2026–2028) All-Media Pakistan & GCC Commercial Rights<br/>
             <strong>Status:</strong> Executed & Confirmed for March 2026 Production Window.
@@ -2360,30 +2313,34 @@ export async function generateChapterPDF(
         </div>
       </div>
     `;
-    appendElementWithPagination(contractBlock);
 
     // Executive Sign-off Box
     const signoffBox = document.createElement('div');
-    signoffBox.style.marginTop = '10px';
-    signoffBox.style.paddingTop = '10px';
-    signoffBox.style.borderTop = '1.5px dashed #cbd5e1';
+    signoffBox.style.marginTop = '8px';
+    signoffBox.style.padding = '10px 14px';
+    signoffBox.style.backgroundColor = '#ffffff';
+    signoffBox.style.border = '1px solid #cbd5e1';
+    signoffBox.style.borderRadius = '6px';
+    signoffBox.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.04)';
     signoffBox.style.display = 'flex';
     signoffBox.style.justifyContent = 'space-between';
-    signoffBox.style.alignItems = 'flex-end';
+    signoffBox.style.alignItems = 'center';
     signoffBox.innerHTML = `
       <div>
-        <div style="font-size: 11px; font-weight: 800; color: #0f172a;">Nasharz Films Confidential Presentation</div>
-        <div style="font-size: 10px; font-weight: 700; color: #b8860b; margin-top: 1px;">
-          Prepared By: <span style="color: #0f172a;">Aatif Rasheed</span> • Producer / Director
+        <div style="font-size: 10.5px; font-weight: 800; color: #0f172a;">Nasharz Films Confidential Presentation</div>
+        <div style="font-size: 9.5px; font-weight: 700; color: #b8860b; margin-top: 2px;">
+          Prepared By: <span style="color: #0f172a;">Aatif Rasheed</span> • Producer / Director • Nasharz Films
         </div>
-        <div style="font-size: 8.5px; color: #64748b; margin-top: 2px;">Proprietary production lookbook prepared strictly for Alaska Batteries.</div>
+        <div style="font-size: 8px; color: #64748b; margin-top: 2px;">Proprietary production lookbook, locations dossier, and talent agreement prepared strictly for Alaska Batteries.</div>
       </div>
-      <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
-        <div style="font-size: 8px; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b; font-weight: 700; margin-bottom: 2px;">Executive Authorization</div>
-        <img src="${imageMetaMap.get(branding.sealStamp)?.dataUrl || branding.sealStamp}" style="height: 55px; width: auto; object-fit: contain;" alt="Official Stamp" />
+      <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
+        <div style="font-size: 7.5px; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b; font-weight: 800; margin-bottom: 2px;">Executive Authorization & Seal</div>
+        <img src="${imageMetaMap.get(branding.sealStamp)?.dataUrl || branding.sealStamp}" style="height: 52px; width: auto; object-fit: contain; background: #ffffff;" alt="Official Stamp" />
       </div>
     `;
-    appendElementWithPagination(signoffBox);
+
+    // Keep talent header, contract, and signoff bundled together so they are never orphaned on separate pages
+    appendSectionWithCards(talentHeader, [contractBlock, signoffBox]);
 
     // Update Footers with actual total page count
     const totalPages = pages.length;
@@ -2413,8 +2370,13 @@ export async function generateChapterPDF(
         pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 0, 0, 210, 297);
       }
 
-      pdf.save(`Nasharz_Alaska_Chapter07_Art_and_Talent.pdf`);
-      return;
+      const filename = options?.customFileName || `Nasharz_Alaska_Chapter07_Art_and_Talent.pdf`;
+      if (options?.returnBlob) {
+        return { blob: pdf.output('blob'), filename, folder: 'Chapter_07_Art_and_Talent' };
+      } else {
+        pdf.save(filename);
+        return;
+      }
     } catch (err) {
       console.error('Error generating Art & Talent PDF:', err);
       window.print();
@@ -2435,21 +2397,21 @@ export async function generateChapterPDF(
     const textToRender = chapter.pdfFullText || chapter.fullText;
     const blocks = parseTextToBlocks(textToRender);
 
-    // Distribute blocks cleanly across discrete pages with intelligent section grouping
+    // Distribute blocks cleanly across discrete pages with intelligent section grouping and zero trailing whitespace
     for (let bIdx = 0; bIdx < blocks.length; bIdx++) {
       const block = blocks[bIdx];
       const blockHeight = measureElementHeight(block);
 
-      // 1. Major Route Header: If we already have substantial content on the page, start a fresh page so the whole route starts at the top
-      if (block.dataset.isRouteHeader === 'true' && currentHeight > 100) {
+      // 1. Major Route Header: If we already have substantial content on the page (> 580px), start a fresh page so the whole route starts at the top
+      if (block.dataset.isRouteHeader === 'true' && currentHeight > 580) {
         currentPage = createNewPage(pages.length);
         currentHeight = 0;
         maxContentHeight = 920;
       }
 
       // 2. Standalone Concept Heading (e.g. Concept 1A when after a full script):
-      // Only break if the page already has significant content (currentHeight > 380) so it never breaks right below a Route Header
-      if (block.dataset.isConceptHeading === 'true' && currentHeight > 380) {
+      // Only break if the page is already substantially filled (> 600px) so the page never leaves wide negative space
+      if (block.dataset.isConceptHeading === 'true' && currentHeight > 600) {
         currentPage = createNewPage(pages.length);
         currentHeight = 0;
         maxContentHeight = 920;
@@ -2465,12 +2427,13 @@ export async function generateChapterPDF(
       currentPage.contentArea.appendChild(block);
       currentHeight += blockHeight;
 
-      // 4. If this was a separation line marking the end of a concept / route, push subsequent content to the next page
+      // 4. If this was a separation line marking the end of a concept / route:
+      // Only break if the current page already has substantial content (> 640px)
       if (block.dataset.pageBreakAfter === 'true' && bIdx < blocks.length - 1) {
-        // Lookahead: only break if there is actually more meaningful content after this separator
+        // Lookahead: only break if there is actually more meaningful content after this separator and page is well utilized
         const remainingBlocks = blocks.slice(bIdx + 1);
         const hasSubsequentContent = remainingBlocks.some(b => (b.textContent || '').trim().length > 0);
-        if (hasSubsequentContent) {
+        if (hasSubsequentContent && currentHeight > 640) {
           currentPage = createNewPage(pages.length);
           currentHeight = 0;
           maxContentHeight = 920;
@@ -2589,26 +2552,29 @@ export async function generateChapterPDF(
 
     // Executive Stamp & Sign-off Box placed immediately after the last content line
     const signoffBox = document.createElement('div');
-    signoffBox.style.marginTop = '20px';
-    signoffBox.style.paddingTop = '14px';
+    signoffBox.style.marginTop = '16px';
+    signoffBox.style.padding = '12px 16px';
     signoffBox.style.marginBottom = '6px';
-    signoffBox.style.borderTop = '1.5px dashed #cbd5e1';
+    signoffBox.style.backgroundColor = '#ffffff';
+    signoffBox.style.border = '1px solid #cbd5e1';
+    signoffBox.style.borderRadius = '8px';
+    signoffBox.style.boxShadow = '0 1px 4px rgba(0, 0, 0, 0.04)';
     signoffBox.style.display = 'flex';
     signoffBox.style.justifyContent = 'space-between';
-    signoffBox.style.alignItems = 'flex-end';
+    signoffBox.style.alignItems = 'center';
 
     signoffBox.innerHTML = `
       <div>
         <div style="font-size: 12px; font-weight: 800; color: #0f172a;">Nasharz Films Confidential Presentation</div>
         <div style="font-size: 11px; font-weight: 700; color: #b8860b; margin-top: 3px;">
-          Prepared By: <span style="color: #0f172a;">Aatif Rasheed</span> • Producer / Director
+          Prepared By: <span style="color: #0f172a;">Aatif Rasheed</span> • Producer / Director • Nasharz Films
         </div>
-        <div style="font-size: 10px; color: #64748b; margin-top: 2px;">Produced by Nasharz Films for Alaska Batteries</div>
-        <div style="font-size: 9.5px; color: #94a3b8; margin-top: 2px;">Proprietary campaign strategy prepared strictly for Alaska Batteries executive review.</div>
+        <div style="font-size: 10px; color: #475569; margin-top: 2px;">Produced by Nasharz Films for Alaska Batteries</div>
+        <div style="font-size: 9px; color: #64748b; margin-top: 2px;">Proprietary campaign strategy prepared strictly for Alaska Batteries executive review.</div>
       </div>
-      <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end;">
-        <div style="font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b; font-weight: 700; margin-bottom: 4px;">Executive Authorization</div>
-        <img src="${branding.sealStamp}" style="height: 64px; width: auto; object-fit: contain; filter: contrast(1.05);" alt="Official Stamp" />
+      <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; justify-content: center;">
+        <div style="font-size: 9px; text-transform: uppercase; letter-spacing: 0.08em; color: #b8860b; font-weight: 700; margin-bottom: 3px;">Executive Authorization</div>
+        <img src="${branding.sealStamp}" style="height: 60px; width: auto; object-fit: contain; filter: contrast(1.05); background: #ffffff;" alt="Official Stamp" />
       </div>
     `;
 
@@ -2649,21 +2615,27 @@ export async function generateChapterPDF(
     for (let i = 0; i < pages.length; i++) {
       const pageEl = pages[i].pageEl;
       const canvas = await html2canvas(pageEl, {
-        scale: 2,
+        scale: 1.5,
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
         logging: false
       });
 
-      const imgData = canvas.toDataURL('image/jpeg', 0.95);
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
       if (i > 0) {
         pdf.addPage('a4', 'portrait');
       }
       pdf.addImage(imgData, 'JPEG', 0, 0, 210, 297);
     }
 
-    pdf.save(`Nasharz_Alaska_Batteries_Chapter_${chapter.number}_${chapter.id}.pdf`);
+    const filename = options?.customFileName || `Nasharz_Alaska_Batteries_Chapter_${chapter.number}_${chapter.id}.pdf`;
+    if (options?.returnBlob) {
+      return { blob: pdf.output('blob'), filename, folder: `Chapter_${chapter.number}_${chapter.id}` };
+    } else {
+      pdf.save(filename);
+      return;
+    }
   } catch (err) {
     console.error('Error generating clean PDF:', err);
     window.print();
@@ -2996,16 +2968,16 @@ export async function generateEstimatePDF(
 
     for (let i = 0; i < pageEls.length; i++) {
       const page = pageEls[i];
-      // Use scale: 3 for ultra-sharp crisp text rendering
+      // Use scale: 1.6 for fast, razor-sharp high-contrast print rendering
       const canvas = await html2canvas(page, {
-        scale: 3,
+        scale: 1.6,
         useCORS: true,
         allowTaint: true,
         backgroundColor: '#ffffff',
         logging: false
       });
 
-      const imgData = canvas.toDataURL('image/jpeg', 0.98);
+      const imgData = canvas.toDataURL('image/jpeg', 0.92);
       if (i > 0) {
         pdf.addPage('a4', 'portrait');
       }

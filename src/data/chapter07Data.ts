@@ -27,15 +27,22 @@ IFTIKHAR THAKUR — CHARACTER TRANSFORMATIONS
 
 The central visual device of the campaign is that Iftikhar Thakur appears as different characters in different situations, while the Battery Expert version remains visually consistent.
 
-A. BATTERY EXPERT — MASTER LOOK
+A. BATTERY EXPERT / PEHLWAN THAKUR — MASTER LOOK
 Wardrobe:
-• Clean white laboratory coat
-• Crisp, practical and contemporary
-• White or very light neutral shalwar qameez underneath
-• Minimal styling
-• No tie
-• No medical costume clichés
-• No gloves unless required for a technical action
+• Clean premium white laboratory coat
+• Sharp, well-tailored fit
+• Full-length lab coat, slightly structured and masculine
+• Crisp shirt and nice tie underneath
+• Formal pants
+• Formal shoes
+• No traditional Pakistani shalwar qameez
+• No stethoscope
+• No doctor costume clichés
+• Rubber gloves
+• No medical equipment
+• Absolutely no cap
+• Absolutely no turban
+• Absolutely no headwear
 
 Head:
 • Absolutely no cap, no turban and no headwear.
@@ -63,20 +70,34 @@ ________________________________________
 03. WARDROBE & CASTING BY SEQUENCE
 
 MAIN WARDROBE
-1. Thakur as Battery Pehlwan (Master Look)
-• Clean white laboratory coat (crisp, practical, contemporary)
-• White or very light neutral shalwar qameez underneath
-• Minimal styling, no tie, no medical costume clichés
-• No gloves unless required for a technical action
-• CRITICAL: Absolutely no cap, no turban and no headwear.
-• Performance: Senior surgeon meets emergency technology specialist, unmistakably Iftikhar Thakur.
+1. Pehlwan Thakur (Master Look)
+• Clean premium white laboratory coat
+• Sharp, well-tailored fit
+• Full-length lab coat, slightly structured and masculine
+• Crisp shirt and nice tie underneath
+• Formal pants
+• Formal shoes
+• No traditional Pakistani shalwar qameez
+• No stethoscope
+• No doctor costume clichés
+• Rubber gloves
+• No medical equipment
+• Absolutely no cap
+• Absolutely no turban
+• Absolutely no headwear
 
-2. Alaska Battery Expert Team
-• Contemporary technical uniforms with clean silhouettes
-• Practical jackets or utility-style clothing
-• Subtle Alaska branding insignia
-• Functional equipment belts and technical diagnostic cases
-• Modern technical specialists — DO NOT look like hospital staff.
+2. Diagnostic team.
+• Scrubs worn underneath white lab coats
+• Clean premium white laboratory coats
+• Contemporary technical silhouettes
+• Traditional Pakistani styling subtly integrated
+• Neutral base clothing
+• No branding
+• Practical utility trousers
+• Premium technical footwear
+• Equipment belts where appropriate
+• Small technical pouches
+• Protective work accessories only where practical
 
 ________________________________________
 
@@ -101,12 +122,11 @@ CAR SEQUENCE (FILM 01 — CAR)
 ________________________________________
 
 BIKE SEQUENCE (FILM 04 — BIKE)
-1. Character Thakur: Office Executive in Safari Suit
-• Senior office executive commuting during morning rush hour
-• Classic tailored safari suit (beige/khaki or grey-blue)
+1. Senior executive in bike seq
+• Senior office executive commuting during morning rush hour (formerly morning man)
+• Classic tailored safari suit (out door colors must not blue)
 • Epaulettes, flap chest pockets, belted or structured jacket silhouette
-• Polished leather shoes, frantic commuter watch-checking
-• No headwear (natural groomed morning hair)
+• Polished leather shoes, frantic commuter watch-checking in morning
 
 2. Taxi Bike Rider (Supporting Cast)
 • The character is a practical Pakistani taxi motorcycle rider, urban, hardworking and realistic.
@@ -121,31 +141,35 @@ BIKE SEQUENCE (FILM 04 — BIKE)
 ________________________________________
 
 TRUCK SEQUENCE (FILM 02 — TRUCK)
-1. Character Thakur: Fisherman & Port Logistics Captain
-• Simple traditional shalwar qameez in earthy, practical fabric
-• Embroidered waistcoat details, brass ring keys, weathered working look
-• KEY MANDATORY RULE: Truck Driver / Fisherman Thakur MUST always wear the white Pathan cap.
-• Battery Expert contrasts with white lab coat, NO Pathan cap, and NO headwear.
+1. Fish Logistics seq thakur
+• Simple traditional Pakistani shalwar qameez
+• Slightly loose and practical fit
+• Light or earthy neutral fabric
+• White traditional Pathan cap
+• Traditional practical footwear
+• Slightly weathered working-man appearance
+• A simple ring on one finger
+• No embroidery on the waistcoat
 
-2. Truck Driver & Port Cargo Crew (Supporting Ensemble)
-• Weathered workwear, rolled-up sleeves, waterproof boots, heavy ice crates
-• Grounded Karachi fish harbor maritime atmosphere.
+2. Truck driver
+• Weathered utility workwear, Chappal or worn out leather shoes or waterproof rubber boots
 
 ________________________________________
 
 TRACTOR SEQUENCE (FILM 03 — TRACTOR)
-1. Character Thakur: Chaudhary Sb (Option A — Red Polka Turban)
-• Vibrant red turban / safa with golden-yellow polka-dot pattern
-• Traditional fan-style front knot (Turra / Shamla)
-• Mustard-yellow kurta with matching dhoti or lacha
-• Red floral-print stole, traditional tilla khussa
-• Bushy handlebar moustache, thick eyebrows, rustic Punjabi Chaudhary personality
+1. In tractor seq Chaudhary thakur wears
+• Mustard-yellow kurta
+• Matching dhoti or lacha or shalwar
+• Red floral-print stole or sash
+• Matching Red waistcoat
+• Traditional khussa
 
-2. Character Thakur: Chaudhary Sb (Option B — Traditional Boski Elder)
-• Starched pristine white Cotton Boski Kurta Pajama
-• Traditional starched white/cream turban
-• Authentic handmade Tilla Khussa & carved cane
-• Authoritative village patriarch presence
+2. TRACTOR THAKUR OP2:
+• Starched pristine white cotton Boski kurta shalwar
+• Traditional starched white turban
+• Authentic handmade tilla khussa or black shoes
+• Carved cane
+• Practical workwear details
 
 3. Farmer & Agricultural Harvester Crew
 • Earthy Khaki/Olive breathable cotton kurta, traditional Punjabi Tehband (Lungi)
@@ -174,19 +198,24 @@ UPS / INVERTER SEQUENCE (FILM 05 — UPS)
 
 ________________________________________
 
-04. THE ALASKA BATTERY EXPERT TEAM
+04. THE ALASKA BATTERY EXPERT TEAM / DIAGNOSTIC TEAM
 
 Overall Look:
 The team should not look like hospital staff.
 They are modern battery technology specialists.
 
 Wardrobe Direction:
-• Contemporary technical uniforms
-• Clean silhouettes
-• Practical jackets or utility-style clothing
-• Subtle Alaska branding
-• Functional equipment belts
-• Technical cases
+• Scrubs worn underneath white lab coats
+• Clean premium white laboratory coats
+• Contemporary technical silhouettes
+• Traditional Pakistani styling subtly integrated
+• Neutral base clothing
+• No branding
+• Practical utility trousers
+• Premium technical footwear
+• Equipment belts where appropriate
+• Small technical pouches
+• Protective work accessories only where practical
 
 Visual Feel:
 Think:
@@ -794,7 +823,7 @@ export const chapter07Data: Chapter = {
   visualImage: 'https://res.cloudinary.com/dawlj9ne4/image/upload/ITrobot_qwhvys.png',
   visualImagePosition: 'center center',
   overlayHeadline: 'Battery Expert Production Design & Celebrity Talent.',
-  summary: 'Production design master sheet, Lead & Support wardrobe sheets, vehicle & prop design grids, Battery Pehlwan Van, Shooting locations, and 2-Year Talent Agreement.',
+  summary: 'Production design, wardrobe design, vehicle & prop, locations and Talent Agreement.',
   lastUpdated: 'Aug/26',
   fullText: `${MASTER_PRODUCTION_DESIGN_TEXT}\n\n_____________________________________________________________________________________\n\n${PROPS_AND_VEHICLES_MASTER_TEXT}\n\n_____________________________________________________________________________________\n\n${SHOOTING_LOCATIONS_TEXT}\n\n_____________________________________________________________________________________\n\n${TALENT_CONTRACT_RAW}`,
   
@@ -1015,7 +1044,7 @@ export const chapter07Data: Chapter = {
     '6 Vehicle & Props Design Grids: Unified Battery Pehlwan Van across all 5 ads, Sedan, Refrigerated Cargo Truck, Agri Tractor, Taxi Motorcycle, and Wedding UPS Electrical Grid',
     'Includes Policeman Uniform Color Options & Insignia Palette and detailed specifications for Car Owner, Taxi Bike Rider, Interview Candidate, UPS Groom, and Mother',
     'Production Locations: Food Street/Badshahi Masjid (Car), Ibrahim Hyderi Karachi (Truck), Kareem Block Agri Fields (Tractor), Packages Mall Promenade (Bike), Fakir Khana Haveli (UPS)',
-    'Core Rule: Battery Expert always in clean white lab coat with neutral shalwar qameez; absolutely no cap, turban, or headwear',
+    'Core Rule: Battery Expert always in clean premium white lab coat with crisp shirt, tie, formal pants, formal shoes, and rubber gloves underneath (no traditional shalwar qameez); absolutely no cap, turban, or headwear',
     'Exclusive 2-Year Contract (2026–2028), 5 Shoot Days, Worldwide Commercial Usage & AI/Likeness Exclusivity'
   ],
 
